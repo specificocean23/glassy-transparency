@@ -1,0 +1,17 @@
+node_modules
+npm-debug.log
+.env
+.env.example
+.git
+.gitignore
+.editorconfig
+.DS_Store
+dist
+build
+.vscode
+.idea
+storage/logs/*
+storage/app/*
+bootstrap/cache/*
+tests
+README.md
