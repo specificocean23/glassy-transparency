@@ -25,7 +25,7 @@ COPY . /app
 RUN composer install --no-dev --optimize-autoloader
 
 # Install Node.js and build frontend
-RUN curl -fsSL https://deb.nodesource.com/setup_18.x | bash - \
+RUN curl -fsSL https://deb.nodesource.com/setup_20.x | bash - \
     && apt-get install -y nodejs \
     && npm ci \
     && npm run build \
