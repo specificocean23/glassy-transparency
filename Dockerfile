@@ -8,10 +8,12 @@ RUN apt-get update && apt-get install -y \
     curl \
     libpq-dev \
     libsqlite3-dev \
+    libicu-dev \
+    libzip-dev \
     && rm -rf /var/lib/apt/lists/*
 
 # Install PHP extensions
-RUN docker-php-ext-install pdo pdo_pgsql pdo_sqlite
+RUN docker-php-ext-install pdo pdo_pgsql pdo_sqlite intl zip
 
 # Install Composer
 COPY --from=composer:latest /usr/bin/composer /usr/bin/composer
