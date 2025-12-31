@@ -37,8 +37,9 @@ RUN mkdir -p storage/logs storage/app storage/framework/sessions storage/framewo
 # Set permissions
 RUN chown -R www-data:www-data /app
 
-# Expose port
-EXPOSE 8000
+# Expose port (Railway will assign via $PORT)
+EXPOSE $PORT
 
-# Run application
-CMD ["php", "artisan", "serve", "--host=0.0.0.0", "--port=8000"]
+# CMD is overridden by railway.json startCommand
+# This is just a fallback for local testing
+CMD ["sh", "-c", "php artisan serve --host=0.0.0.0 --port=${PORT:-8000}"]
