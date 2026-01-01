@@ -6,9 +6,6 @@
     <title>{{ config('app.name', 'Transparency.ie') }}</title>
     <link rel="preconnect" href="https://fonts.bunny.net">
     <link href="https://fonts.bunny.net/css?family=instrument-sans:400,500,600,700" rel="stylesheet" />
-    @if (file_exists(public_path('build/manifest.json')) || file_exists(public_path('hot')))
-        @vite(['resources/css/app.css', 'resources/js/app.js'])
-    @endif
     <style>
         :root {
             --bg: #f8f8f8;
@@ -47,7 +44,6 @@
         }
         .blob-1 { width: 400px; height: 400px; left: -150px; top: -150px; background: var(--ink); }
         .blob-2 { width: 500px; height: 500px; right: -200px; bottom: -200px; background: var(--ink); }
-
         .wrap {
             position: relative;
             max-width: 1320px;
@@ -57,36 +53,6 @@
             flex-direction: column;
             gap: 48px;
         }
-        header.top {
-            display: flex;
-            flex-wrap: wrap;
-            align-items: center;
-            justify-content: space-between;
-            gap: 24px;
-            padding-bottom: 20px;
-        }
-        .brand { display: flex; align-items: center; gap: 16px; }
-        .brand-badge {
-            width: 48px;
-            height: 48px;
-            border-radius: 50%;
-            background: var(--card);
-            border: 2px solid var(--border);
-        }
-        .brand small { color: var(--subtle); font-size: 12px; text-transform: uppercase; letter-spacing: 0.1em; }
-        .brand-title { font-weight: 800; font-size: 22px; letter-spacing: -0.5px; }
-        nav.links { display: flex; flex-wrap: wrap; align-items: center; gap: 16px; }
-        .chip {
-            padding: 10px 16px;
-            border: 1px solid var(--border);
-            border-radius: 8px;
-            font-size: 13px;
-            font-weight: 500;
-            transition: all 160ms ease;
-            background: transparent;
-            cursor: pointer;
-        }
-        .chip:hover { border-color: var(--ink); background: var(--card); }
         .btn {
             padding: 11px 20px;
             border-radius: 8px;
@@ -99,10 +65,8 @@
             cursor: pointer;
         }
         .btn:hover { transform: translateY(-1px); box-shadow: 0 8px 20px rgba(0,0,0,0.15); }
-        :root.dark .btn { color: var(--bg); }
-        .ghost { border: 1px solid var(--border); background: transparent; }
+        .ghost { border: 1px solid var(--border); background: transparent; color: var(--ink); }
         .ghost:hover { background: var(--card); }
-
         .panel {
             background: var(--panel);
             border: 1px solid var(--border);
@@ -112,21 +76,35 @@
             backdrop-filter: var(--blur);
         }
         .grid { display: grid; gap: 24px; }
-        .hero { grid-template-columns: repeat(auto-fit, minmax(320px, 1fr)); }
         .pillars { grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); }
         .routes { grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); }
-
         .muted { color: var(--subtle); font-size: 14px; line-height: 1.6; }
         h1, h2, h3, h4 { margin: 0; letter-spacing: -0.5px; }
         h2 { font-size: 36px; font-weight: 800; line-height: 1.2; margin-bottom: 16px; }
         h3 { font-size: 22px; font-weight: 700; margin-bottom: 12px; }
         h4 { font-size: 18px; font-weight: 700; margin-bottom: 8px; }
         .tag { font-size: 11px; text-transform: uppercase; letter-spacing: 0.15em; color: var(--subtle); font-weight: 600; }
-
+        .dash-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); gap: 16px; }
+        .dash-card {
+            border: 1px solid var(--border);
+            border-radius: 12px;
+            padding: 20px;
+            background: var(--card);
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
+        .dash-number { font-size: 28px; font-weight: 800; letter-spacing: -0.3px; }
+        .dash-pill { font-size: 12px; color: var(--subtle); text-transform: uppercase; letter-spacing: 0.1em; }
+        .dash-bar { height: 6px; background: var(--border); border-radius: 999px; overflow: hidden; }
+        .dash-bar span { display: block; height: 100%; background: var(--ink); border-radius: 999px; }
+        .dash-list { list-style: none; padding: 0; margin: 0; display: flex; flex-direction: column; gap: 8px; }
+        .dash-list li { display: flex; justify-content: space-between; font-size: 13px; color: var(--subtle); }
+        .dash-dot { width: 8px; height: 8px; border-radius: 50%; background: var(--ink); margin-right: 8px; display: inline-block; }
+        .dash-meta { font-size: 12px; color: var(--subtle); }
         .stat { border: 1px solid var(--border); border-radius: 8px; padding: 20px; background: var(--card); }
         .stat-number { font-size: 28px; font-weight: 800; color: var(--ink); margin: 8px 0; }
         .stat-label { font-size: 12px; text-transform: uppercase; letter-spacing: 0.1em; color: var(--subtle); }
-
         .pill-card { 
             border: 1px solid var(--border); 
             border-radius: 12px; 
@@ -142,7 +120,6 @@
         .pill-icon { font-size: 32px; margin-bottom: 4px; }
         .pill-card a { margin-top: auto; color: var(--ink); font-weight: 600; font-size: 14px; display: inline-flex; align-items: center; gap: 6px; }
         .pill-card a:hover { opacity: 0.7; }
-
         .route-card { 
             border: 1px solid var(--border); 
             border-radius: 12px; 
@@ -152,16 +129,12 @@
         }
         .route-card:hover { border-color: var(--ink); transform: translateY(-2px); box-shadow: 0 12px 30px rgba(0,0,0,0.12); }
         .route-card h4 { margin-top: 12px; }
-
         .reveal { opacity: 0; transform: translateY(16px); transition: opacity 0.7s ease, transform 0.7s ease; }
         .revealed { opacity: 1; transform: translateY(0); }
-
         @media (max-width: 768px) {
             .wrap { padding: 24px 16px 40px; gap: 32px; }
             .panel { padding: 24px; }
             h2 { font-size: 28px; }
-            header.top { gap: 16px; }
-            nav.links { gap: 12px; }
         }
     </style>
     <script>
@@ -196,38 +169,51 @@
             <span class="blob-1"></span>
             <span class="blob-2"></span>
         </div>
-
+        @include('components.navigation')
         <div class="wrap">
-            <header class="top">
-                <div class="brand">
-                    <div class="brand-badge"></div>
-                    <div>
-                        <small>Public Observatory</small>
-                        <div class="brand-title">Transparency.ie</div>
+            <section class="panel dashboard reveal">
+                <div class="dash-header">
+                    <p class="tag">Live Overview</p>
+                    <h2>Platform Dashboard</h2>
+                    <p class="muted" style="max-width: 720px;">Quick clarity on budgets, climate, civic action, and innovation. Updated from live sources so you can act fast.</p>
+                </div>
+                <div class="dash-grid">
+                    <div class="dash-card">
+                        <div class="dash-pill">Budgets mapped</div>
+                        <div class="dash-number">€104B</div>
+                        <div class="dash-bar"><span style="width: 84%;"></span></div>
+                        <p class="dash-meta">47 departments live · Last sync: 15m ago</p>
+                    </div>
+                    <div class="dash-card">
+                        <div class="dash-pill">Climate metrics</div>
+                        <div class="dash-number">32</div>
+                        <ul class="dash-list">
+                            <li><span><span class="dash-dot"></span>Emissions</span><span>-4.2% YoY</span></li>
+                            <li><span><span class="dash-dot"></span>Energy mix</span><span>52% renewables</span></li>
+                            <li><span><span class="dash-dot"></span>Storage pilots</span><span>8 active</span></li>
+                        </ul>
+                    </div>
+                    <div class="dash-card">
+                        <div class="dash-pill">Civic momentum</div>
+                        <div class="dash-number">14 campaigns</div>
+                        <div class="dash-bar"><span style="width: 62%;"></span></div>
+                        <p class="dash-meta">18,234 supporters · 8 policy wins in 2025</p>
+                    </div>
+                    <div class="dash-card">
+                        <div class="dash-pill">Innovation</div>
+                        <div class="dash-number">23 grid projects</div>
+                        <ul class="dash-list">
+                            <li><span><span class="dash-dot"></span>Smart meters</span><span>31% rollout</span></li>
+                            <li><span><span class="dash-dot"></span>Storage scale</span><span>40 MWh live</span></li>
+                            <li><span><span class="dash-dot"></span>Hackathons</span><span>12 events</span></li>
+                        </ul>
                     </div>
                 </div>
-                <nav class="links">
-                    <a class="chip" href="#pillars">Pillars</a>
-                    <a class="chip" href="#routes">Navigate</a>
-                    <a class="chip" href="/case-studies">Case Studies</a>
-                    <a class="chip" href="/campaigns">Campaigns</a>
-                    <a class="chip" href="/events">Events</a>
-                    <button type="button" class="chip" onclick="toggleTheme()">☀️/🌙</button>
-                    @if (Route::has('login'))
-                        @auth
-                            <a href="{{ url('/dashboard') }}" class="btn">Dashboard</a>
-                        @else
-                            <a href="{{ route('login') }}" class="btn">Log in</a>
-                        @endauth
-                    @endif
-                </nav>
-            </header>
-
+            </section>
             <section class="panel reveal">
                 <div class="tag" style="margin-bottom: 12px;">Ireland's Public Ledger</div>
                 <h2>Clarity on budgets, climate impact, and civic action.</h2>
                 <p class="muted" style="font-size: 16px; max-width: 680px; line-height: 1.7; margin-bottom: 32px;">We mapped €104B in budgets, 32 environmental metrics, and 14 active civic campaigns so communities can move from curiosity to action in seconds. Power to the people.</p>
-                
                 <div class="grid" style="grid-template-columns: repeat(auto-fit, minmax(140px, 1fr)); gap: 20px; margin-bottom: 32px;">
                     <div class="stat">
                         <p class="stat-label">Open Budgets</p>
@@ -245,13 +231,11 @@
                         <p class="muted">Citizen-led drives</p>
                     </div>
                 </div>
-
                 <div style="display: flex; gap: 12px; flex-wrap: wrap;">
                     <a href="/technologies" class="btn">Explore Technologies</a>
-                    <a href="#routes" class="chip ghost">See all sections ↓</a>
+                    <a href="#routes" class="btn ghost">See all sections ↓</a>
                 </div>
             </section>
-
             <section id="pillars" class="panel reveal">
                 <div style="margin-bottom: 28px;">
                     <p class="tag">Four Pillars</p>
@@ -285,7 +269,6 @@
                     </div>
                 </div>
             </section>
-
             <section id="routes" class="panel reveal">
                 <div style="margin-bottom: 28px;">
                     <p class="tag">Navigate the Platform</p>
@@ -316,6 +299,7 @@
                 </div>
             </section>
         </div>
+        @include('components.footer-alt-1')
     </div>
 </body>
 </html>

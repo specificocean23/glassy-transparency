@@ -198,25 +198,9 @@
 </head>
 <body>
     <div class="page">
-        <div class="backdrop">
-            <span class="blob-1"></span>
-            <span class="blob-2"></span>
-        </div>
+        @include('components.navigation')
 
         <div class="wrap">
-            <header class="top">
-                <div class="brand">
-                    <div class="brand-badge"></div>
-                    <div>
-                        <small>Public Observatory</small>
-                        <div class="brand-title">Transparency.ie</div>
-                    </div>
-                </div>
-                <nav class="links">
-                    <a class="chip" href="/">Home</a>
-                    <a class="chip" href="/technologies">Technologies</a>
-                    <a class="chip" href="/case-studies">Case Studies</a>
-                    <a class="chip" href="/events">Events</a>
                     <a class="chip" href="/metrics">Metrics</a>
                     <button type="button" class="chip" onclick="toggleTheme()">☀️/🌙</button>
                 </nav>
@@ -230,6 +214,8 @@
 
             <section class="grid campaigns reveal">
                 <div class="campaign-card reveal">
+                @include('components.navigation')
+
                     <p class="tag">Active</p>
                     <h3>National Emissions Reduction Target</h3>
                     <p class="muted">Push for 2030 carbon neutrality across public sector. Track legislative progress, join advocacy, and see real-time impact.</p>
@@ -314,6 +300,8 @@
                 </div>
             </section>
         </div>
+
+        @include('components.footer-alt-1')
     </div>
 </body>
 </html>
