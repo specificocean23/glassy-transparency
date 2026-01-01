@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
@@ -14,6 +15,7 @@
             --border: #e0e0e0;
             --blur: blur(20px);
         }
+
         :root.dark {
             --bg: #0a0a0a;
             --panel: #1a1a1a;
@@ -22,7 +24,10 @@
             --border: #333333;
         }
 
-        * { box-sizing: border-box; }
+        * {
+            box-sizing: border-box;
+        }
+
         body {
             margin: 0;
             font-family: 'Instrument Sans', system-ui, -apple-system, sans-serif;
@@ -77,7 +82,7 @@
 
         .theme-toggle:hover {
             transform: scale(1.1);
-            box-shadow: 0 12px 32px rgba(0,0,0,0.2);
+            box-shadow: 0 12px 32px rgba(0, 0, 0, 0.2);
         }
 
         .section {
@@ -111,7 +116,7 @@
 
         .variation-card:hover {
             border-color: var(--ink);
-            box-shadow: 0 20px 60px rgba(0,0,0,0.08);
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.08);
         }
 
         .variation-header {
@@ -229,11 +234,13 @@
         }
     </style>
 </head>
+
 <body>
     <div class="showcase">
         <div class="showcase-header">
             <h1>Design Variations</h1>
-            <p>Three unique navigation menu designs and three footer options to choose from. Click to preview each variation.</p>
+            <p>Three unique navigation menu designs and three footer options to choose from. Click to preview each
+                variation.</p>
         </div>
 
         <!-- NAVIGATION SECTION -->
@@ -248,7 +255,8 @@
                         <span class="variation-badge">Default</span>
                     </div>
                     <div class="variation-description">
-                        The original design featuring 4 pillar-based navigation sections with smooth hover-triggered submenus. Creates a strong visual hierarchy and makes navigation intuitive.
+                        The original design featuring 4 pillar-based navigation sections with smooth hover-triggered
+                        submenus. Creates a strong visual hierarchy and makes navigation intuitive.
                         <ul class="feature-list">
                             <li>4 pillar sections with contextual submenus</li>
                             <li>Hover-triggered dropdowns</li>
@@ -260,7 +268,8 @@
                     <div class="variation-preview">
                         <strong>File:</strong> <code>resources/views/components/navigation.blade.php</code>
                         <div class="code-block">@include('components.navigation')</div>
-                        <div class="note">👉 Best for: Users who appreciate visual organization and hover interactions. Great for exploring content by category.</div>
+                        <div class="note">👉 Best for: Users who appreciate visual organization and hover interactions.
+                            Great for exploring content by category.</div>
                     </div>
                 </div>
 
@@ -271,7 +280,8 @@
                         <span class="variation-badge">Flat Design</span>
                     </div>
                     <div class="variation-description">
-                        A clean, single-row layout with subtle accent highlighting. No submenus—all links appear in one horizontal line for quick access and minimal cognitive load.
+                        A clean, single-row layout with subtle accent highlighting. No submenus—all links appear in one
+                        horizontal line for quick access and minimal cognitive load.
                         <ul class="feature-list">
                             <li>Single-row horizontal navigation</li>
                             <li>Soft emerald green accents</li>
@@ -283,7 +293,8 @@
                     <div class="variation-preview">
                         <strong>File:</strong> <code>resources/views/components/navigation-alt-1.blade.php</code>
                         <div class="code-block">@include('components.navigation-alt-1')</div>
-                        <div class="note">👉 Best for: Users who prefer simplicity and direct access to all major sections. Modern and clean aesthetic.</div>
+                        <div class="note">👉 Best for: Users who prefer simplicity and direct access to all major
+                            sections. Modern and clean aesthetic.</div>
                     </div>
                 </div>
 
@@ -294,7 +305,8 @@
                         <span class="variation-badge">Interactive</span>
                     </div>
                     <div class="variation-description">
-                        Pillar sections appear as distinct cards with inline menu toggles. Each card is clickable and expands to show contextual links, creating a modern and interactive experience.
+                        Pillar sections appear as distinct cards with inline menu toggles. Each card is clickable and
+                        expands to show contextual links, creating a modern and interactive experience.
                         <ul class="feature-list">
                             <li>Pillar cards with click-to-expand menus</li>
                             <li>Visual separation with card styling</li>
@@ -306,13 +318,17 @@
                     <div class="variation-preview">
                         <strong>File:</strong> <code>resources/views/components/navigation-alt-2.blade.php</code>
                         <div class="code-block">@include('components.navigation-alt-2')</div>
-                        <div class="note">👉 Best for: Users who prefer visual prominence and interactive elements. Great for exploratory navigation.</div>
+                        <div class="note">👉 Best for: Users who prefer visual prominence and interactive elements.
+                            Great for exploratory navigation.</div>
                     </div>
                 </div>
             </div>
 
             <div class="note" style="margin-top: 40px;">
-                <strong>✨ How to Use:</strong> Update your page header includes to use your preferred navigation component. Replace old header.top elements with @include('components.navigation-alt-1') or similar in welcome.blade.php, technologies.blade.php, case-studies.blade.php, campaigns.blade.php, and events.blade.php.
+                <strong>✨ How to Use:</strong> Update your page header includes to use your preferred navigation
+                component. Replace old header.top elements with @include('components.navigation-alt-1') or similar in
+                welcome.blade.php, technologies.blade.php, case-studies.blade.php, campaigns.blade.php, and
+                events.blade.php.
             </div>
         </div>
 
@@ -328,7 +344,8 @@
                         <span class="variation-badge">Zen</span>
                     </div>
                     <div class="variation-description">
-                        A single-line elegant footer with centered links and social icons. Minimal and zen-like, perfect for a clean, sophisticated website aesthetic.
+                        A single-line elegant footer with centered links and social icons. Minimal and zen-like, perfect
+                        for a clean, sophisticated website aesthetic.
                         <ul class="feature-list">
                             <li>Single-line horizontal layout</li>
                             <li>Centered alignment</li>
@@ -340,7 +357,8 @@
                     <div class="variation-preview">
                         <strong>File:</strong> <code>resources/views/components/footer-alt-1.blade.php</code>
                         <div class="code-block">@include('components.footer-alt-1')</div>
-                        <div class="note">👉 Best for: Clean, minimalist websites. Users who want a distraction-free footer experience.</div>
+                        <div class="note">👉 Best for: Clean, minimalist websites. Users who want a distraction-free
+                            footer experience.</div>
                     </div>
                 </div>
 
@@ -351,7 +369,8 @@
                         <span class="variation-badge">Professional</span>
                     </div>
                     <div class="variation-description">
-                        A 4-column organized layout with clear sections: Product, Company, Resources, and Legal. Professional and comprehensive, making it easy to find information.
+                        A 4-column organized layout with clear sections: Product, Company, Resources, and Legal.
+                        Professional and comprehensive, making it easy to find information.
                         <ul class="feature-list">
                             <li>4-column grid layout</li>
                             <li>Clear section categorization</li>
@@ -363,7 +382,8 @@
                     <div class="variation-preview">
                         <strong>File:</strong> <code>resources/views/components/footer-alt-2.blade.php</code>
                         <div class="code-block">@include('components.footer-alt-2')</div>
-                        <div class="note">👉 Best for: Organizations needing comprehensive footer content. Professional and corporate sites.</div>
+                        <div class="note">👉 Best for: Organizations needing comprehensive footer content. Professional
+                            and corporate sites.</div>
                     </div>
                 </div>
 
@@ -374,7 +394,8 @@
                         <span class="variation-badge">Cohesive</span>
                     </div>
                     <div class="variation-description">
-                        4 columns matching the navigation pillars for visual continuity. Each pillar has its own footer section with relevant links, creating a unified design system.
+                        4 columns matching the navigation pillars for visual continuity. Each pillar has its own footer
+                        section with relevant links, creating a unified design system.
                         <ul class="feature-list">
                             <li>Matches navigation pillars</li>
                             <li>Visually cohesive design</li>
@@ -386,149 +407,162 @@
                     <div class="variation-preview">
                         <strong>File:</strong> <code>resources/views/components/footer-alt-3.blade.php</code>
                         <div class="code-block">@include('components.footer-alt-3')</div>
-                        <div class="note">👉 Best for: Maximum design cohesion. Combines beautifully with Option 1 or 3 navigation menu.</div>
+                        <div class="note">👉 Best for: Maximum design cohesion. Combines beautifully with Option 1 or 3
+                            navigation menu.</div>
                     </div>
                 </div>
             </div>
 
             <div class="note" style="margin-top: 40px;">
-                <strong>✨ How to Use:</strong> Add your chosen footer component before the closing </body> tag. Typically place after your main content: @include('components.footer-alt-1') for the minimalist option, or @include('components.footer-alt-3') for pillar-integrated design.
-            </div>
+                <strong>✨ How to Use:</strong> Add your chosen footer component before the closing
+</body> tag. Typically place after your main content: @include('components.footer-alt-1') for the minimalist option, or
+@include('components.footer-alt-3') for pillar-integrated design.
+</div>
+</div>
+
+<!-- COMPARISON MATRIX -->
+<div class="section">
+    <h2 class="section-title">📊 Quick Comparison</h2>
+
+    <div style="overflow-x: auto;">
+        <table style="width: 100%; border-collapse: collapse; font-size: 13px;">
+            <thead>
+                <tr style="background: var(--bg); border-bottom: 2px solid var(--border);">
+                    <th style="padding: 12px; text-align: left; font-weight: 700;">Design</th>
+                    <th style="padding: 12px; text-align: center;">Complexity</th>
+                    <th style="padding: 12px; text-align: center;">Visual Impact</th>
+                    <th style="padding: 12px; text-align: center;">Mobile-Friendly</th>
+                    <th style="padding: 12px; text-align: center;">Best For</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr style="border-bottom: 1px solid var(--border);">
+                    <td style="padding: 12px;">Nav Option 1: Pillars + Hover</td>
+                    <td style="padding: 12px; text-align: center;">Medium</td>
+                    <td style="padding: 12px; text-align: center;">★★★★☆</td>
+                    <td style="padding: 12px; text-align: center;">Good</td>
+                    <td style="padding: 12px;">Content exploration</td>
+                </tr>
+                <tr style="border-bottom: 1px solid var(--border);">
+                    <td style="padding: 12px;">Nav Option 2: Minimalist</td>
+                    <td style="padding: 12px; text-align: center;">Low</td>
+                    <td style="padding: 12px; text-align: center;">★★★☆☆</td>
+                    <td style="padding: 12px; text-align: center;">Excellent</td>
+                    <td style="padding: 12px;">Quick navigation</td>
+                </tr>
+                <tr style="border-bottom: 1px solid var(--border);">
+                    <td style="padding: 12px;">Nav Option 3: Cards</td>
+                    <td style="padding: 12px; text-align: center;">High</td>
+                    <td style="padding: 12px; text-align: center;">★★★★★</td>
+                    <td style="padding: 12px; text-align: center;">Good</td>
+                    <td style="padding: 12px;">Modern experience</td>
+                </tr>
+                <tr style="border-bottom: 1px solid var(--border);">
+                    <td style="padding: 12px;">Footer Option 1: Minimal</td>
+                    <td style="padding: 12px; text-align: center;">Low</td>
+                    <td style="padding: 12px; text-align: center;">★★★☆☆</td>
+                    <td style="padding: 12px; text-align: center;">Excellent</td>
+                    <td style="padding: 12px;">Clean sites</td>
+                </tr>
+                <tr style="border-bottom: 1px solid var(--border);">
+                    <td style="padding: 12px;">Footer Option 2: Grid</td>
+                    <td style="padding: 12px; text-align: center;">High</td>
+                    <td style="padding: 12px; text-align: center;">★★★★☆</td>
+                    <td style="padding: 12px; text-align: center;">Good</td>
+                    <td style="padding: 12px;">Corporate sites</td>
+                </tr>
+                <tr>
+                    <td style="padding: 12px;">Footer Option 3: Pillars</td>
+                    <td style="padding: 12px; text-align: center;">Medium</td>
+                    <td style="padding: 12px; text-align: center;">★★★★★</td>
+                    <td style="padding: 12px; text-align: center;">Good</td>
+                    <td style="padding: 12px;">Design cohesion</td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+</div>
+
+<!-- RECOMMENDED PAIRINGS -->
+<div class="section">
+    <h2 class="section-title">💡 Recommended Design Pairings</h2>
+
+    <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 20px;">
+        <div style="padding: 20px; background: var(--panel); border: 1px solid var(--border); border-radius: 8px;">
+            <h3 style="margin: 0 0 8px 0; font-size: 14px; font-weight: 700;">🎯 Elegant & Modern</h3>
+            <p style="margin: 0; color: var(--subtle); font-size: 13px;">Nav Option 1 (Pillars) + Footer Option 3
+                (Pillars)</p>
+            <p style="margin: 8px 0 0 0; color: var(--subtle); font-size: 12px;">⭐ Best overall cohesion. Creates
+                unified visual language from header to footer.</p>
         </div>
 
-        <!-- COMPARISON MATRIX -->
-        <div class="section">
-            <h2 class="section-title">📊 Quick Comparison</h2>
-
-            <div style="overflow-x: auto;">
-                <table style="width: 100%; border-collapse: collapse; font-size: 13px;">
-                    <thead>
-                        <tr style="background: var(--bg); border-bottom: 2px solid var(--border);">
-                            <th style="padding: 12px; text-align: left; font-weight: 700;">Design</th>
-                            <th style="padding: 12px; text-align: center;">Complexity</th>
-                            <th style="padding: 12px; text-align: center;">Visual Impact</th>
-                            <th style="padding: 12px; text-align: center;">Mobile-Friendly</th>
-                            <th style="padding: 12px; text-align: center;">Best For</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        <tr style="border-bottom: 1px solid var(--border);">
-                            <td style="padding: 12px;">Nav Option 1: Pillars + Hover</td>
-                            <td style="padding: 12px; text-align: center;">Medium</td>
-                            <td style="padding: 12px; text-align: center;">★★★★☆</td>
-                            <td style="padding: 12px; text-align: center;">Good</td>
-                            <td style="padding: 12px;">Content exploration</td>
-                        </tr>
-                        <tr style="border-bottom: 1px solid var(--border);">
-                            <td style="padding: 12px;">Nav Option 2: Minimalist</td>
-                            <td style="padding: 12px; text-align: center;">Low</td>
-                            <td style="padding: 12px; text-align: center;">★★★☆☆</td>
-                            <td style="padding: 12px; text-align: center;">Excellent</td>
-                            <td style="padding: 12px;">Quick navigation</td>
-                        </tr>
-                        <tr style="border-bottom: 1px solid var(--border);">
-                            <td style="padding: 12px;">Nav Option 3: Cards</td>
-                            <td style="padding: 12px; text-align: center;">High</td>
-                            <td style="padding: 12px; text-align: center;">★★★★★</td>
-                            <td style="padding: 12px; text-align: center;">Good</td>
-                            <td style="padding: 12px;">Modern experience</td>
-                        </tr>
-                        <tr style="border-bottom: 1px solid var(--border);">
-                            <td style="padding: 12px;">Footer Option 1: Minimal</td>
-                            <td style="padding: 12px; text-align: center;">Low</td>
-                            <td style="padding: 12px; text-align: center;">★★★☆☆</td>
-                            <td style="padding: 12px; text-align: center;">Excellent</td>
-                            <td style="padding: 12px;">Clean sites</td>
-                        </tr>
-                        <tr style="border-bottom: 1px solid var(--border);">
-                            <td style="padding: 12px;">Footer Option 2: Grid</td>
-                            <td style="padding: 12px; text-align: center;">High</td>
-                            <td style="padding: 12px; text-align: center;">★★★★☆</td>
-                            <td style="padding: 12px; text-align: center;">Good</td>
-                            <td style="padding: 12px;">Corporate sites</td>
-                        </tr>
-                        <tr>
-                            <td style="padding: 12px;">Footer Option 3: Pillars</td>
-                            <td style="padding: 12px; text-align: center;">Medium</td>
-                            <td style="padding: 12px; text-align: center;">★★★★★</td>
-                            <td style="padding: 12px; text-align: center;">Good</td>
-                            <td style="padding: 12px;">Design cohesion</td>
-                        </tr>
-                    </tbody>
-                </table>
-            </div>
+        <div style="padding: 20px; background: var(--panel); border: 1px solid var(--border); border-radius: 8px;">
+            <h3 style="margin: 0 0 8px 0; font-size: 14px; font-weight: 700;">⚡ Clean & Minimal</h3>
+            <p style="margin: 0; color: var(--subtle); font-size: 13px;">Nav Option 2 (Minimalist) + Footer Option 1
+                (Minimal)</p>
+            <p style="margin: 8px 0 0 0; color: var(--subtle); font-size: 12px;">✨ Perfect for focusing attention on
+                content. Zen and professional.</p>
         </div>
 
-        <!-- RECOMMENDED PAIRINGS -->
-        <div class="section">
-            <h2 class="section-title">💡 Recommended Design Pairings</h2>
-
-            <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 20px;">
-                <div style="padding: 20px; background: var(--panel); border: 1px solid var(--border); border-radius: 8px;">
-                    <h3 style="margin: 0 0 8px 0; font-size: 14px; font-weight: 700;">🎯 Elegant & Modern</h3>
-                    <p style="margin: 0; color: var(--subtle); font-size: 13px;">Nav Option 1 (Pillars) + Footer Option 3 (Pillars)</p>
-                    <p style="margin: 8px 0 0 0; color: var(--subtle); font-size: 12px;">⭐ Best overall cohesion. Creates unified visual language from header to footer.</p>
-                </div>
-
-                <div style="padding: 20px; background: var(--panel); border: 1px solid var(--border); border-radius: 8px;">
-                    <h3 style="margin: 0 0 8px 0; font-size: 14px; font-weight: 700;">⚡ Clean & Minimal</h3>
-                    <p style="margin: 0; color: var(--subtle); font-size: 13px;">Nav Option 2 (Minimalist) + Footer Option 1 (Minimal)</p>
-                    <p style="margin: 8px 0 0 0; color: var(--subtle); font-size: 12px;">✨ Perfect for focusing attention on content. Zen and professional.</p>
-                </div>
-
-                <div style="padding: 20px; background: var(--panel); border: 1px solid var(--border); border-radius: 8px;">
-                    <h3 style="margin: 0 0 8px 0; font-size: 14px; font-weight: 700;">🚀 Interactive & Bold</h3>
-                    <p style="margin: 0; color: var(--subtle); font-size: 13px;">Nav Option 3 (Cards) + Footer Option 2 (Grid)</p>
-                    <p style="margin: 8px 0 0 0; color: var(--subtle); font-size: 12px;">💫 Most visual impact. Comprehensive and modern. For feature-rich sites.</p>
-                </div>
-            </div>
-        </div>
-
-        <!-- METRICS PAGE NOTE -->
-        <div class="section">
-            <h2 class="section-title">✅ Already Implemented</h2>
-
-            <div style="padding: 24px; background: var(--panel); border: 2px solid #4CAF50; border-radius: 8px;">
-                <h3 style="margin: 0 0 12px 0; color: #4CAF50; font-size: 14px; font-weight: 700;">📊 Metrics Page Redesigned</h3>
-                <p style="margin: 0 0 12px 0; color: var(--subtle); font-size: 13px;">The /metrics page has been completely redesigned with:</p>
-                <ul style="margin: 0; padding-left: 20px; font-size: 13px; color: var(--subtle);">
-                    <li>✓ 9 expandable metric cards (click to expand)</li>
-                    <li>✓ Interactive bar charts showing data trends</li>
-                    <li>✓ Tab system for different data views</li>
-                    <li>✓ Comprehensive data source attribution</li>
-                    <li>✓ Smooth animations and transitions</li>
-                    <li>✓ Full responsive design</li>
-                </ul>
-                <p style="margin: 12px 0 0 0; padding: 12px; background: var(--bg); border-radius: 6px; font-size: 12px; color: var(--subtle);">
-                    <strong>Location:</strong> <code>resources/views/public/metrics.blade.php</code>
-                </p>
-            </div>
+        <div style="padding: 20px; background: var(--panel); border: 1px solid var(--border); border-radius: 8px;">
+            <h3 style="margin: 0 0 8px 0; font-size: 14px; font-weight: 700;">🚀 Interactive & Bold</h3>
+            <p style="margin: 0; color: var(--subtle); font-size: 13px;">Nav Option 3 (Cards) + Footer Option 2 (Grid)
+            </p>
+            <p style="margin: 8px 0 0 0; color: var(--subtle); font-size: 12px;">💫 Most visual impact. Comprehensive
+                and modern. For feature-rich sites.</p>
         </div>
     </div>
+</div>
 
-    <button class="theme-toggle" onclick="toggleTheme()">☀️</button>
+<!-- METRICS PAGE NOTE -->
+<div class="section">
+    <h2 class="section-title">✅ Already Implemented</h2>
 
-    <script>
-        const root = document.documentElement;
-        const stored = localStorage.getItem('theme');
-        const prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
-        
-        if (stored === 'dark' || (!stored && prefersDark)) {
-            root.classList.add('dark');
-        }
-        
-        function toggleTheme() {
-            const isDark = root.classList.toggle('dark');
-            localStorage.setItem('theme', isDark ? 'dark' : 'light');
-            updateThemeButton();
-        }
-        
-        function updateThemeButton() {
-            const btn = document.querySelector('.theme-toggle');
-            btn.textContent = root.classList.contains('dark') ? '🌙' : '☀️';
-        }
-        
+    <div style="padding: 24px; background: var(--panel); border: 2px solid #4CAF50; border-radius: 8px;">
+        <h3 style="margin: 0 0 12px 0; color: #4CAF50; font-size: 14px; font-weight: 700;">📊 Metrics Page Redesigned
+        </h3>
+        <p style="margin: 0 0 12px 0; color: var(--subtle); font-size: 13px;">The /metrics page has been completely
+            redesigned with:</p>
+        <ul style="margin: 0; padding-left: 20px; font-size: 13px; color: var(--subtle);">
+            <li>✓ 9 expandable metric cards (click to expand)</li>
+            <li>✓ Interactive bar charts showing data trends</li>
+            <li>✓ Tab system for different data views</li>
+            <li>✓ Comprehensive data source attribution</li>
+            <li>✓ Smooth animations and transitions</li>
+            <li>✓ Full responsive design</li>
+        </ul>
+        <p
+            style="margin: 12px 0 0 0; padding: 12px; background: var(--bg); border-radius: 6px; font-size: 12px; color: var(--subtle);">
+            <strong>Location:</strong> <code>resources/views/public/metrics.blade.php</code>
+        </p>
+    </div>
+</div>
+</div>
+
+<button class="theme-toggle" onclick="toggleTheme()">☀️</button>
+
+<script>
+    const root = document.documentElement;
+    const stored = localStorage.getItem('theme');
+    const prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
+
+    if (stored === 'dark' || (!stored && prefersDark)) {
+        root.classList.add('dark');
+    }
+
+    function toggleTheme() {
+        const isDark = root.classList.toggle('dark');
+        localStorage.setItem('theme', isDark ? 'dark' : 'light');
         updateThemeButton();
-    </script>
+    }
+
+    function updateThemeButton() {
+        const btn = document.querySelector('.theme-toggle');
+        btn.textContent = root.classList.contains('dark') ? '🌙' : '☀️';
+    }
+
+    updateThemeButton();
+</script>
 </body>
+
 </html>

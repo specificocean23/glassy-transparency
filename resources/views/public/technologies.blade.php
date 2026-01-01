@@ -54,50 +54,6 @@
             flex-direction: column;
             gap: 48px;
         }
-        header.top {
-            display: flex;
-            flex-wrap: wrap;
-            align-items: center;
-            justify-content: space-between;
-            gap: 24px;
-            padding-bottom: 20px;
-        }
-        .brand { display: flex; align-items: center; gap: 16px; }
-        .brand-badge {
-            width: 48px;
-            height: 48px;
-            border-radius: 50%;
-            background: var(--card);
-            border: 2px solid var(--border);
-        }
-        .brand small { color: var(--subtle); font-size: 12px; text-transform: uppercase; letter-spacing: 0.1em; }
-        .brand-title { font-weight: 800; font-size: 22px; letter-spacing: -0.5px; }
-        nav.links { display: flex; flex-wrap: wrap; align-items: center; gap: 16px; }
-        .chip {
-            padding: 10px 16px;
-            border: 1px solid var(--border);
-            border-radius: 8px;
-            font-size: 13px;
-            font-weight: 500;
-            transition: all 160ms ease;
-            background: transparent;
-            cursor: pointer;
-        }
-        .chip:hover { border-color: var(--ink); background: var(--card); }
-        .btn {
-            padding: 11px 20px;
-            border-radius: 8px;
-            border: 1.5px solid var(--ink);
-            background: var(--ink);
-            color: var(--bg);
-            font-weight: 700;
-            transition: all 180ms ease;
-            font-size: 13px;
-            cursor: pointer;
-        }
-        .btn:hover { transform: translateY(-1px); box-shadow: 0 8px 20px rgba(0,0,0,0.15); }
-        :root.dark .btn { color: var(--bg); }
-
         .panel {
             background: var(--panel);
             border: 1px solid var(--border);
@@ -154,8 +110,6 @@
             .wrap { padding: 24px 16px 40px; gap: 32px; }
             .panel { padding: 24px; }
             h2 { font-size: 28px; }
-            header.top { gap: 16px; }
-            nav.links { gap: 12px; }
         }
     </style>
     <script>
