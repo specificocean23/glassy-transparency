@@ -17,6 +17,7 @@ class DatabaseSeeder extends Seeder
         $this->call([
             WaterfordCouncilSeeder::class,
             IrishFederalEnergySeeder::class,
+            IrishEnvironmentalDataSeeder::class,
         ]);
     }
 }

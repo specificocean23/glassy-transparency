@@ -27,6 +27,7 @@ class IrishFederalEnergySeeder extends Seeder
             'department_id' => $energyDept->id,
             'allocated_amount' => 2500000000, // €2.5 billion
             'fiscal_year' => 2025,
+            'budget_date' => now(),
         ]);
 
         // Energy Spendings
@@ -108,7 +109,7 @@ class IrishFederalEnergySeeder extends Seeder
                 'amount' => 285000000,
                 'category' => 'Wind Energy',
                 'date' => '2025-01-10',
-                'vendor' => 'Irish Wind Energy Ltd',
+                'vendor_name' => 'Irish Wind Energy Ltd',
                 'green' => true,
             ],
             [
@@ -116,7 +117,7 @@ class IrishFederalEnergySeeder extends Seeder
                 'amount' => 125000000,
                 'category' => 'Solar Energy',
                 'date' => '2025-01-15',
-                'vendor' => 'Bright Solar Ireland',
+                'vendor_name' => 'Bright Solar Ireland',
                 'green' => true,
             ],
             [
@@ -124,7 +125,7 @@ class IrishFederalEnergySeeder extends Seeder
                 'amount' => 95000000,
                 'category' => 'Hydro Energy',
                 'date' => '2025-01-20',
-                'vendor' => 'Irish Water Power Corp',
+                'vendor_name' => 'Irish Water Power Corp',
                 'green' => true,
             ],
             [
@@ -132,7 +133,7 @@ class IrishFederalEnergySeeder extends Seeder
                 'amount' => 180000000,
                 'category' => 'Grid Modernization',
                 'date' => '2025-02-01',
-                'vendor' => 'EirGrid Digital Systems',
+                'vendor_name' => 'EirGrid Digital Systems',
                 'green' => true,
             ],
             [
@@ -140,7 +141,7 @@ class IrishFederalEnergySeeder extends Seeder
                 'amount' => 165000000,
                 'category' => 'Energy Storage',
                 'date' => '2025-02-10',
-                'vendor' => 'Celtic Energy Storage',
+                'vendor_name' => 'Celtic Energy Storage',
                 'green' => true,
             ],
             
@@ -150,7 +151,7 @@ class IrishFederalEnergySeeder extends Seeder
                 'amount' => 220000000,
                 'category' => 'Building Efficiency',
                 'date' => '2025-02-15',
-                'vendor' => 'Irish Energy Efficiency Services',
+                'vendor_name' => 'Irish Energy Efficiency Services',
                 'green' => true,
             ],
             [
@@ -158,7 +159,7 @@ class IrishFederalEnergySeeder extends Seeder
                 'amount' => 145000000,
                 'category' => 'District Heat',
                 'date' => '2025-03-01',
-                'vendor' => 'European District Heating Ltd',
+                'vendor_name' => 'European District Heating Ltd',
                 'green' => true,
             ],
             
@@ -168,7 +169,7 @@ class IrishFederalEnergySeeder extends Seeder
                 'amount' => 165000000,
                 'category' => 'EV Infrastructure',
                 'date' => '2025-03-05',
-                'vendor' => 'Chargenet Ireland',
+                'vendor_name' => 'Chargenet Ireland',
                 'green' => true,
             ],
             [
@@ -176,7 +177,7 @@ class IrishFederalEnergySeeder extends Seeder
                 'amount' => 285000000,
                 'category' => 'Public Transport',
                 'date' => '2025-03-10',
-                'vendor' => 'Bus Eireann Green Fleet',
+                'vendor_name' => 'Bus Eireann Green Fleet',
                 'green' => true,
             ],
             
@@ -186,7 +187,7 @@ class IrishFederalEnergySeeder extends Seeder
                 'amount' => 95000000,
                 'category' => 'Research & Development',
                 'date' => '2025-03-15',
-                'vendor' => 'Trinity College Dublin Research',
+                'vendor_name' => 'Trinity College Dublin Research',
                 'green' => true,
             ],
             [
@@ -194,7 +195,7 @@ class IrishFederalEnergySeeder extends Seeder
                 'amount' => 75000000,
                 'category' => 'Research & Development',
                 'date' => '2025-03-20',
-                'vendor' => 'University College Dublin',
+                'vendor_name' => 'University College Dublin',
                 'green' => true,
             ],
             
@@ -204,7 +205,7 @@ class IrishFederalEnergySeeder extends Seeder
                 'amount' => 185000000,
                 'category' => 'Gas Infrastructure',
                 'date' => '2025-01-25',
-                'vendor' => 'Gas Networks Ireland',
+                'vendor_name' => 'Gas Networks Ireland',
                 'fossil' => true,
             ],
             
@@ -214,7 +215,7 @@ class IrishFederalEnergySeeder extends Seeder
                 'amount' => 65000000,
                 'category' => 'Nuclear Research',
                 'date' => '2025-02-20',
-                'vendor' => 'Irish Nuclear Safety Institute',
+                'vendor_name' => 'Irish Nuclear Safety Institute',
                 'green' => true, // Clean energy but separate category
             ],
             
@@ -224,7 +225,7 @@ class IrishFederalEnergySeeder extends Seeder
                 'amount' => 45000000,
                 'category' => 'Administration',
                 'date' => '2025-01-05',
-                'vendor' => 'Department of Enterprise',
+                'vendor_name' => 'Department of Enterprise',
                 'green' => false,
             ],
         ];
@@ -236,7 +237,7 @@ class IrishFederalEnergySeeder extends Seeder
                 'description' => $spending['description'],
                 'amount' => $spending['amount'],
                 'transaction_date' => $spending['date'],
-                'vendor' => $spending['vendor'],
+                'vendor_name' => $spending['vendor'],
                 'is_green_energy' => $spending['green'] ?? false,
                 'is_fossil_fuel_related' => $spending['fossil'] ?? false,
                 'supports_homelessness_initiative' => false,

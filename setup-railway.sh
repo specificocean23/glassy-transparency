@@ -16,14 +16,14 @@ echo -e "${BLUE}Step 1: Updating .env with Railway PostgreSQL credentials${NC}"
 echo "Enter your Railway PostgreSQL credentials:"
 echo ""
 
-read -p "PostgreSQL Host [postgres-production-b2a7.up.railway.app]: " DB_HOST
-DB_HOST=${DB_HOST:-postgres-production-b2a7.up.railway.app}
+read -p "PostgreSQL Host [postgresql://postgres:puPGsAIQuXYhqctgNnUISHBHqAjtlEjI@postgres.railway.internal:5432/railway]: " DB_HOST
+DB_HOST=${DB_HOST:-postgresql://postgres:puPGsAIQuXYhqctgNnUISHBHqAjtlEjI@postgres.railway.internal:5432/railway}
 
 read -p "PostgreSQL Port [6969]: " DB_PORT
 DB_PORT=${DB_PORT:-6969}
 
 read -p "Database Name [transparency_ie]: " DB_DATABASE
-DB_DATABASE=${DB_DATABASE:-transparency_ie}
+DB_DATABASE=${DB_DATABASE:-railway}
 
 read -p "Database Username [postgres]: " DB_USERNAME
 DB_USERNAME=${DB_USERNAME:-postgres}

@@ -68,6 +68,7 @@ class WaterfordCouncilSeeder extends Seeder
                     default => 1000000,
                 },
                 'fiscal_year' => 2025,
+                'budget_date' => now(),
             ]);
         }
 
@@ -119,53 +120,53 @@ class WaterfordCouncilSeeder extends Seeder
         // Initiatives
         Initiative::create([
             'department_id' => Department::where('slug', 'housing-community')->first()->id,
-            'title' => 'Waterford Housing First Initiative',
+            'name' => 'Waterford Housing First Initiative',
             'slug' => 'waterford-housing-first',
             'description' => 'Comprehensive programme to provide stable housing and support to homeless individuals and families in Waterford',
             'category' => 'Homelessness',
             'status' => 'active',
             'budget' => 1200000,
             'spent' => 580000,
-            'people_impacted' => 145,
+            'start_date' => now()->subMonths(6),
             'irish_workers_employed' => 38,
         ]);
 
         Initiative::create([
             'department_id' => Department::where('slug', 'roads-transportation')->first()->id,
-            'title' => 'Waterford Sustainable Mobility Programme',
+            'name' => 'Waterford Sustainable Mobility Programme',
             'slug' => 'waterford-sustainable-mobility',
             'description' => 'Investment in green transport, cycling infrastructure and electric public transport for Waterford region',
             'category' => 'Green Transport',
             'status' => 'active',
             'budget' => 1800000,
             'spent' => 1125000,
-            'people_impacted' => 85000,
+            'start_date' => now()->subMonths(10),
             'irish_workers_employed' => 52,
         ]);
 
         Initiative::create([
             'department_id' => Department::where('slug', 'environment-water')->first()->id,
-            'title' => 'River Suir Environmental Restoration',
+            'name' => 'River Suir Environmental Restoration',
             'slug' => 'river-suir-restoration',
             'description' => 'Ecological restoration and flood management programme for the River Suir',
             'category' => 'Environmental Protection',
             'status' => 'active',
             'budget' => 950000,
             'spent' => 450000,
-            'people_impacted' => 120000,
+            'start_date' => now()->subMonths(14),
             'irish_workers_employed' => 28,
         ]);
 
         Initiative::create([
             'department_id' => Department::where('slug', 'recreation-culture')->first()->id,
-            'title' => 'Waterford Cultural Heritage Preservation',
+            'name' => 'Waterford Cultural Heritage Preservation',
             'slug' => 'waterford-cultural-heritage',
             'description' => 'Preservation and promotion of Waterford\'s rich cultural heritage and historic sites',
             'category' => 'Cultural Development',
             'status' => 'active',
             'budget' => 580000,
             'spent' => 340000,
-            'people_impacted' => 245000,
+            'start_date' => now()->subMonths(6),
             'irish_workers_employed' => 34,
         ]);
     }
@@ -175,11 +176,12 @@ class WaterfordCouncilSeeder extends Seeder
         foreach ($records as $record) {
             Spending::create([
                 'department_id' => $departmentId,
+                'budget_id' => Budget::where('department_id', $departmentId)->first()->id,
                 'category' => $record['category'],
                 'description' => $record['description'],
                 'amount' => $record['amount'],
                 'transaction_date' => $record['date'],
-                'vendor' => $this->getVendor($record['category']),
+                'vendor_name' => $this->getVendor($record['category']),
                 'is_green_energy' => $record['green_energy'] ?? false,
                 'is_fossil_fuel_related' => false,
                 'supports_homelessness_initiative' => $record['homelessness'] ?? false,
