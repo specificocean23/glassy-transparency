@@ -6,6 +6,7 @@
     <title>Metrics | {{ config('app.name', 'Transparency.ie') }}</title>
     <link rel="preconnect" href="https://fonts.bunny.net">
     <link href="https://fonts.bunny.net/css?family=instrument-sans:400,500,600,700" rel="stylesheet" />
+    <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.js"></script>
     <style>
         :root {
             --bg: #f8f8f8;
@@ -105,16 +106,16 @@
             box-shadow: var(--shadow);
             backdrop-filter: var(--blur);
         }
-
         .muted { color: var(--subtle); font-size: 14px; line-height: 1.6; }
         h1, h2, h3 { margin: 0; letter-spacing: -0.5px; }
         h2 { font-size: 36px; font-weight: 800; line-height: 1.2; margin-bottom: 16px; }
+        h3 { font-size: 18px; font-weight: 700; margin: 12px 0 8px 0; }
         .tag { font-size: 11px; text-transform: uppercase; letter-spacing: 0.15em; color: var(--subtle); font-weight: 600; }
 
         .metrics-grid {
             display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
             gap: 24px;
-            grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
         }
 
         .metric-card {
@@ -122,8 +123,11 @@
             border-radius: 12px;
             padding: 32px;
             background: var(--card);
-            cursor: pointer;
             transition: all 200ms ease;
+            display: flex;
+            flex-direction: column;
+            gap: 16px;
+            cursor: pointer;
             position: relative;
         }
         .metric-card:hover {
@@ -131,138 +135,115 @@
             transform: translateY(-2px);
             box-shadow: 0 12px 30px rgba(0,0,0,0.12);
         }
-
-        .metric-header {
-            display: flex;
-            justify-content: space-between;
-            align-items: flex-start;
-            gap: 12px;
+        .metric-card.expanded {
+            grid-column: 1 / -1;
+            padding: 40px;
         }
-        .metric-title {
-            font-size: 20px;
-            font-weight: 700;
-            margin: 8px 0 4px 0;
-        }
+        
         .metric-number {
-            font-size: 40px;
+            font-size: 32px;
             font-weight: 800;
             color: var(--ink);
-            margin: 12px 0 4px 0;
         }
         .metric-change {
             font-size: 12px;
+            color: #4CAF50;
             font-weight: 600;
             display: flex;
             align-items: center;
             gap: 4px;
-            margin-bottom: 12px;
         }
-        .metric-change.positive { color: #4CAF50; }
         .metric-change.negative { color: #f44336; }
-
-        .expand-icon {
-            flex-shrink: 0;
-            font-size: 20px;
-            transition: transform 300ms ease;
-        }
-        .metric-card.expanded .expand-icon {
-            transform: rotate(180deg);
-        }
-
-        .metric-expanded {
-            max-height: 0;
-            overflow: hidden;
-            opacity: 0;
-            transition: max-height 400ms ease, opacity 300ms ease, padding 400ms ease;
-        }
-        .metric-card.expanded .metric-expanded {
-            max-height: 800px;
-            opacity: 1;
-            padding: 28px 0 0 0;
-            margin-top: 28px;
-            border-top: 1px solid var(--border);
-        }
-
-        .metric-tabs {
-            display: flex;
-            gap: 8px;
-            margin-bottom: 24px;
-            flex-wrap: wrap;
-        }
-        .metric-tab {
-            padding: 8px 12px;
-            border: 1px solid var(--border);
+        .metric-card p { margin: 0; }
+        
+        .metric-expand-btn {
+            position: absolute;
+            top: 16px;
+            right: 16px;
+            width: 32px;
+            height: 32px;
             border-radius: 6px;
+            border: 1px solid var(--border);
             background: var(--bg);
             cursor: pointer;
-            font-size: 12px;
-            font-weight: 600;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 16px;
             transition: all 160ms ease;
         }
-        .metric-tab:hover,
-        .metric-tab.active {
-            background: var(--ink);
-            color: var(--bg);
+        .metric-expand-btn:hover {
             border-color: var(--ink);
+            background: var(--card);
         }
+        .metric-card.expanded .metric-expand-btn { top: 24px; right: 24px; }
 
+        .metric-content { display: block; }
+        .metric-card.expanded .metric-content { display: none; }
+        
+        .metric-expanded { display: none; }
+        .metric-card.expanded .metric-expanded { 
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 40px;
+        }
+        
         .metric-chart {
-            height: 240px;
-            background: linear-gradient(180deg, var(--bg) 0%, rgba(0,0,0,0.02) 100%);
-            border: 1px solid var(--border);
-            border-radius: 8px;
-            display: flex;
-            align-items: flex-end;
-            justify-content: space-around;
-            padding: 16px;
-            gap: 12px;
-            margin-bottom: 20px;
-        }
-        .chart-bar {
-            flex: 1;
-            background: var(--ink);
-            border-radius: 4px 4px 0 0;
-            transition: all 200ms ease;
+            height: 300px;
             position: relative;
-            min-height: 20px;
-        }
-        .chart-bar:hover {
-            opacity: 0.8;
-            transform: scaleY(1.05);
-        }
-        .chart-bar-label {
-            position: absolute;
-            bottom: -24px;
-            left: 50%;
-            transform: translateX(-50%);
-            font-size: 11px;
-            color: var(--subtle);
-            white-space: nowrap;
-        }
-
-        .metric-sources {
-            background: var(--bg);
             border: 1px solid var(--border);
             border-radius: 8px;
             padding: 16px;
+            background: var(--bg);
         }
-        .metric-sources h4 {
-            margin: 0 0 12px 0;
-            font-size: 14px;
-            font-weight: 700;
+        
+        .metric-details {
+            display: flex;
+            flex-direction: column;
+            gap: 24px;
         }
-        .source-item {
-            padding: 8px 0;
-            border-bottom: 1px solid var(--border);
+        .metric-detail-section {
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+        }
+        .metric-detail-section h4 {
+            font-size: 12px;
+            font-weight: 800;
+            text-transform: uppercase;
+            letter-spacing: 0.15em;
+            color: var(--ink);
+            margin: 0;
+        }
+        .metric-detail-section p {
             font-size: 13px;
+            color: var(--subtle);
+            line-height: 1.6;
+            margin: 0;
         }
-        .source-item:last-child {
-            border-bottom: none;
+        
+        .metric-source {
+            padding: 14px;
+            background: var(--bg);
+            border-radius: 6px;
+            border: 1px solid var(--border);
         }
-        .source-label { color: var(--subtle); font-weight: 600; }
-        .source-value { color: var(--ink); margin-top: 2px; }
-        .source-link { color: #4CAF50; text-decoration: none; margin-top: 2px; }
-        .source-link:hover { text-decoration: underline; }
+        .metric-source-title {
+            font-weight: 700;
+            font-size: 11px;
+            color: var(--ink);
+            margin-bottom: 6px;
+            text-transform: uppercase;
+            letter-spacing: 0.1em;
+        }
+        .metric-source-link {
+            font-size: 12px;
+            color: var(--subtle);
+            text-decoration: none;
+            transition: color 160ms ease;
+            display: inline-block;
+        }
+        .metric-source-link:hover { color: var(--ink); }
 
         .reveal { opacity: 0; transform: translateY(16px); transition: opacity 0.7s ease, transform 0.7s ease; }
         .revealed { opacity: 1; transform: translateY(0); }
@@ -271,7 +252,11 @@
             .wrap { padding: 24px 16px 40px; gap: 32px; }
             .panel { padding: 24px; }
             h2 { font-size: 28px; }
-            .metric-chart { height: 180px; }
+            header.top { gap: 16px; }
+            nav.links { gap: 12px; }
+            .metric-expanded {
+                grid-template-columns: 1fr !important;
+            }
         }
     </style>
     <script>
@@ -286,8 +271,29 @@
                 const isDark = root.classList.toggle('dark');
                 localStorage.setItem('theme', isDark ? 'dark' : 'light');
             };
+            
+            window.expandMetric = (id) => {
+                const card = document.getElementById(`metric-${id}`);
+                if (card) {
+                    card.classList.toggle('expanded');
+                    if (card.classList.contains('expanded')) {
+                        setTimeout(() => {
+                            const canvas = card.querySelector('canvas');
+                            if (canvas && canvas.chartInstance === undefined) {
+                                const ctx = canvas.getContext('2d');
+                                try {
+                                    const config = JSON.parse(canvas.dataset.chartConfig);
+                                    canvas.chartInstance = new Chart(ctx, config);
+                                } catch (e) {
+                                    console.error('Chart config error:', e);
+                                }
+                            }
+                        }, 100);
+                    }
+                }
+            };
+
             window.addEventListener('DOMContentLoaded', () => {
-                // Reveal animations
                 const observer = new IntersectionObserver((entries) => {
                     entries.forEach((entry) => {
                         if (entry.isIntersecting) {
@@ -297,25 +303,6 @@
                     });
                 }, { threshold: 0.1 });
                 document.querySelectorAll('.reveal').forEach((el) => observer.observe(el));
-
-                // Expandable metric cards
-                document.querySelectorAll('.metric-card').forEach(card => {
-                    card.addEventListener('click', function(e) {
-                        // Don't expand if clicking a tab
-                        if (e.target.closest('.metric-tab')) return;
-                        this.classList.toggle('expanded');
-                    });
-                    
-                    // Tab switching
-                    const tabs = card.querySelectorAll('.metric-tab');
-                    tabs.forEach(tab => {
-                        tab.addEventListener('click', (e) => {
-                            e.stopPropagation();
-                            tabs.forEach(t => t.classList.remove('active'));
-                            tab.classList.add('active');
-                        });
-                    });
-                });
             });
         })();
     </script>
@@ -349,430 +336,361 @@
             <section class="panel reveal">
                 <p class="tag" style="margin-bottom: 12px;">The Numbers</p>
                 <h2>Impact Metrics</h2>
-                <p class="muted" style="font-size: 16px; max-width: 680px; line-height: 1.7;">Click any metric to expand and explore detailed data, trends over time, and comprehensive sources. Real-time tracking of budget transparency, climate progress, civic engagement, and technology adoption.</p>
+                <p class="muted" style="font-size: 16px; max-width: 680px; line-height: 1.7;">Real-time tracking of budget transparency, climate progress, civic engagement, and technology adoption. Click any metric to explore historical trends, detailed charts, comprehensive data sources, and insights.</p>
             </section>
 
-            <div class="metrics-grid reveal">
+            <section class="metrics-grid reveal">
                 <!-- Metric 1: Total Budgets -->
-                <div class="metric-card reveal">
-                    <div class="metric-header">
-                        <div style="flex: 1;">
-                            <p class="tag">Public Finance</p>
-                            <h3 class="metric-title">Total Budgets Mapped</h3>
-                            <div class="metric-number">€104B</div>
-                            <p class="metric-change positive">↑ €8.2B from 2022</p>
-                            <p class="muted">Across 47 departments and agencies. Real-time spending data now live.</p>
-                        </div>
-                        <div class="expand-icon">▼</div>
+                <div id="metric-1" class="metric-card reveal" onclick="expandMetric('1')">
+                    <button class="metric-expand-btn" onclick="event.stopPropagation(); expandMetric('1')">⬇️</button>
+                    <div class="metric-content">
+                        <p class="tag">Public Finance</p>
+                        <h3>Total Budgets Mapped</h3>
+                        <div class="metric-number">€104B</div>
+                        <p class="metric-change">↑ €8.2B from 2022</p>
+                        <p class="muted">Across 47 departments and agencies. Real-time spending data now live.</p>
                     </div>
-                    
                     <div class="metric-expanded">
-                        <div class="metric-tabs">
-                            <div class="metric-tab active">Timeline</div>
-                            <div class="metric-tab">By Department</div>
-                            <div class="metric-tab">Sources</div>
-                        </div>
-
                         <div class="metric-chart">
-                            <div class="chart-bar" style="height: 30%;"><div class="chart-bar-label">2020</div></div>
-                            <div class="chart-bar" style="height: 45%;"><div class="chart-bar-label">2021</div></div>
-                            <div class="chart-bar" style="height: 62%;"><div class="chart-bar-label">2022</div></div>
-                            <div class="chart-bar" style="height: 78%;"><div class="chart-bar-label">2023</div></div>
-                            <div class="chart-bar" style="height: 88%;"><div class="chart-bar-label">2024</div></div>
-                            <div class="chart-bar" style="height: 100%;"><div class="chart-bar-label">2025</div></div>
+                            <canvas data-chart-config='{"type":"line","data":{"labels":["2019","2020","2021","2022","2023","2024","2025","2026"],"datasets":[{"label":"Budget Mapped (€B)","data":[45,52,68,95.8,104,108,112,116],"borderColor":"#1a1a1a","backgroundColor":"rgba(26,26,26,0.05)","borderWidth":2,"fill":true,"tension":0.4}]},"options":{"responsive":true,"maintainAspectRatio":false,"plugins":{"legend":{"display":true},"title":{"display":true,"text":"7-Year Budget Transparency Growth"}},"scales":{"y":{"beginAtZero":true}}}}'></canvas>
                         </div>
-
-                        <div class="metric-sources">
-                            <h4>Data Sources</h4>
-                            <div class="source-item">
-                                <div class="source-label">Primary Source</div>
-                                <div class="source-value">Department of Finance Portal</div>
-                                <div class="source-link"><a href="#">→ Visit source</a></div>
+                        <div class="metric-details">
+                            <button class="metric-expand-btn" onclick="event.stopPropagation(); expandMetric('1')">⬆️</button>
+                            <div class="metric-detail-section">
+                                <h4>Overview</h4>
+                                <p>Total public sector budgets across all departments and agencies that have been mapped, digitized, and made publicly accessible through Transparency.ie platform.</p>
                             </div>
-                            <div class="source-item">
-                                <div class="source-label">Updated</div>
-                                <div class="source-value">January 2026 (Real-time)</div>
+                            <div class="metric-detail-section">
+                                <h4>Key Insights</h4>
+                                <p>• Growth from €45B (2019) to €104B (2026) = 131% increase<br/>• Average YoY growth: €8.6B<br/>• Currently covers 93% of all government spending<br/>• Projection: €125B by 2027</p>
                             </div>
-                            <div class="source-item">
-                                <div class="source-label">Methodology</div>
-                                <div class="source-value">Aggregated from 47 government entities using standardized reporting</div>
+                            <div class="metric-detail-section">
+                                <h4>Data Sources</h4>
+                                <div class="metric-source">
+                                    <div class="metric-source-title">Department of Finance</div>
+                                    <a href="#" class="metric-source-link">gov.ie/finance ↗</a>
+                                </div>
+                                <div class="metric-source">
+                                    <div class="metric-source-title">Transparency.ie DB</div>
+                                    <a href="#" class="metric-source-link">data.transparency.ie ↗</a>
+                                </div>
                             </div>
                         </div>
                     </div>
                 </div>
 
                 <!-- Metric 2: Budget Data Points -->
-                <div class="metric-card reveal">
-                    <div class="metric-header">
-                        <div style="flex: 1;">
-                            <p class="tag">Transparency</p>
-                            <h3 class="metric-title">Budget Data Points</h3>
-                            <div class="metric-number">847K</div>
-                            <p class="metric-change positive">↑ 34% adoption rate</p>
-                            <p class="muted">Individual line items now queryable. Machine-readable APIs available.</p>
-                        </div>
-                        <div class="expand-icon">▼</div>
+                <div id="metric-2" class="metric-card reveal" onclick="expandMetric('2')">
+                    <button class="metric-expand-btn" onclick="event.stopPropagation(); expandMetric('2')">⬇️</button>
+                    <div class="metric-content">
+                        <p class="tag">Granularity</p>
+                        <h3>Budget Data Points</h3>
+                        <div class="metric-number">847K</div>
+                        <p class="metric-change">↑ 34% adoption</p>
+                        <p class="muted">Individual line items queryable. APIs available.</p>
                     </div>
-
                     <div class="metric-expanded">
-                        <div class="metric-tabs">
-                            <div class="metric-tab active">Growth</div>
-                            <div class="metric-tab">Format</div>
-                            <div class="metric-tab">Sources</div>
-                        </div>
-
                         <div class="metric-chart">
-                            <div class="chart-bar" style="height: 20%;"><div class="chart-bar-label">Q1 24</div></div>
-                            <div class="chart-bar" style="height: 35%;"><div class="chart-bar-label">Q2 24</div></div>
-                            <div class="chart-bar" style="height: 52%;"><div class="chart-bar-label">Q3 24</div></div>
-                            <div class="chart-bar" style="height: 75%;"><div class="chart-bar-label">Q4 24</div></div>
-                            <div class="chart-bar" style="height: 100%;"><div class="chart-bar-label">Q1 25</div></div>
+                            <canvas data-chart-config='{"type":"bar","data":{"labels":["2022","2023","2024","2025","2026"],"datasets":[{"label":"Data Points (K)","data":[281,415,602,724,847],"backgroundColor":"rgba(26,26,26,0.1)","borderColor":"#1a1a1a","borderWidth":1}]},"options":{"responsive":true,"maintainAspectRatio":false}}'></canvas>
                         </div>
-
-                        <div class="metric-sources">
-                            <h4>Data Sources</h4>
-                            <div class="source-item">
-                                <div class="source-label">Primary Source</div>
-                                <div class="source-value">Transparency.ie Data API v2.0</div>
-                                <div class="source-link"><a href="#">→ API Documentation</a></div>
+                        <div class="metric-details">
+                            <button class="metric-expand-btn" onclick="event.stopPropagation(); expandMetric('2')">⬆️</button>
+                            <div class="metric-detail-section">
+                                <h4>Overview</h4>
+                                <p>Granular budget line items broken down to department, function, and project level. Each data point represents a single budget allocation entry.</p>
                             </div>
-                            <div class="source-item">
-                                <div class="source-label">Format</div>
-                                <div class="source-value">JSON, CSV, RDF, Open Data Portal</div>
+                            <div class="metric-detail-section">
+                                <h4>Key Insights</h4>
+                                <p>• 281K (2022) → 847K (2026) = 201% growth<br/>• 34% agency adoption rate<br/>• API queries: +340% YoY<br/>• Avg citizen can track €12,286 personal tax spending</p>
                             </div>
-                            <div class="source-item">
-                                <div class="source-label">Validation</div>
-                                <div class="source-value">Audited quarterly by independent data verifiers</div>
+                            <div class="metric-detail-section">
+                                <h4>Data Sources</h4>
+                                <div class="metric-source">
+                                    <div class="metric-source-title">CSO Ireland</div>
+                                    <a href="#" class="metric-source-link">cso.ie ↗</a>
+                                </div>
+                                <div class="metric-source">
+                                    <div class="metric-source-title">API Analytics</div>
+                                    <a href="#" class="metric-source-link">api.transparency.ie ↗</a>
+                                </div>
                             </div>
                         </div>
                     </div>
                 </div>
 
-                <!-- Metric 3: Emissions Tracked -->
-                <div class="metric-card reveal">
-                    <div class="metric-header">
-                        <div style="flex: 1;">
-                            <p class="tag">Climate</p>
-                            <h3 class="metric-title">Emissions Tracked</h3>
-                            <div class="metric-number">32 Metrics</div>
-                            <p class="metric-change negative">↓ 4.2% annual reduction</p>
-                            <p class="muted">Public sector on track for 2030 carbon neutrality target.</p>
-                        </div>
-                        <div class="expand-icon">▼</div>
+                <!-- Metric 3: Emissions -->
+                <div id="metric-3" class="metric-card reveal" onclick="expandMetric('3')">
+                    <button class="metric-expand-btn" onclick="event.stopPropagation(); expandMetric('3')">⬇️</button>
+                    <div class="metric-content">
+                        <p class="tag">Climate</p>
+                        <h3>Emissions Tracked</h3>
+                        <div class="metric-number">32</div>
+                        <p class="metric-change">↓ 4.2% annual</p>
+                        <p class="muted">On track for 2030 carbon neutrality.</p>
                     </div>
-
                     <div class="metric-expanded">
-                        <div class="metric-tabs">
-                            <div class="metric-tab active">Projections</div>
-                            <div class="metric-tab">By Sector</div>
-                            <div class="metric-tab">Sources</div>
-                        </div>
-
                         <div class="metric-chart">
-                            <div class="chart-bar" style="height: 100%;"><div class="chart-bar-label">2020</div></div>
-                            <div class="chart-bar" style="height: 93%;"><div class="chart-bar-label">2021</div></div>
-                            <div class="chart-bar" style="height: 88%;"><div class="chart-bar-label">2022</div></div>
-                            <div class="chart-bar" style="height: 82%;"><div class="chart-bar-label">2023</div></div>
-                            <div class="chart-bar" style="height: 76%;"><div class="chart-bar-label">2024</div></div>
-                            <div class="chart-bar" style="height: 68%;"><div class="chart-bar-label">2025</div></div>
+                            <canvas data-chart-config='{"type":"line","data":{"labels":["2020","2021","2022","2023","2024","2025","2026"],"datasets":[{"label":"Emissions (MtCO₂e)","data":[120,118,114,109,104,99.6,95.3],"borderColor":"#1a1a1a","backgroundColor":"rgba(26,26,26,0.05)","borderWidth":2,"fill":true,"tension":0.4}]},"options":{"responsive":true,"maintainAspectRatio":false}}'></canvas>
                         </div>
-
-                        <div class="metric-sources">
-                            <h4>Data Sources</h4>
-                            <div class="source-item">
-                                <div class="source-label">Primary Source</div>
-                                <div class="source-value">EPA Ireland Emissions Reporting</div>
-                                <div class="source-link"><a href="#">→ Visit EPA</a></div>
+                        <div class="metric-details">
+                            <button class="metric-expand-btn" onclick="event.stopPropagation(); expandMetric('3')">⬆️</button>
+                            <div class="metric-detail-section">
+                                <h4>Overview</h4>
+                                <p>32 distinct climate metrics tracked across public sector: energy use, transport, waste, buildings, procurement, and supply chains.</p>
                             </div>
-                            <div class="source-item">
-                                <div class="source-label">Coverage</div>
-                                <div class="source-value">32 tracked metrics across public sector, energy, transport, buildings</div>
+                            <div class="metric-detail-section">
+                                <h4>Key Insights</h4>
+                                <p>• 4.2% annual reduction = 51% by 2030<br/>• Renewable energy: 52%<br/>• Transport emissions: ↓18%<br/>• Building efficiency: +23%</p>
                             </div>
-                            <div class="source-item">
-                                <div class="source-label">Verification</div>
-                                <div class="source-value">Annual third-party audit by KPMG Ireland</div>
+                            <div class="metric-detail-section">
+                                <h4>Data Sources</h4>
+                                <div class="metric-source">
+                                    <div class="metric-source-title">EPA Ireland</div>
+                                    <a href="#" class="metric-source-link">epa.ie ↗</a>
+                                </div>
+                                <div class="metric-source">
+                                    <div class="metric-source-title">SEAI Energy</div>
+                                    <a href="#" class="metric-source-link">seai.ie ↗</a>
+                                </div>
                             </div>
                         </div>
                     </div>
                 </div>
 
-                <!-- Metric 4: Renewable Energy Mix -->
-                <div class="metric-card reveal">
-                    <div class="metric-header">
-                        <div style="flex: 1;">
-                            <p class="tag">Energy</p>
-                            <h3 class="metric-title">Renewable Energy Mix</h3>
-                            <div class="metric-number">52%</div>
-                            <p class="metric-change positive">↑ 12% from 2020</p>
-                            <p class="muted">Wind, solar, hydro, and biomass now dominant in grid. Storage pending.</p>
-                        </div>
-                        <div class="expand-icon">▼</div>
+                <!-- Metric 4: Renewable Mix -->
+                <div id="metric-4" class="metric-card reveal" onclick="expandMetric('4')">
+                    <button class="metric-expand-btn" onclick="event.stopPropagation(); expandMetric('4')">⬇️</button>
+                    <div class="metric-content">
+                        <p class="tag">Energy</p>
+                        <h3>Renewable Mix</h3>
+                        <div class="metric-number">52%</div>
+                        <p class="metric-change">↑ 12% since 2020</p>
+                        <p class="muted">Wind, solar, hydro dominant.</p>
                     </div>
-
                     <div class="metric-expanded">
-                        <div class="metric-tabs">
-                            <div class="metric-tab active">Composition</div>
-                            <div class="metric-tab">Regional</div>
-                            <div class="metric-tab">Sources</div>
-                        </div>
-
                         <div class="metric-chart">
-                            <div class="chart-bar" style="height: 25%;"><div class="chart-bar-label">Wind</div></div>
-                            <div class="chart-bar" style="height: 15%;"><div class="chart-bar-label">Solar</div></div>
-                            <div class="chart-bar" style="height: 8%;"><div class="chart-bar-label">Hydro</div></div>
-                            <div class="chart-bar" style="height: 4%;"><div class="chart-bar-label">Biomass</div></div>
+                            <canvas data-chart-config='{"type":"doughnut","data":{"labels":["Wind (28%)","Solar (15%)","Hydro (4%)","Biomass (5%)","Gas (35%)","Coal (10%)","Other (3%)"],"datasets":[{"data":[28,15,4,5,35,10,3],"backgroundColor":["#c0c0c0","#d4d4d4","#b0b0b0","#a0a0a0","#888888","#606060","#999999"]}]},"options":{"responsive":true,"maintainAspectRatio":false}}'></canvas>
                         </div>
-
-                        <div class="metric-sources">
-                            <h4>Data Sources</h4>
-                            <div class="source-item">
-                                <div class="source-label">Primary Source</div>
-                                <div class="source-value">EirGrid Real-Time Grid Data</div>
-                                <div class="source-link"><a href="#">→ Visit EirGrid</a></div>
+                        <div class="metric-details">
+                            <button class="metric-expand-btn" onclick="event.stopPropagation(); expandMetric('4')">⬆️</button>
+                            <div class="metric-detail-section">
+                                <h4>Overview</h4>
+                                <p>Electricity generation from renewable sources including wind, solar, hydro, and biomass as primary clean energy.</p>
                             </div>
-                            <div class="source-item">
-                                <div class="source-label">Updated</div>
-                                <div class="source-value">Every 15 minutes (live)</div>
+                            <div class="metric-detail-section">
+                                <h4>Key Insights</h4>
+                                <p>• 40% (2020) → 52% (2026)<br/>• Wind: 28%, fastest growing<br/>• Solar capacity doubled in 3 yrs<br/>• Target: 80% by 2030</p>
                             </div>
-                            <div class="source-item">
-                                <div class="source-label">Target</div>
-                                <div class="source-value">80% renewables by 2030 (on track)</div>
+                            <div class="metric-detail-section">
+                                <h4>Data Sources</h4>
+                                <div class="metric-source">
+                                    <div class="metric-source-title">EirGrid</div>
+                                    <a href="#" class="metric-source-link">eirgrid.ie ↗</a>
+                                </div>
+                                <div class="metric-source">
+                                    <div class="metric-source-title">IEA</div>
+                                    <a href="#" class="metric-source-link">iea.org ↗</a>
+                                </div>
                             </div>
                         </div>
                     </div>
                 </div>
 
                 <!-- Metric 5: Active Campaigns -->
-                <div class="metric-card reveal">
-                    <div class="metric-header">
-                        <div style="flex: 1;">
-                            <p class="tag">Engagement</p>
-                            <h3 class="metric-title">Active Campaigns</h3>
-                            <div class="metric-number">14</div>
-                            <p class="metric-change positive">18K supporters</p>
-                            <p class="muted">Citizen-led advocacy from climate to transport to education equity.</p>
-                        </div>
-                        <div class="expand-icon">▼</div>
+                <div id="metric-5" class="metric-card reveal" onclick="expandMetric('5')">
+                    <button class="metric-expand-btn" onclick="event.stopPropagation(); expandMetric('5')">⬇️</button>
+                    <div class="metric-content">
+                        <p class="tag">Engagement</p>
+                        <h3>Active Campaigns</h3>
+                        <div class="metric-number">14</div>
+                        <p class="metric-change">18K supporters</p>
+                        <p class="muted">Citizen-led advocacy.</p>
                     </div>
-
                     <div class="metric-expanded">
-                        <div class="metric-tabs">
-                            <div class="metric-tab active">Timeline</div>
-                            <div class="metric-tab">Topics</div>
-                            <div class="metric-tab">Sources</div>
-                        </div>
-
                         <div class="metric-chart">
-                            <div class="chart-bar" style="height: 35%;"><div class="chart-bar-label">Climate</div></div>
-                            <div class="chart-bar" style="height: 25%;"><div class="chart-bar-label">Transport</div></div>
-                            <div class="chart-bar" style="height: 20%;"><div class="chart-bar-label">Budget</div></div>
-                            <div class="chart-bar" style="height: 15%;"><div class="chart-bar-label">Housing</div></div>
-                            <div class="chart-bar" style="height: 10%;"><div class="chart-bar-label">Other</div></div>
+                            <canvas data-chart-config='{"type":"bar","data":{"labels":["Climate","Transport","Energy","Housing","Education","Water","Health","Other"],"datasets":[{"label":"Campaigns","data":[3,2,2,1,1,1,2,2],"backgroundColor":"rgba(26,26,26,0.1)","borderColor":"#1a1a1a","borderWidth":1}]},"options":{"responsive":true,"maintainAspectRatio":false}}'></canvas>
                         </div>
-
-                        <div class="metric-sources">
-                            <h4>Data Sources</h4>
-                            <div class="source-item">
-                                <div class="source-label">Primary Source</div>
-                                <div class="source-value">Transparency.ie Campaign Database</div>
-                                <div class="source-link"><a href="/campaigns">→ Browse campaigns</a></div>
+                        <div class="metric-details">
+                            <button class="metric-expand-btn" onclick="event.stopPropagation(); expandMetric('5')">⬆️</button>
+                            <div class="metric-detail-section">
+                                <h4>Overview</h4>
+                                <p>Active civic campaigns focused on policy change and accountability action across all sectors.</p>
                             </div>
-                            <div class="source-item">
-                                <div class="source-label">Participants</div>
-                                <div class="source-value">18,234 active civic participants</div>
+                            <div class="metric-detail-section">
+                                <h4>Key Insights</h4>
+                                <p>• 14 active campaigns, 8 sectors<br/>• 18K active supporters<br/>• Avg duration: 18 months<br/>• Success rate: 42% policy change</p>
                             </div>
-                            <div class="source-item">
-                                <div class="source-label">Success Rate</div>
-                                <div class="source-value">8 campaigns won policy commitments in 2025</div>
+                            <div class="metric-detail-section">
+                                <h4>Data Sources</h4>
+                                <div class="metric-source">
+                                    <div class="metric-source-title">Campaigns DB</div>
+                                    <a href="#" class="metric-source-link">transparency.ie/campaigns ↗</a>
+                                </div>
+                                <div class="metric-source">
+                                    <div class="metric-source-title">Analytics</div>
+                                    <a href="#" class="metric-source-link">analytics.transparency.ie ↗</a>
+                                </div>
                             </div>
                         </div>
                     </div>
                 </div>
 
-                <!-- Metric 6: Community Members -->
-                <div class="metric-card reveal">
-                    <div class="metric-header">
-                        <div style="flex: 1;">
-                            <p class="tag">Growth</p>
-                            <h3 class="metric-title">Community Members</h3>
-                            <div class="metric-number">67K+</div>
-                            <p class="metric-change positive">↑ 47% YoY growth</p>
-                            <p class="muted">Active users engaging with budgets, events, and policy discussions monthly.</p>
-                        </div>
-                        <div class="expand-icon">▼</div>
+                <!-- Metric 6: Community -->
+                <div id="metric-6" class="metric-card reveal" onclick="expandMetric('6')">
+                    <button class="metric-expand-btn" onclick="event.stopPropagation(); expandMetric('6')">⬇️</button>
+                    <div class="metric-content">
+                        <p class="tag">Community</p>
+                        <h3>Members</h3>
+                        <div class="metric-number">67K+</div>
+                        <p class="metric-change">↑ 47% YoY</p>
+                        <p class="muted">Active engaged users.</p>
                     </div>
-
                     <div class="metric-expanded">
-                        <div class="metric-tabs">
-                            <div class="metric-tab active">Growth</div>
-                            <div class="metric-tab">Engagement</div>
-                            <div class="metric-tab">Sources</div>
-                        </div>
-
                         <div class="metric-chart">
-                            <div class="chart-bar" style="height: 20%;"><div class="chart-bar-label">Q1 24</div></div>
-                            <div class="chart-bar" style="height: 32%;"><div class="chart-bar-label">Q2 24</div></div>
-                            <div class="chart-bar" style="height: 48%;"><div class="chart-bar-label">Q3 24</div></div>
-                            <div class="chart-bar" style="height: 68%;"><div class="chart-bar-label">Q4 24</div></div>
-                            <div class="chart-bar" style="height: 100%;"><div class="chart-bar-label">Q1 25</div></div>
+                            <canvas data-chart-config='{"type":"line","data":{"labels":["Q1 2024","Q2 2024","Q3 2024","Q4 2024","Q1 2025","Q2 2025","Q3 2025","Q1 2026"],"datasets":[{"label":"Members","data":[28000,36000,45000,55000,62000,67000,71000,75000],"borderColor":"#1a1a1a","backgroundColor":"rgba(26,26,26,0.05)","borderWidth":2,"fill":true,"tension":0.4}]},"options":{"responsive":true,"maintainAspectRatio":false}}'></canvas>
                         </div>
-
-                        <div class="metric-sources">
-                            <h4>Data Sources</h4>
-                            <div class="source-item">
-                                <div class="source-label">Primary Source</div>
-                                <div class="source-value">Transparency.ie User Analytics</div>
+                        <div class="metric-details">
+                            <button class="metric-expand-btn" onclick="event.stopPropagation(); expandMetric('6')">⬆️</button>
+                            <div class="metric-detail-section">
+                                <h4>Overview</h4>
+                                <p>Total registered users actively engaged with platform data, campaigns, events, and policy discussions in past 30 days.</p>
                             </div>
-                            <div class="source-item">
-                                <div class="source-label">Activity</div>
-                                <div class="source-value">Monthly active users: 23,847 (35% of registered users)</div>
+                            <div class="metric-detail-section">
+                                <h4>Key Insights</h4>
+                                <p>• 28K (Q1 2024) → 67K (Q1 2026)<br/>• Monthly active: 48K<br/>• Engagement: 3.2x/week per user<br/>• Retention: 68%</p>
                             </div>
-                            <div class="source-item">
-                                <div class="source-label">Geographic</div>
-                                <div class="source-value">Represented across all 32 Irish counties</div>
+                            <div class="metric-detail-section">
+                                <h4>Data Sources</h4>
+                                <div class="metric-source">
+                                    <div class="metric-source-title">User Analytics</div>
+                                    <a href="#" class="metric-source-link">analytics.transparency.ie ↗</a>
+                                </div>
+                                <div class="metric-source">
+                                    <div class="metric-source-title">Platform Metrics</div>
+                                    <a href="#" class="metric-source-link">transparency.ie/metrics ↗</a>
+                                </div>
                             </div>
                         </div>
                     </div>
                 </div>
 
-                <!-- Metric 7: Energy Storage Pilots -->
-                <div class="metric-card reveal">
-                    <div class="metric-header">
-                        <div style="flex: 1;">
-                            <p class="tag">Technology</p>
-                            <h3 class="metric-title">Energy Storage Pilots</h3>
-                            <div class="metric-number">8</div>
-                            <p class="metric-change positive">€34M invested</p>
-                            <p class="muted">Battery systems now operational in Limerick, Cork, and Waterford.</p>
-                        </div>
-                        <div class="expand-icon">▼</div>
+                <!-- Metric 7: Storage Pilots -->
+                <div id="metric-7" class="metric-card reveal" onclick="expandMetric('7')">
+                    <button class="metric-expand-btn" onclick="event.stopPropagation(); expandMetric('7')">⬇️</button>
+                    <div class="metric-content">
+                        <p class="tag">Innovation</p>
+                        <h3>Storage Pilots</h3>
+                        <div class="metric-number">8</div>
+                        <p class="metric-change">€34M invested</p>
+                        <p class="muted">Operational systems.</p>
                     </div>
-
                     <div class="metric-expanded">
-                        <div class="metric-tabs">
-                            <div class="metric-tab active">Projects</div>
-                            <div class="metric-tab">Investment</div>
-                            <div class="metric-tab">Sources</div>
-                        </div>
-
                         <div class="metric-chart">
-                            <div class="chart-bar" style="height: 30%;"><div class="chart-bar-label">Li-Ion</div></div>
-                            <div class="chart-bar" style="height: 25%;"><div class="chart-bar-label">Flow</div></div>
-                            <div class="chart-bar" style="height: 20%;"><div class="chart-bar-label">Gravity</div></div>
-                            <div class="chart-bar" style="height: 15%;"><div class="chart-bar-label">Thermal</div></div>
-                            <div class="chart-bar" style="height: 10%;"><div class="chart-bar-label">Other</div></div>
+                            <canvas data-chart-config='{"type":"bar","data":{"labels":["Limerick","Cork","Waterford","Dublin","Galway","Sligo"],"datasets":[{"label":"Investment (€M)","data":[8,6.5,4.2,3.8,3.5,2.4],"backgroundColor":"rgba(26,26,26,0.1)","borderColor":"#1a1a1a","borderWidth":1}]},"options":{"responsive":true,"maintainAspectRatio":false}}'></canvas>
                         </div>
-
-                        <div class="metric-sources">
-                            <h4>Data Sources</h4>
-                            <div class="source-item">
-                                <div class="source-label">Primary Source</div>
-                                <div class="source-value">Department of Energy Ireland</div>
-                                <div class="source-link"><a href="#">→ Visit DOE</a></div>
+                        <div class="metric-details">
+                            <button class="metric-expand-btn" onclick="event.stopPropagation(); expandMetric('7')">⬆️</button>
+                            <div class="metric-detail-section">
+                                <h4>Overview</h4>
+                                <p>Active energy storage pilot projects with total public sector investment deployed across Ireland.</p>
                             </div>
-                            <div class="source-item">
-                                <div class="source-label">Scale</div>
-                                <div class="source-value">40 MWh total capacity deployed nationally</div>
+                            <div class="metric-detail-section">
+                                <h4>Key Insights</h4>
+                                <p>• €34M across 8 sites<br/>• 150 MWh capacity<br/>• Limerick hub leads: 8 MW<br/>• 92% uptime, 87% efficiency</p>
                             </div>
-                            <div class="source-item">
-                                <div class="source-label">Timeline</div>
-                                <div class="source-value">Additional 120 MWh planned for 2026-2027</div>
+                            <div class="metric-detail-section">
+                                <h4>Data Sources</h4>
+                                <div class="metric-source">
+                                    <div class="metric-source-title">SEAI Pilots</div>
+                                    <a href="#" class="metric-source-link">seai.ie ↗</a>
+                                </div>
+                                <div class="metric-source">
+                                    <div class="metric-source-title">Projects</div>
+                                    <a href="#" class="metric-source-link">transparency.ie/tech ↗</a>
+                                </div>
                             </div>
                         </div>
                     </div>
                 </div>
 
-                <!-- Metric 8: Grid Innovation Projects -->
-                <div class="metric-card reveal">
-                    <div class="metric-header">
-                        <div style="flex: 1;">
-                            <p class="tag">Technology</p>
-                            <h3 class="metric-title">Grid Innovation Projects</h3>
-                            <div class="metric-number">23</div>
-                            <p class="metric-change positive">↑ 6 launched this year</p>
-                            <p class="muted">Smart metering, demand response, and microgrid experiments ongoing.</p>
-                        </div>
-                        <div class="expand-icon">▼</div>
+                <!-- Metric 8: Grid Innovation -->
+                <div id="metric-8" class="metric-card reveal" onclick="expandMetric('8')">
+                    <button class="metric-expand-btn" onclick="event.stopPropagation(); expandMetric('8')">⬇️</button>
+                    <div class="metric-content">
+                        <p class="tag">Technology</p>
+                        <h3>Grid Projects</h3>
+                        <div class="metric-number">23</div>
+                        <p class="metric-change">↑ 6 this year</p>
+                        <p class="muted">Smart & microgrids.</p>
                     </div>
-
                     <div class="metric-expanded">
-                        <div class="metric-tabs">
-                            <div class="metric-tab active">Projects</div>
-                            <div class="metric-tab">Maturity</div>
-                            <div class="metric-tab">Sources</div>
-                        </div>
-
                         <div class="metric-chart">
-                            <div class="chart-bar" style="height: 40%;"><div class="chart-bar-label">Planning</div></div>
-                            <div class="chart-bar" style="height: 35%;"><div class="chart-bar-label">Testing</div></div>
-                            <div class="chart-bar" style="height: 20%;"><div class="chart-bar-label">Deployed</div></div>
-                            <div class="chart-bar" style="height: 5%;"><div class="chart-bar-label">Scaling</div></div>
+                            <canvas data-chart-config='{"type":"line","data":{"labels":["2022","2023","2024","2025","2026"],"datasets":[{"label":"Projects","data":[6,11,17,20,23],"borderColor":"#1a1a1a","backgroundColor":"rgba(26,26,26,0.05)","borderWidth":2,"fill":true,"tension":0.4}]},"options":{"responsive":true,"maintainAspectRatio":false}}'></canvas>
                         </div>
-
-                        <div class="metric-sources">
-                            <h4>Data Sources</h4>
-                            <div class="source-item">
-                                <div class="source-label">Primary Source</div>
-                                <div class="source-value">EirGrid Innovation Programme</div>
-                                <div class="source-link"><a href="#">→ Visit EirGrid</a></div>
+                        <div class="metric-details">
+                            <button class="metric-expand-btn" onclick="event.stopPropagation(); expandMetric('8')">⬆️</button>
+                            <div class="metric-detail-section">
+                                <h4>Overview</h4>
+                                <p>Active grid innovation research and pilot projects including smart meters, demand response, and microgrids.</p>
                             </div>
-                            <div class="source-item">
-                                <div class="source-label">Focus Areas</div>
-                                <div class="source-value">Smart meters (31% rollout), demand response, microgrids</div>
+                            <div class="metric-detail-section">
+                                <h4>Key Insights</h4>
+                                <p>• 6 (2022) → 23 (2026)<br/>• €82M investment<br/>• 600K smart meters<br/>• 78% success rate</p>
                             </div>
-                            <div class="source-item">
-                                <div class="source-label">Budget</div>
-                                <div class="source-value">€18M allocated through 2027</div>
+                            <div class="metric-detail-section">
+                                <h4>Data Sources</h4>
+                                <div class="metric-source">
+                                    <div class="metric-source-title">SEAI</div>
+                                    <a href="#" class="metric-source-link">seai.ie ↗</a>
+                                </div>
+                                <div class="metric-source">
+                                    <div class="metric-source-title">Registry</div>
+                                    <a href="#" class="metric-source-link">transparency.ie/grid ↗</a>
+                                </div>
                             </div>
                         </div>
                     </div>
                 </div>
 
-                <!-- Metric 9: Hackathons & Events -->
-                <div class="metric-card reveal">
-                    <div class="metric-header">
-                        <div style="flex: 1;">
-                            <p class="tag">Outreach</p>
-                            <h3 class="metric-title">Hackathons & Events</h3>
-                            <div class="metric-number">12</div>
-                            <p class="metric-change positive">2.4K participants</p>
-                            <p class="muted">Nationwide events fostering civic data literacy and innovation.</p>
-                        </div>
-                        <div class="expand-icon">▼</div>
+                <!-- Metric 9: Events -->
+                <div id="metric-9" class="metric-card reveal" onclick="expandMetric('9')">
+                    <button class="metric-expand-btn" onclick="event.stopPropagation(); expandMetric('9')">⬇️</button>
+                    <div class="metric-content">
+                        <p class="tag">Outreach</p>
+                        <h3>Events</h3>
+                        <div class="metric-number">12</div>
+                        <p class="metric-change">2.4K people</p>
+                        <p class="muted">Data literacy programs.</p>
                     </div>
-
                     <div class="metric-expanded">
-                        <div class="metric-tabs">
-                            <div class="metric-tab active">Timeline</div>
-                            <div class="metric-tab">Types</div>
-                            <div class="metric-tab">Sources</div>
-                        </div>
-
                         <div class="metric-chart">
-                            <div class="chart-bar" style="height: 35%;"><div class="chart-bar-label">2024</div></div>
-                            <div class="chart-bar" style="height: 50%;"><div class="chart-bar-label">2025</div></div>
-                            <div class="chart-bar" style="height: 30%;"><div class="chart-bar-label">2026</div></div>
+                            <canvas data-chart-config='{"type":"bar","data":{"labels":["Hackathons","Webinars","Workshops","Conferences","Town Halls","Meetups"],"datasets":[{"label":"Events","data":[3,2,3,1,2,1],"backgroundColor":"rgba(26,26,26,0.1)","borderColor":"#1a1a1a","borderWidth":1}]},"options":{"responsive":true,"maintainAspectRatio":false}}'></canvas>
                         </div>
-
-                        <div class="metric-sources">
-                            <h4>Data Sources</h4>
-                            <div class="source-item">
-                                <div class="source-label">Primary Source</div>
-                                <div class="source-value">Transparency.ie Event Registry</div>
-                                <div class="source-link"><a href="/events">→ View upcoming events</a></div>
+                        <div class="metric-details">
+                            <button class="metric-expand-btn" onclick="event.stopPropagation(); expandMetric('9')">⬆️</button>
+                            <div class="metric-detail-section">
+                                <h4>Overview</h4>
+                                <p>Public engagement events including hackathons, workshops, webinars, and conferences fostering civic data literacy.</p>
                             </div>
-                            <div class="source-item">
-                                <div class="source-label">Participant Feedback</div>
-                                <div class="source-value">92% satisfaction rating across all events</div>
+                            <div class="metric-detail-section">
+                                <h4>Key Insights</h4>
+                                <p>• 12 events, 2.4K participants<br/>• 800 developers (hackathons)<br/>• 94% workshop completion<br/>• 92% satisfaction</p>
                             </div>
-                            <div class="source-item">
-                                <div class="source-label">Outcomes</div>
-                                <div class="source-value">18 startups, 8 new tools, 6 policy wins</div>
+                            <div class="metric-detail-section">
+                                <h4>Data Sources</h4>
+                                <div class="metric-source">
+                                    <div class="metric-source-title">Events</div>
+                                    <a href="#" class="metric-source-link">transparency.ie/events ↗</a>
+                                </div>
+                                <div class="metric-source">
+                                    <div class="metric-source-title">Engagement</div>
+                                    <a href="#" class="metric-source-link">analytics.transparency.ie ↗</a>
+                                </div>
                             </div>
                         </div>
                     </div>
                 </div>
-            </div>
+            </section>
         </div>
     </div>
 </body>

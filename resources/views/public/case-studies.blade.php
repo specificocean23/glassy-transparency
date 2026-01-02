@@ -54,6 +54,50 @@
             flex-direction: column;
             gap: 48px;
         }
+        header.top {
+            display: flex;
+            flex-wrap: wrap;
+            align-items: center;
+            justify-content: space-between;
+            gap: 24px;
+            padding-bottom: 20px;
+        }
+        .brand { display: flex; align-items: center; gap: 16px; }
+        .brand-badge {
+            width: 48px;
+            height: 48px;
+            border-radius: 50%;
+            background: var(--card);
+            border: 2px solid var(--border);
+        }
+        .brand small { color: var(--subtle); font-size: 12px; text-transform: uppercase; letter-spacing: 0.1em; }
+        .brand-title { font-weight: 800; font-size: 22px; letter-spacing: -0.5px; }
+        nav.links { display: flex; flex-wrap: wrap; align-items: center; gap: 16px; }
+        .chip {
+            padding: 10px 16px;
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            font-size: 13px;
+            font-weight: 500;
+            transition: all 160ms ease;
+            background: transparent;
+            cursor: pointer;
+        }
+        .chip:hover { border-color: var(--ink); background: var(--card); }
+        .btn {
+            padding: 11px 20px;
+            border-radius: 8px;
+            border: 1.5px solid var(--ink);
+            background: var(--ink);
+            color: var(--bg);
+            font-weight: 700;
+            transition: all 180ms ease;
+            font-size: 13px;
+            cursor: pointer;
+        }
+        .btn:hover { transform: translateY(-1px); box-shadow: 0 8px 20px rgba(0,0,0,0.15); }
+        :root.dark .btn { color: var(--bg); }
+
         .panel {
             background: var(--panel);
             border: 1px solid var(--border);
@@ -116,6 +160,8 @@
             .wrap { padding: 24px 16px 40px; gap: 32px; }
             .panel { padding: 24px; }
             h2 { font-size: 28px; }
+            header.top { gap: 16px; }
+            nav.links { gap: 12px; }
         }
     </style>
     <script>
@@ -150,9 +196,25 @@
             <span class="blob-1"></span>
             <span class="blob-2"></span>
         </div>
-        @include('components.navigation')
 
         <div class="wrap">
+            <header class="top">
+                <div class="brand">
+                    <div class="brand-badge"></div>
+                    <div>
+                        <small>Public Observatory</small>
+                        <div class="brand-title">Transparency.ie</div>
+                    </div>
+                </div>
+                <nav class="links">
+                    <a class="chip" href="/">Home</a>
+                    <a class="chip" href="/technologies">Technologies</a>
+                    <a class="chip" href="/campaigns">Campaigns</a>
+                    <a class="chip" href="/events">Events</a>
+                    <a class="chip" href="/metrics">Metrics</a>
+                    <button type="button" class="chip" onclick="toggleTheme()">☀️/🌙</button>
+                </nav>
+            </header>
 
             <section class="panel reveal">
                 <p class="tag" style="margin-bottom: 12px;">Real-world proof points</p>
@@ -234,8 +296,6 @@
                 </div>
             </section>
         </div>
-
-        @include('components.footer-alt-1')
     </div>
 </body>
 </html>

@@ -4,6 +4,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Api\DashboardController;
 use App\Http\Controllers\Api\TransparencyController;
+use App\Http\Controllers\Api\EnvironmentalDashboardController;
 
 Route::get('/health', function () {
     return response()->json(['status' => 'ok']);
@@ -18,6 +19,13 @@ Route::group(['prefix' => 'v1'], function () {
     Route::get('/dashboard/spending-by-department', [DashboardController::class, 'spendingByDepartment']);
     Route::get('/dashboard/green-energy', [DashboardController::class, 'greenEnergyImpact']);
     Route::get('/dashboard/homelessness', [DashboardController::class, 'homelessnessImpact']);
+
+    // Environmental Dashboard endpoints
+    Route::get('/environmental/stats', [EnvironmentalDashboardController::class, 'getEnvironmentalStats']);
+    Route::get('/environmental/technologies', [EnvironmentalDashboardController::class, 'getTechnologyOverview']);
+    Route::get('/environmental/impact', [EnvironmentalDashboardController::class, 'getImpactSummary']);
+    Route::get('/environmental/climate-projections', [EnvironmentalDashboardController::class, 'getClimateProjections']);
+    Route::get('/environmental/policies', [EnvironmentalDashboardController::class, 'getPolicyOverview']);
 
     // Transparency endpoints
     Route::get('/departments', [TransparencyController::class, 'departments']);
