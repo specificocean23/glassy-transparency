@@ -39,4 +39,11 @@ class PublicController extends Controller
         $metrics = EnvironmentalMetric::where('is_featured', true)->get();
         return view('public.metrics', compact('metrics'));
     }
+
+    public function waterfordSpending()
+    {
+        // This page uses static data shown in the view
+        // In the future, you can fetch from a database or API
+        return view('waterford-spending');
+    }
 }

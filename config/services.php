@@ -35,4 +35,12 @@ return [
         ],
     ],
 
+    'enjoydeise' => [
+        'client_id' => env('ENJOYDEISE_CLIENT_ID'),
+        'client_secret' => env('ENJOYDEISE_CLIENT_SECRET'),
+        'authorization_endpoint' => env('ENJOYDEISE_AUTHORIZATION_ENDPOINT', 'https://enjoydeise.ie/oauth/authorize'),
+        'token_endpoint' => env('ENJOYDEISE_TOKEN_ENDPOINT', 'https://enjoydeise.ie/oauth/token'),
+        'resource_endpoint' => env('ENJOYDEISE_RESOURCE_ENDPOINT', 'https://enjoydeise.ie/api/user'),
+    ],
+
 ];

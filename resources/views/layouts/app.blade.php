@@ -325,27 +325,12 @@
 </head>
 <body>
     <div id="app">
-        <!-- Navigation -->
-        <nav>
-            <div class="nav-inner">
-                <a href="/" class="nav-brand">
-                    <div class="nav-brand-icon">T</div>
-                    <span>Transparency.ie</span>
-                </a>
-                <div class="nav-links">
-                    <a href="/" class="@if(request()->is('/')) active @endif">Home</a>
-                    <a href="/metrics" class="@if(request()->is('metrics*')) active @endif">Metrics</a>
-                    <a href="/technologies" class="@if(request()->is('technologies*')) active @endif">Technologies</a>
-                    <a href="/events" class="@if(request()->is('events*')) active @endif">Events</a>
-                    <a href="/campaigns" class="@if(request()->is('campaigns*')) active @endif">Campaigns</a>
-                    <a href="/case-studies" class="@if(request()->is('case-studies*')) active @endif">Studies</a>
-                </div>
-                <div class="nav-actions">
-                    <a href="/admin" class="btn btn-primary">Dashboard</a>
-                    <button class="theme-toggle" onclick="window.toggleTheme();">🌙</button>
-                </div>
-            </div>
-        </nav>
+        <!-- Navigation - Use green nav only on Waterford pages -->
+        @if(request()->is('waterford*'))
+            @include('components.nav-waterford-professional')
+        @else
+            @include('components.nav-professional')
+        @endif
 
         <!-- Main Content -->
         <main>

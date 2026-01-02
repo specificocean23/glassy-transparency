@@ -3,9 +3,10 @@
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>{{ config('app.name', 'Transparency.ie') }}</title>
+    <meta name="csrf-token" content="{{ csrf_token() }}">
+    <title>{{ config('app.name', 'Transparency.ie') }} - Ireland's Public Ledger</title>
     <link rel="preconnect" href="https://fonts.bunny.net">
-    <link href="https://fonts.bunny.net/css?family=instrument-sans:400,500,600,700" rel="stylesheet" />
+    <link href="https://fonts.bunny.net/css?family=figtree:400,600&display=swap" rel="stylesheet" />
     @if (file_exists(public_path('build/manifest.json')) || file_exists(public_path('hot')))
         @vite(['resources/css/app.css', 'resources/js/app.js'])
     @endif
@@ -189,133 +190,172 @@
             });
         })();
     </script>
+    </style>
 </head>
 <body>
-    <div class="page">
-        <div class="backdrop">
-            <span class="blob-1"></span>
-            <span class="blob-2"></span>
-        </div>
+    @include('components.nav-professional')
 
-        <div class="wrap">
-            <header class="top">
-                <div class="brand">
-                    <div class="brand-badge"></div>
-                    <div>
-                        <small>Public Observatory</small>
-                        <div class="brand-title">Transparency.ie</div>
-                    </div>
-                </div>
-                <nav class="links">
-                    <a class="chip" href="#pillars">Pillars</a>
-                    <a class="chip" href="#routes">Navigate</a>
-                    <a class="chip" href="/case-studies">Case Studies</a>
-                    <a class="chip" href="/campaigns">Campaigns</a>
-                    <a class="chip" href="/events">Events</a>
-                    <button type="button" class="chip" onclick="toggleTheme()">☀️/🌙</button>
-                    @if (Route::has('login'))
-                        @auth
-                            <a href="{{ url('/dashboard') }}" class="btn">Dashboard</a>
-                        @else
-                            <a href="{{ route('login') }}" class="btn">Log in</a>
-                        @endauth
-                    @endif
-                </nav>
-            </header>
+    <main style="margin-top: 0;">
+        <!-- Hero Section -->
+        <section style="background: linear-gradient(135deg, var(--panel) 0%, var(--card) 100%); padding: 80px 32px; text-align: center; border-bottom: 1px solid var(--border); position: relative; overflow: hidden;">
+            <div style="position: absolute; top: -50%; right: -20%; width: 600px; height: 600px; border-radius: 50%; background: radial-gradient(circle, var(--card) 0%, transparent 70%); opacity: 0.3; z-index: 0;"></div>
+            <div style="position: relative; z-index: 1; max-width: 800px; margin: 0 auto;">
+                <h1 style="font-size: clamp(32px, 8vw, 52px); font-weight: 900; letter-spacing: -1.5px; margin: 0 0 20px 0; line-height: 1.1;">Ireland's Public Ledger</h1>
+                <p style="font-size: 18px; color: var(--subtle); margin: 0; line-height: 1.7;">Real-time transparency into government budgets, council spending, environmental initiatives, and civic engagement across Ireland.</p>
+            </div>
+        </section>
 
-            <section class="panel reveal">
-                <div class="tag" style="margin-bottom: 12px;">Ireland's Public Ledger</div>
-                <h2>Clarity on budgets, climate impact, and civic action.</h2>
-                <p class="muted" style="font-size: 16px; max-width: 680px; line-height: 1.7; margin-bottom: 32px;">We mapped €104B in budgets, 32 environmental metrics, and 14 active civic campaigns so communities can move from curiosity to action in seconds. Power to the people.</p>
-                
-                <div class="grid" style="grid-template-columns: repeat(auto-fit, minmax(140px, 1fr)); gap: 20px; margin-bottom: 32px;">
-                    <div class="stat">
-                        <p class="stat-label">Open Budgets</p>
-                        <div class="stat-number">€104B</div>
-                        <p class="muted">Live across departments</p>
-                    </div>
-                    <div class="stat">
-                        <p class="stat-label">Impact Metrics</p>
-                        <div class="stat-number">32</div>
-                        <p class="muted">Climate & emissions</p>
-                    </div>
-                    <div class="stat">
-                        <p class="stat-label">Active Campaigns</p>
-                        <div class="stat-number">14</div>
-                        <p class="muted">Citizen-led drives</p>
-                    </div>
-                </div>
+        <!-- Statistics Section -->
+        <section style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 20px; padding: 60px 32px; max-width: 1400px; margin: 0 auto; background: var(--bg);">
+            <div style="background: var(--panel); border: 1px solid var(--border); border-radius: 12px; padding: 24px; text-align: center; transition: all 300ms ease; transform: translateY(0); opacity: 0; animation: revealStat 600ms ease forwards; animation-delay: 100ms;">
+                <div style="font-size: 32px; font-weight: 900; margin-bottom: 8px;">€104B</div>
+                <div style="font-size: 13px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.5px; color: var(--subtle);">Public Budget Tracked</div>
+            </div>
+            <div style="background: var(--panel); border: 1px solid var(--border); border-radius: 12px; padding: 24px; text-align: center; transition: all 300ms ease; transform: translateY(0); opacity: 0; animation: revealStat 600ms ease forwards; animation-delay: 200ms;">
+                <div style="font-size: 32px; font-weight: 900; margin-bottom: 8px;">32</div>
+                <div style="font-size: 13px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.5px; color: var(--subtle);">Active Metrics</div>
+            </div>
+            <div style="background: var(--panel); border: 1px solid var(--border); border-radius: 12px; padding: 24px; text-align: center; transition: all 300ms ease; transform: translateY(0); opacity: 0; animation: revealStat 600ms ease forwards; animation-delay: 300ms;">
+                <div style="font-size: 32px; font-weight: 900; margin-bottom: 8px;">14</div>
+                <div style="font-size: 13px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.5px; color: var(--subtle);">Active Campaigns</div>
+            </div>
+            <div style="background: var(--panel); border: 1px solid var(--border); border-radius: 12px; padding: 24px; text-align: center; transition: all 300ms ease; transform: translateY(0); opacity: 0; animation: revealStat 600ms ease forwards; animation-delay: 400ms;">
+                <div style="font-size: 32px; font-weight: 900; margin-bottom: 8px;">100%</div>
+                <div style="font-size: 13px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.5px; color: var(--subtle);">Open Source</div>
+            </div>
+            <style>
+                @keyframes revealStat {
+                    from {
+                        opacity: 0;
+                        transform: translateY(20px);
+                    }
+                    to {
+                        opacity: 1;
+                        transform: translateY(0);
+                    }
+                }
+            </style>
+        </section>
 
-                <div style="display: flex; gap: 12px; flex-wrap: wrap;">
-                    <a href="/technologies" class="btn">Explore Technologies</a>
-                    <a href="#routes" class="chip ghost">See all sections ↓</a>
-                </div>
-            </section>
+        <!-- Pillars Section -->
+        <section style="padding: 80px 32px; background: var(--panel); border-bottom: 1px solid var(--border);">
+            <div style="text-align: center; margin-bottom: 60px; max-width: 600px; margin-left: auto; margin-right: auto;">
+                <h2 style="font-size: 36px; font-weight: 800; letter-spacing: -0.5px; margin: 0 0 12px 0;">Core Pillars</h2>
+                <p style="font-size: 16px; color: var(--subtle); margin: 0; line-height: 1.6;">Four foundational platforms driving transparency and civic engagement across Ireland.</p>
+            </div>
+            <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 32px; max-width: 1400px; margin: 0 auto;">
+                <a href="/metrics" style="background: var(--bg); border: 1px solid var(--border); border-radius: 12px; padding: 32px; text-decoration: none; color: inherit; transition: all 300ms ease; opacity: 0; animation: revealCard 600ms ease forwards; animation-delay: 100ms;" onmouseover="this.style.borderColor='var(--ink)'; this.style.boxShadow='var(--shadow)'; this.style.transform='translateY(-6px)';" onmouseout="this.style.borderColor='var(--border)'; this.style.boxShadow='none'; this.style.transform='translateY(0)';">
+                    <span style="font-size: 48px; margin-bottom: 16px; display: block;">💰</span>
+                    <h3 style="font-size: 20px; font-weight: 700; margin: 0 0 12px 0;">Transparency Engine</h3>
+                    <p style="font-size: 14px; color: var(--subtle); margin: 0; line-height: 1.6;">Real-time budget tracking, spending analysis, and financial transparency for all public institutions.</p>
+                </a>
+                <a href="/metrics" style="background: var(--bg); border: 1px solid var(--border); border-radius: 12px; padding: 32px; text-decoration: none; color: inherit; transition: all 300ms ease; opacity: 0; animation: revealCard 600ms ease forwards; animation-delay: 200ms;" onmouseover="this.style.borderColor='var(--ink)'; this.style.boxShadow='var(--shadow)'; this.style.transform='translateY(-6px)';" onmouseout="this.style.borderColor='var(--border)'; this.style.boxShadow='none'; this.style.transform='translateY(0)';">
+                    <span style="font-size: 48px; margin-bottom: 16px; display: block;">🌍</span>
+                    <h3 style="font-size: 20px; font-weight: 700; margin: 0 0 12px 0;">Environmental Atlas</h3>
+                    <p style="font-size: 14px; color: var(--subtle); margin: 0; line-height: 1.6;">Monitor climate initiatives, sustainability metrics, and environmental policy implementation.</p>
+                </a>
+                <a href="/waterford-spending" style="background: var(--bg); border: 1px solid var(--border); border-radius: 12px; padding: 32px; text-decoration: none; color: inherit; transition: all 300ms ease; opacity: 0; animation: revealCard 600ms ease forwards; animation-delay: 300ms;" onmouseover="this.style.borderColor='var(--ink)'; this.style.boxShadow='var(--shadow)'; this.style.transform='translateY(-6px)';" onmouseout="this.style.borderColor='var(--border)'; this.style.boxShadow='none'; this.style.transform='translateY(0)';">
+                    <span style="font-size: 48px; margin-bottom: 16px; display: block;">🏛️</span>
+                    <h3 style="font-size: 20px; font-weight: 700; margin: 0 0 12px 0;">Waterford Council</h3>
+                    <p style="font-size: 14px; color: var(--subtle); margin: 0; line-height: 1.6;">Detailed spending breakdown, departmental budgets, and council initiatives in Waterford.</p>
+                </a>
+                <a href="/technologies" style="background: var(--bg); border: 1px solid var(--border); border-radius: 12px; padding: 32px; text-decoration: none; color: inherit; transition: all 300ms ease; opacity: 0; animation: revealCard 600ms ease forwards; animation-delay: 400ms;" onmouseover="this.style.borderColor='var(--ink)'; this.style.boxShadow='var(--shadow)'; this.style.transform='translateY(-6px)';" onmouseout="this.style.borderColor='var(--border)'; this.style.boxShadow='none'; this.style.transform='translateY(0)';">
+                    <span style="font-size: 48px; margin-bottom: 16px; display: block;">💡</span>
+                    <h3 style="font-size: 20px; font-weight: 700; margin: 0 0 12px 0;">Innovation Lab</h3>
+                    <p style="font-size: 14px; color: var(--subtle); margin: 0; line-height: 1.6;">Emerging technologies, civic tech experiments, and governance innovation trials.</p>
+                </a>
+            </div>
+            <style>
+                @keyframes revealCard {
+                    from {
+                        opacity: 0;
+                        transform: translateY(24px);
+                    }
+                    to {
+                        opacity: 1;
+                        transform: translateY(0);
+                    }
+                }
+            </style>
+        </section>
 
-            <section id="pillars" class="panel reveal">
-                <div style="margin-bottom: 28px;">
-                    <p class="tag">Four Pillars</p>
-                    <h2>How we organize transparency.</h2>
-                    <p class="muted" style="max-width: 640px;">Each pillar represents a core function—tracking budgets, measuring climate impact, fostering civic engagement, and testing innovation. Together, they create clarity.</p>
-                </div>
-                <div class="grid pillars">
-                    <div class="pill-card reveal">
-                        <div class="pill-icon">💰</div>
-                        <h3>Transparency Engine</h3>
-                        <p class="muted">Budget allocations, department rollups, spending per initiative. Follow every euro across Ireland's public sector.</p>
-                        <a href="/metrics">View metrics →</a>
-                    </div>
-                    <div class="pill-card reveal">
-                        <div class="pill-icon">🌍</div>
-                        <h3>Environmental Atlas</h3>
-                        <p class="muted">Emissions tracking, energy mix analysis, sea-level projections. See climate action budgeted by region and timeline.</p>
-                        <a href="/metrics">View metrics →</a>
-                    </div>
-                    <div class="pill-card reveal">
-                        <div class="pill-icon">⚖️</div>
-                        <h3>Civic Forum</h3>
-                        <p class="muted">Campaigns, consultations, and advocacy. Join or launch civic initiatives and track their progress in real time.</p>
-                        <a href="/campaigns">Browse campaigns →</a>
-                    </div>
-                    <div class="pill-card reveal">
-                        <div class="pill-icon">💡</div>
-                        <h3>Innovation Lab</h3>
-                        <p class="muted">Energy storage trials, grid innovations, student challenges. See where breakthrough tech gets tested first in Ireland.</p>
-                        <a href="/technologies">Explore tech →</a>
-                    </div>
-                </div>
-            </section>
+        <!-- Routes Section -->
+        <section style="padding: 80px 32px; background: var(--bg); border-bottom: 1px solid var(--border);">
+            <div style="text-align: center; margin-bottom: 60px; max-width: 600px; margin-left: auto; margin-right: auto;">
+                <h2 style="font-size: 36px; font-weight: 800; letter-spacing: -0.5px; margin: 0 0 12px 0;">Explore Further</h2>
+                <p style="font-size: 16px; color: var(--subtle); margin: 0; line-height: 1.6;">Dive deeper into specific areas of interest and engagement.</p>
+            </div>
+            <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); gap: 24px; max-width: 1400px; margin: 0 auto;">
+                <a href="/technologies" style="background: var(--panel); border: 1px solid var(--border); border-radius: 10px; padding: 24px; text-decoration: none; color: inherit; transition: all 250ms ease; opacity: 0; animation: revealRoute 600ms ease forwards; animation-delay: 100ms;" onmouseover="this.style.borderColor='var(--ink)'; this.style.backgroundColor='var(--card)'; this.style.boxShadow='var(--shadow)'; this.style.transform='translateY(-4px)';" onmouseout="this.style.borderColor='var(--border)'; this.style.backgroundColor='var(--panel)'; this.style.boxShadow='none'; this.style.transform='translateY(0)';">
+                    <span style="font-size: 32px; margin-bottom: 12px; display: block;">🛠️</span>
+                    <h4 style="font-size: 16px; font-weight: 700; margin: 0 0 8px 0;">Technologies</h4>
+                    <p style="font-size: 13px; color: var(--subtle); margin: 0;">Explore the tech stack powering transparency initiatives.</p>
+                </a>
+                <a href="/events" style="background: var(--panel); border: 1px solid var(--border); border-radius: 10px; padding: 24px; text-decoration: none; color: inherit; transition: all 250ms ease; opacity: 0; animation: revealRoute 600ms ease forwards; animation-delay: 200ms;" onmouseover="this.style.borderColor='var(--ink)'; this.style.backgroundColor='var(--card)'; this.style.boxShadow='var(--shadow)'; this.style.transform='translateY(-4px)';" onmouseout="this.style.borderColor='var(--border)'; this.style.backgroundColor='var(--panel)'; this.style.boxShadow='none'; this.style.transform='translateY(0)';">
+                    <span style="font-size: 32px; margin-bottom: 12px; display: block;">🎯</span>
+                    <h4 style="font-size: 16px; font-weight: 700; margin: 0 0 8px 0;">Events</h4>
+                    <p style="font-size: 13px; color: var(--subtle); margin: 0;">Upcoming webinars, workshops, and community engagement events.</p>
+                </a>
+                <a href="/case-studies" style="background: var(--panel); border: 1px solid var(--border); border-radius: 10px; padding: 24px; text-decoration: none; color: inherit; transition: all 250ms ease; opacity: 0; animation: revealRoute 600ms ease forwards; animation-delay: 300ms;" onmouseover="this.style.borderColor='var(--ink)'; this.style.backgroundColor='var(--card)'; this.style.boxShadow='var(--shadow)'; this.style.transform='translateY(-4px)';" onmouseout="this.style.borderColor='var(--border)'; this.style.backgroundColor='var(--panel)'; this.style.boxShadow='none'; this.style.transform='translateY(0)';">
+                    <span style="font-size: 32px; margin-bottom: 12px; display: block;">📚</span>
+                    <h4 style="font-size: 16px; font-weight: 700; margin: 0 0 8px 0;">Case Studies</h4>
+                    <p style="font-size: 13px; color: var(--subtle); margin: 0;">Real-world examples of transparency in action.</p>
+                </a>
+                <a href="/dashboard" style="background: var(--panel); border: 1px solid var(--border); border-radius: 10px; padding: 24px; text-decoration: none; color: inherit; transition: all 250ms ease; opacity: 0; animation: revealRoute 600ms ease forwards; animation-delay: 400ms;" onmouseover="this.style.borderColor='var(--ink)'; this.style.backgroundColor='var(--card)'; this.style.boxShadow='var(--shadow)'; this.style.transform='translateY(-4px)';" onmouseout="this.style.borderColor='var(--border)'; this.style.backgroundColor='var(--panel)'; this.style.boxShadow='none'; this.style.transform='translateY(0)';">
+                    <span style="font-size: 32px; margin-bottom: 12px; display: block;">📊</span>
+                    <h4 style="font-size: 16px; font-weight: 700; margin: 0 0 8px 0;">Dashboard</h4>
+                    <p style="font-size: 13px; color: var(--subtle); margin: 0;">Personalized analytics and custom data views.</p>
+                </a>
+            </div>
+            <style>
+                @keyframes revealRoute {
+                    from {
+                        opacity: 0;
+                        transform: translateY(20px);
+                    }
+                    to {
+                        opacity: 1;
+                        transform: translateY(0);
+                    }
+                }
+            </style>
+        </section>
 
-            <section id="routes" class="panel reveal">
-                <div style="margin-bottom: 28px;">
-                    <p class="tag">Navigate the Platform</p>
-                    <h2>Find what matters to you.</h2>
-                    <p class="muted" style="max-width: 640px;">Each section unlocks a different view—start with technologies, join live events, study case studies from real communities, or launch a campaign.</p>
+        <!-- CTA Section -->
+        <section style="padding: 80px 32px; text-align: center; background: linear-gradient(135deg, var(--card) 0%, var(--panel) 100%); border-top: 1px solid var(--border);">
+            <div style="max-width: 700px; margin: 0 auto;">
+                <h2 style="font-size: 36px; font-weight: 800; margin: 0 0 16px 0; letter-spacing: -0.5px;">Join the Transparency Movement</h2>
+                <p style="font-size: 16px; color: var(--subtle); margin: 0 0 32px 0; line-height: 1.6;">Be part of Ireland's commitment to open government and civic engagement. Start exploring data, contribute insights, or build with our APIs.</p>
+                <div style="display: flex; gap: 16px; justify-content: center; flex-wrap: wrap;">
+                    <a href="/dashboard" style="padding: 12px 28px; border-radius: 8px; font-weight: 700; font-size: 14px; text-decoration: none; text-transform: uppercase; letter-spacing: 0.5px; display: inline-block; background: var(--ink); color: var(--panel); border: 2px solid var(--ink); transition: all 200ms ease; cursor: pointer;" onmouseover="this.style.transform='translateY(-2px)'; this.style.boxShadow='0 8px 20px rgba(0,0,0,0.15)';" onmouseout="this.style.transform='translateY(0)'; this.style.boxShadow='none';">Access Dashboard</a>
+                    <a href="/waterford-spending" style="padding: 12px 28px; border-radius: 8px; font-weight: 700; font-size: 14px; text-decoration: none; text-transform: uppercase; letter-spacing: 0.5px; display: inline-block; background: transparent; color: var(--ink); border: 2px solid var(--ink); transition: all 200ms ease; cursor: pointer;" onmouseover="this.style.backgroundColor='var(--card)'; this.style.transform='translateY(-2px)';" onmouseout="this.style.backgroundColor='transparent'; this.style.transform='translateY(0)';">Learn More</a>
                 </div>
-                <div class="grid routes">
-                    <a href="/technologies" class="route-card reveal">
-                        <div class="tag">Energy</div>
-                        <h4>Technologies</h4>
-                        <p class="muted">Compare storage solutions, grid tech, and climate innovations being tested in Ireland.</p>
-                    </a>
-                    <a href="/events" class="route-card reveal">
-                        <div class="tag">Live</div>
-                        <h4>Events</h4>
-                        <p class="muted">Upcoming town halls, hackathons, policy briefings, and community action events.</p>
-                    </a>
-                    <a href="/case-studies" class="route-card reveal">
-                        <div class="tag">Learn</div>
-                        <h4>Case Studies</h4>
-                        <p class="muted">Real community projects, lessons learned, and proof points from across Ireland.</p>
-                    </a>
-                    <a href="/campaigns" class="route-card reveal">
-                        <div class="tag">Act</div>
-                        <h4>Campaigns</h4>
-                        <p class="muted">Join civic campaigns, sign petitions, fund projects, or launch your own initiative.</p>
-                    </a>
-                </div>
-            </section>
-        </div>
-    </div>
+            </div>
+        </section>
+    </main>
+
+    <!-- Theme Toggle Script -->
+    <script>
+        const root = document.documentElement;
+        
+        // Check for saved theme preference or default to light
+        const savedTheme = localStorage.getItem('theme-mode');
+        if (savedTheme === 'dark') {
+            root.classList.add('dark');
+        }
+        
+        // Theme toggle function
+        window.toggleTheme = function() {
+            root.classList.toggle('dark');
+            const isDark = root.classList.contains('dark');
+            localStorage.setItem('theme-mode', isDark ? 'dark' : 'light');
+            
+            // Update icon
+            const icon = document.getElementById('theme-toggle-icon');
+            if (icon) {
+                icon.textContent = isDark ? '🌙' : '☀️';
+            }
+        };
+    </script>
 </body>
 </html>

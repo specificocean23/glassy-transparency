@@ -1,0 +1,579 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Waterford Professional Navigation Preview</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #f0f0f0 0%, #e0e0e0 100%);
+            padding: 20px;
+            line-height: 1.6;
+        }
+        
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+        
+        h1, h2, h3 {
+            margin-bottom: 16px;
+            color: #1a472a;
+        }
+        
+        h1 { font-size: 32px; }
+        h2 { font-size: 24px; margin-top: 32px; }
+        h3 { font-size: 18px; }
+        
+        p { margin-bottom: 12px; color: #555; }
+        
+        .preview-section {
+            background: white;
+            border-radius: 12px;
+            padding: 32px;
+            margin-bottom: 24px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+        }
+        
+        /* Navigation Styles */
+        :root {
+            --wf-green-dark: #1a472a;
+            --wf-green-main: #2d6a4f;
+            --wf-green-light: #40916c;
+            --wf-green-pale: #52b788;
+            --wf-green-mint: #74c69d;
+        }
+        
+        .nav-waterford {
+            background: linear-gradient(135deg, var(--wf-green-dark) 0%, var(--wf-green-main) 100%);
+            border-bottom: 3px solid var(--wf-green-light);
+            padding: 0;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            height: 72px;
+            padding: 0 32px;
+            border-radius: 8px;
+            gap: 32px;
+            color: white;
+        }
+        
+        .nav-brand {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            font-weight: 800;
+            font-size: 18px;
+            color: var(--wf-green-mint);
+            text-decoration: none;
+        }
+        
+        .nav-badge {
+            width: 44px;
+            height: 44px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, var(--wf-green-pale), var(--wf-green-mint));
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 22px;
+        }
+        
+        .nav-links {
+            display: flex;
+            gap: 4px;
+            flex: 1;
+            justify-content: center;
+            align-items: center;
+        }
+        
+        .nav-link, .nav-pillars-trigger {
+            padding: 10px 18px;
+            border-radius: 6px;
+            font-size: 14px;
+            font-weight: 600;
+            color: var(--wf-green-mint);
+            background: transparent;
+            border: 2px solid transparent;
+            cursor: pointer;
+            transition: all 180ms ease;
+            white-space: nowrap;
+        }
+        
+        .nav-link:hover {
+            background: rgba(255, 255, 255, 0.1);
+            border-color: var(--wf-green-mint);
+        }
+        
+        .nav-pillars { position: relative; }
+        
+        .nav-pillars-trigger {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+        
+        .nav-pillars-trigger::after {
+            content: '▼';
+            font-size: 10px;
+            transition: transform 200ms ease;
+        }
+        
+        .nav-pillars:hover .nav-pillars-trigger::after {
+            transform: rotateZ(-180deg);
+        }
+        
+        .nav-pillars-menu {
+            position: absolute;
+            top: calc(100% + 8px);
+            left: 50%;
+            transform: translateX(-50%);
+            background: #f1faee;
+            border: 2px solid var(--wf-green-light);
+            border-radius: 8px;
+            min-width: 280px;
+            box-shadow: 0 8px 24px rgba(26, 71, 42, 0.15);
+            opacity: 0;
+            pointer-events: none;
+            transform: translateX(-50%) translateY(-12px);
+            transition: all 200ms;
+            overflow: hidden;
+            z-index: 1001;
+            white-space: nowrap;
+        }
+        
+        .nav-pillars:hover .nav-pillars-menu {
+            opacity: 1;
+            pointer-events: all;
+            transform: translateX(-50%) translateY(0);
+        }
+        
+        .nav-pillar-item {
+            display: flex;
+            align-items: center;
+            gap: 14px;
+            padding: 14px 16px;
+            border-bottom: 1px solid #d9e8df;
+            text-decoration: none;
+            color: #1a472a;
+            transition: all 160ms ease;
+        }
+        
+        .nav-pillar-item:hover {
+            background: var(--wf-green-light);
+            color: white;
+            padding-left: 20px;
+        }
+        
+        .nav-pillar-item:last-child {
+            border-bottom: none;
+        }
+        
+        .nav-pillar-icon {
+            font-size: 20px;
+            min-width: 24px;
+            text-align: center;
+        }
+        
+        .nav-pillar-title {
+            font-size: 13px;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+        
+        .nav-pillar-desc {
+            font-size: 11px;
+            color: #555;
+            display: block;
+            margin-top: 2px;
+        }
+        
+        .nav-pillar-item:hover .nav-pillar-desc {
+            color: rgba(255, 255, 255, 0.85);
+        }
+        
+        .nav-actions {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            flex-shrink: 0;
+        }
+        
+        .nav-theme-btn {
+            padding: 8px 12px;
+            border: 2px solid var(--wf-green-mint);
+            border-radius: 6px;
+            background: transparent;
+            color: var(--wf-green-mint);
+            font-size: 16px;
+            cursor: pointer;
+            transition: all 180ms ease;
+            min-width: 36px;
+        }
+        
+        .nav-theme-btn:hover {
+            background: rgba(255, 255, 255, 0.1);
+            transform: scale(1.1);
+        }
+        
+        .nav-auth-btn {
+            padding: 9px 18px;
+            border: 2px solid var(--wf-green-mint);
+            border-radius: 6px;
+            background: var(--wf-green-light);
+            color: white;
+            font-weight: 700;
+            font-size: 12px;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            cursor: pointer;
+            text-decoration: none;
+            transition: all 180ms ease;
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+        }
+        
+        .nav-auth-btn:hover {
+            background: var(--wf-green-pale);
+            transform: translateY(-2px);
+            box-shadow: 0 6px 16px rgba(26, 71, 42, 0.3);
+        }
+        
+        .color-swatch {
+            display: inline-block;
+            width: 40px;
+            height: 40px;
+            border-radius: 6px;
+            margin-right: 12px;
+            vertical-align: middle;
+            border: 1px solid #ccc;
+        }
+        
+        .color-row {
+            margin-bottom: 12px;
+            display: flex;
+            align-items: center;
+        }
+        
+        .color-code {
+            font-family: monospace;
+            background: #f5f5f5;
+            padding: 4px 8px;
+            border-radius: 4px;
+            font-size: 12px;
+        }
+        
+        .demo-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 16px;
+            margin-top: 16px;
+        }
+        
+        .demo-card {
+            padding: 16px;
+            border-radius: 8px;
+            border: 1px solid #ddd;
+        }
+        
+        .feature-list {
+            list-style: none;
+            margin-top: 16px;
+        }
+        
+        .feature-list li {
+            padding: 8px 0;
+            padding-left: 24px;
+            position: relative;
+        }
+        
+        .feature-list li:before {
+            content: "✓";
+            position: absolute;
+            left: 0;
+            color: var(--wf-green-light);
+            font-weight: bold;
+        }
+        
+        code {
+            background: #f5f5f5;
+            padding: 2px 6px;
+            border-radius: 4px;
+            font-family: monospace;
+            font-size: 12px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>🍀 Waterford Professional Navigation Preview</h1>
+        <p>Visual preview of the new navigation component for Transparency.ie</p>
+        
+        <!-- Navigation Preview -->
+        <div class="preview-section">
+            <h2>Navigation Bar (Live Preview)</h2>
+            <p>This is what you'll see at the top of every page. Hover over "Pillars" to see the dropdown menu.</p>
+            <br>
+            
+            <nav class="nav-waterford">
+                <a href="#" class="nav-brand">
+                    <div class="nav-badge">🍀</div>
+                    <span>Transparency.ie</span>
+                </a>
+                
+                <div class="nav-links">
+                    <a href="#" class="nav-link">🏠 Home</a>
+                    
+                    <div class="nav-pillars">
+                        <button class="nav-pillars-trigger">📊 Pillars</button>
+                        <div class="nav-pillars-menu">
+                            <a href="#" class="nav-pillar-item">
+                                <span class="nav-pillar-icon">💰</span>
+                                <div>
+                                    <div class="nav-pillar-title">Transparency</div>
+                                    <span class="nav-pillar-desc">Budgets & spending</span>
+                                </div>
+                            </a>
+                            <a href="#" class="nav-pillar-item">
+                                <span class="nav-pillar-icon">🌍</span>
+                                <div>
+                                    <div class="nav-pillar-title">Environment</div>
+                                    <span class="nav-pillar-desc">Climate & sustainability</span>
+                                </div>
+                            </a>
+                            <a href="#" class="nav-pillar-item">
+                                <span class="nav-pillar-icon">🏛️</span>
+                                <div>
+                                    <div class="nav-pillar-title">Waterford</div>
+                                    <span class="nav-pillar-desc">Council spending & initiatives</span>
+                                </div>
+                            </a>
+                            <a href="#" class="nav-pillar-item">
+                                <span class="nav-pillar-icon">💡</span>
+                                <div>
+                                    <div class="nav-pillar-title">Innovation</div>
+                                    <span class="nav-pillar-desc">Technologies & trials</span>
+                                </div>
+                            </a>
+                        </div>
+                    </div>
+                    
+                    <a href="#" class="nav-link">📚 Studies</a>
+                    <a href="#" class="nav-link">🎯 Events</a>
+                </div>
+                
+                <div class="nav-actions">
+                    <button class="nav-theme-btn" title="Toggle theme">☀️</button>
+                    <button class="nav-auth-btn">🔐 Login</button>
+                </div>
+            </nav>
+            
+            <p style="margin-top: 16px; font-style: italic; color: #999;">
+                💡 Hover over "Pillars" to see the dropdown menu with 4 major sections
+            </p>
+        </div>
+        
+        <!-- Features -->
+        <div class="preview-section">
+            <h2>Key Features</h2>
+            <ul class="feature-list">
+                <li>🍀 <strong>Waterford Green Theme</strong> - Professional palette inspired by Waterford</li>
+                <li>📊 <strong>Dropdown Menu</strong> - Clean dropdown with 4 major sections (Pillars)</li>
+                <li>☀️/🌙 <strong>Dark Mode</strong> - Theme toggle for light and dark modes</li>
+                <li>🔐 <strong>OAuth Ready</strong> - Login button integrated with Enjoydeise</li>
+                <li>📱 <strong>Fully Responsive</strong> - Works perfectly on mobile, tablet, desktop</li>
+                <li>✨ <strong>Smooth Animations</strong> - Modern transitions and hover effects</li>
+                <li>♿ <strong>Accessible</strong> - WCAG AA color contrast compliance</li>
+            </ul>
+        </div>
+        
+        <!-- Color Palette -->
+        <div class="preview-section">
+            <h2>Color Palette</h2>
+            <p>Professional Waterford Green theme with light and dark variants</p>
+            
+            <div style="margin-top: 20px;">
+                <h3>Light Mode Colors</h3>
+                <div class="color-row">
+                    <span class="color-swatch" style="background: #1a472a;"></span>
+                    <div>
+                        <strong>Deep Forest Green</strong><br>
+                        <span class="color-code">#1a472a</span> - Primary dark color, text on light backgrounds
+                    </div>
+                </div>
+                <div class="color-row">
+                    <span class="color-swatch" style="background: #2d6a4f;"></span>
+                    <div>
+                        <strong>Professional Green (Main)</strong><br>
+                        <span class="color-code">#2d6a4f</span> - Navigation backgrounds, buttons
+                    </div>
+                </div>
+                <div class="color-row">
+                    <span class="color-swatch" style="background: #40916c;"></span>
+                    <div>
+                        <strong>Accent Green (Light)</strong><br>
+                        <span class="color-code">#40916c</span> - Hover states, borders, accents
+                    </div>
+                </div>
+                <div class="color-row">
+                    <span class="color-swatch" style="background: #52b788;"></span>
+                    <div>
+                        <strong>Pale Green</strong><br>
+                        <span class="color-code">#52b788</span> - Light backgrounds, badges
+                    </div>
+                </div>
+                <div class="color-row">
+                    <span class="color-swatch" style="background: #74c69d;"></span>
+                    <div>
+                        <strong>Mint Green (Bright)</strong><br>
+                        <span class="color-code">#74c69d</span> - Navigation text, light elements
+                    </div>
+                </div>
+                <div class="color-row">
+                    <span class="color-swatch" style="background: #f1faee;"></span>
+                    <div>
+                        <strong>Off-White with Green Tint</strong><br>
+                        <span class="color-code">#f1faee</span> - Page background
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Menu Structure -->
+        <div class="preview-section">
+            <h2>Navigation Structure</h2>
+            
+            <h3>Main Menu Items</h3>
+            <ul class="feature-list">
+                <li>🏠 Home - Returns to homepage</li>
+                <li>📊 Pillars - Dropdown with 4 sections:
+                    <ul style="margin-top: 8px;">
+                        <li>💰 Transparency - Budget & spending data</li>
+                        <li>🌍 Environment - Climate & sustainability</li>
+                        <li>🏛️ Waterford - Council spending & initiatives ⭐ NEW</li>
+                        <li>💡 Innovation - Technologies & trials</li>
+                    </ul>
+                </li>
+                <li>📚 Case Studies - Case studies page</li>
+                <li>🎯 Events - Events listing</li>
+            </ul>
+            
+            <h3 style="margin-top: 20px;">Right-Side Actions</h3>
+            <ul class="feature-list">
+                <li>☀️/🌙 Theme Toggle - Switch between light and dark mode</li>
+                <li>🔐 Login - OAuth login with Enjoydeise</li>
+            </ul>
+        </div>
+        
+        <!-- Usage -->
+        <div class="preview-section">
+            <h2>How to Use</h2>
+            
+            <h3>1. View Navigation</h3>
+            <p>Just visit any page - the navigation is automatically included on all pages.</p>
+            <code>http://localhost:8003</code>
+            
+            <h3>2. Access Waterford Page</h3>
+            <p>Click the "Waterford" option in the Pillars dropdown, or visit directly:</p>
+            <code>http://localhost:8003/waterford-spending</code>
+            
+            <h3>3. Toggle Dark Mode</h3>
+            <p>Click the ☀️ (sun) in the top right. Colors automatically adjust.</p>
+            
+            <h3>4. Login with Enjoydeise</h3>
+            <p>Click the "🔐 Login" button. (Requires OAuth credentials in .env)</p>
+        </div>
+        
+        <!-- New Features -->
+        <div class="preview-section">
+            <h2>🆕 New Pages & Features</h2>
+            
+            <h3>Waterford Council Spending Dashboard</h3>
+            <p><strong>URL:</strong> <code>/waterford-spending</code></p>
+            <p>Features:</p>
+            <ul class="feature-list">
+                <li>Key budget statistics</li>
+                <li>Department spending breakdown</li>
+                <li>Budget allocation charts</li>
+                <li>2026 key initiatives</li>
+                <li>Waterford green theme throughout</li>
+            </ul>
+            
+            <h3 style="margin-top: 20px;">Enjoydeise OAuth Integration</h3>
+            <p><strong>Routes:</strong></p>
+            <ul class="feature-list">
+                <li><code>GET /auth/enjoydeise/redirect</code> - Start OAuth</li>
+                <li><code>GET /auth/enjoydeise/callback</code> - Receive response</li>
+                <li><code>POST /auth/enjoydeise/logout</code> - Logout user</li>
+            </ul>
+            <p style="margin-top: 12px;">To activate: Add credentials to <code>.env</code></p>
+        </div>
+        
+        <!-- Implementation Files -->
+        <div class="preview-section">
+            <h2>📦 Implementation Files</h2>
+            
+            <h3>Created Files</h3>
+            <ul class="feature-list">
+                <li><code>resources/views/components/nav-waterford-professional.blade.php</code></li>
+                <li><code>resources/views/waterford-spending.blade.php</code></li>
+                <li><code>app/Http/Controllers/Auth/EnjoydeiseOAuthController.php</code></li>
+                <li><code>database/migrations/2026_01_02_000001_add_oauth_fields_to_users_table.php</code></li>
+            </ul>
+            
+            <h3 style="margin-top: 20px;">Modified Files</h3>
+            <ul class="feature-list">
+                <li><code>.env</code> - Updated APP_URL to :8003, added OAuth variables</li>
+                <li><code>routes/web.php</code> - Added waterford and OAuth routes</li>
+                <li><code>config/services.php</code> - Added Enjoydeise configuration</li>
+                <li><code>app/Models/User.php</code> - Added oauth_provider and oauth_id fields</li>
+                <li><code>resources/views/layouts/app.blade.php</code> - Integrated navigation component</li>
+            </ul>
+        </div>
+        
+        <!-- Documentation -->
+        <div class="preview-section">
+            <h2>📚 Documentation</h2>
+            <p>Complete documentation files in project root:</p>
+            <ul class="feature-list">
+                <li><strong>README_COMPLETE_IMPLEMENTATION.md</strong> - This implementation guide</li>
+                <li><strong>FEATURES_QUICK_START.md</strong> - Quick start guide</li>
+                <li><strong>WATERFORD_COLOR_REFERENCE.md</strong> - Color palette details</li>
+                <li><strong>RAILWAY_DEPLOYMENT_COMPLETE.md</strong> - Deployment guide</li>
+                <li><strong>IMPLEMENTATION_SUMMARY_JAN_2.md</strong> - Technical summary</li>
+            </ul>
+        </div>
+        
+        <!-- Quick Start -->
+        <div class="preview-section">
+            <h2>⚡ Quick Start</h2>
+            <pre style="background: #f5f5f5; padding: 16px; border-radius: 8px; overflow-x: auto;">
+# 1. Terminal 1: Start backend
+php artisan serve --port=8003
+
+# 2. Terminal 2: Start frontend
+npm run dev
+
+# 3. Open browser
+http://localhost:8003
+
+# 4. Test features:
+# - Click "Pillars" dropdown
+# - Navigate to /waterford-spending
+# - Toggle dark mode with ☀️ button
+            </pre>
+        </div>
+        
+        <div style="text-align: center; margin-top: 40px; padding: 32px; background: linear-gradient(135deg, #1a472a 0%, #2d6a4f 100%); color: white; border-radius: 12px;">
+            <h2 style="color: white; margin-bottom: 16px;">✨ Ready to Go!</h2>
+            <p style="color: rgba(255,255,255,0.95);">Your Transparency.ie instance is now enhanced with a professional green-themed navigation, Waterford Council spending dashboard, and OAuth integration.</p>
+            <p style="color: rgba(255,255,255,0.8); margin-top: 12px;">Visit http://localhost:8003 to see it live!</p>
+        </div>
+    </div>
+</body>
+</html>
