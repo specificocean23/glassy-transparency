@@ -8,284 +8,155 @@
     <link href="https://fonts.bunny.net/css?family=instrument-sans:400,500,600,700" rel="stylesheet" />
     <style>
         :root {
-            --bg: #f8f8f8;
+            --bg: #f6f9ff;
             --panel: #ffffff;
-            --subtle: #666666;
-            --ink: #1a1a1a;
-            --border: #e0e0e0;
-            --blur: blur(20px);
+            --ink: #0f172a;
+            --subtle: #4b5563;
+            --border: #e5e7eb;
             --card: #ffffff;
-            --shadow: 0 20px 60px rgba(0,0,0,0.08);
+            --shadow: 0 24px 60px rgba(15,23,42,0.12);
+            --accent: #f97316;
+            --accent-soft: #ffedd5;
         }
-        :root.dark {
-            --bg: #0a0a0a;
-            --panel: #1a1a1a;
-            --subtle: #999999;
-            --ink: #f5f5f5;
-            --border: #333333;
-            --card: #242424;
-            --shadow: 0 20px 60px rgba(0,0,0,0.4);
+        .dark {
+            --bg: #0b0f1a;
+            --panel: rgba(255,255,255,0.06);
+            --ink: #e5e7eb;
+            --subtle: #9ca3af;
+            --border: rgba(255,255,255,0.12);
+            --card: rgba(255,255,255,0.04);
+            --shadow: 0 24px 80px rgba(0,0,0,0.28);
+            --accent: #fb923c;
+            --accent-soft: rgba(251,146,60,0.16);
         }
+
         * { box-sizing: border-box; }
+
         body {
             margin: 0;
             min-height: 100vh;
             font-family: 'Instrument Sans', system-ui, -apple-system, sans-serif;
-            background: linear-gradient(135deg, var(--bg) 0%, var(--bg) 100%);
+            background:
+                radial-gradient(circle at 20% 18%, rgba(251,146,60,0.16), transparent 30%),
+                radial-gradient(circle at 82% 8%, rgba(244,114,182,0.14), transparent 28%),
+                linear-gradient(160deg, #f6f9ff, #eef2ff 50%, #f6f9ff);
             color: var(--ink);
         }
-        a { color: inherit; text-decoration: none; }
-        .page { position: relative; overflow: hidden; }
-        .backdrop span {
-            position: absolute;
-            border-radius: 9999px;
-            filter: blur(100px);
-            opacity: 0.04;
-        }
-        .blob-1 { width: 400px; height: 400px; left: -150px; top: -150px; background: var(--ink); }
-        .blob-2 { width: 500px; height: 500px; right: -200px; bottom: -200px; background: var(--ink); }
 
-        .wrap {
-            position: relative;
-            max-width: 1320px;
-            margin: 0 auto;
-            padding: 40px 32px 60px;
-            display: flex;
-            flex-direction: column;
-            gap: 48px;
-        }
-        header.top {
-            display: flex;
-            flex-wrap: wrap;
-            align-items: center;
-            justify-content: space-between;
-            gap: 24px;
-            padding-bottom: 20px;
-        }
-        .brand { display: flex; align-items: center; gap: 16px; }
-        .brand-badge {
-            width: 48px;
-            height: 48px;
-            border-radius: 50%;
-            background: var(--card);
-            border: 2px solid var(--border);
-        }
-        .brand small { color: var(--subtle); font-size: 12px; text-transform: uppercase; letter-spacing: 0.1em; }
-        .brand-title { font-weight: 800; font-size: 22px; letter-spacing: -0.5px; }
-        nav.links { display: flex; flex-wrap: wrap; align-items: center; gap: 16px; }
-        .chip {
-            padding: 10px 16px;
-            border: 1px solid var(--border);
-            border-radius: 8px;
-            font-size: 13px;
-            font-weight: 500;
-            transition: all 160ms ease;
-            background: transparent;
-            cursor: pointer;
-        }
-        .chip:hover { border-color: var(--ink); background: var(--card); }
-        .btn {
-            padding: 11px 20px;
-            border-radius: 8px;
-            border: 1.5px solid var(--ink);
-            background: var(--ink);
-            color: var(--bg);
-            font-weight: 700;
-            transition: all 180ms ease;
-            font-size: 13px;
-            cursor: pointer;
-        }
-        .btn:hover { transform: translateY(-1px); box-shadow: 0 8px 20px rgba(0,0,0,0.15); }
-        :root.dark .btn { color: var(--bg); }
+        .wrap { max-width: 1240px; margin: 0 auto; padding: 32px 28px 64px; display: grid; gap: 28px; }
 
-        .panel {
-            background: var(--panel);
-            border: 1px solid var(--border);
-            border-radius: 12px;
-            padding: 40px;
-            box-shadow: var(--shadow);
-            backdrop-filter: var(--blur);
-        }
-        .grid { display: grid; gap: 24px; }
-        .events { grid-template-columns: repeat(auto-fit, minmax(320px, 1fr)); }
-
-        .muted { color: var(--subtle); font-size: 14px; line-height: 1.6; }
-        h1, h2, h3 { margin: 0; letter-spacing: -0.5px; }
-        h2 { font-size: 36px; font-weight: 800; line-height: 1.2; margin-bottom: 16px; }
-        h3 { font-size: 20px; font-weight: 700; margin: 12px 0 8px 0; }
-        .tag { font-size: 11px; text-transform: uppercase; letter-spacing: 0.15em; color: var(--subtle); font-weight: 600; }
-
-        .event-card {
-            border: 1px solid var(--border);
-            border-radius: 12px;
+        .hero {
             padding: 32px;
-            background: var(--card);
-            transition: all 200ms ease;
-            display: flex;
-            flex-direction: column;
+            border-radius: 18px;
+            background: linear-gradient(135deg, rgba(251,146,60,0.18), rgba(244,114,182,0.12));
+            border: 1px solid var(--border);
+            box-shadow: var(--shadow);
+            display: grid;
             gap: 12px;
         }
-        .event-card:hover {
-            border-color: var(--ink);
-            transform: translateY(-2px);
-            box-shadow: 0 12px 30px rgba(0,0,0,0.12);
-        }
-        .event-date {
-            font-size: 12px;
-            font-weight: 700;
-            color: var(--ink);
-            text-transform: uppercase;
-            letter-spacing: 0.1em;
-        }
-        .event-time {
-            font-size: 14px;
-            color: var(--subtle);
-            display: flex;
-            align-items: center;
-            gap: 8px;
-        }
-        .event-location {
-            font-size: 14px;
-            color: var(--subtle);
-            display: flex;
-            align-items: center;
-            gap: 8px;
-        }
-        .event-card a {
-            color: var(--ink);
-            font-weight: 600;
-            font-size: 14px;
-            margin-top: 8px;
-            display: inline-flex;
-            align-items: center;
-            gap: 6px;
-        }
+        .hero h1 { margin: 0; font-size: 36px; letter-spacing: -0.7px; }
+        .hero p { margin: 0; color: var(--subtle); max-width: 780px; line-height: 1.7; }
+        .hero-tags { display: flex; flex-wrap: wrap; gap: 10px; }
+        .hero-tag { padding: 8px 12px; border-radius: 10px; background: var(--accent-soft); color: var(--ink); font-weight: 700; font-size: 12px; }
 
-        .reveal { opacity: 0; transform: translateY(16px); transition: opacity 0.7s ease, transform 0.7s ease; }
-        .revealed { opacity: 1; transform: translateY(0); }
+        .section-header { display: flex; align-items: center; justify-content: space-between; gap: 12px; }
+        .section-header h2 { margin: 0; font-size: 24px; letter-spacing: -0.4px; }
+        .section-header .muted { color: var(--subtle); }
 
-        @media (max-width: 768px) {
-            .wrap { padding: 24px 16px 40px; gap: 32px; }
-            .panel { padding: 24px; }
-            h2 { font-size: 28px; }
-            header.top { gap: 16px; }
-            nav.links { gap: 12px; }
+        .grid { display: grid; gap: 18px; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); }
+
+        .event-card {
+            padding: 24px;
+            border-radius: 14px;
+            border: 1px solid var(--border);
+            background: var(--card);
+            box-shadow: var(--shadow);
+            display: grid;
+            gap: 10px;
+        }
+        .event-date { font-size: 12px; font-weight: 800; letter-spacing: 0.12em; color: var(--subtle); text-transform: uppercase; }
+        .event-card h3 { margin: 0; font-size: 19px; letter-spacing: -0.3px; }
+        .event-card p { margin: 0; color: var(--subtle); line-height: 1.6; }
+        .event-meta { display: flex; flex-wrap: wrap; gap: 10px; color: var(--subtle); font-weight: 700; }
+        .event-link { font-weight: 700; color: var(--accent); }
+
+        .footer { padding: 28px; text-align: center; color: var(--subtle); font-size: 13px; }
+        .footer a { color: var(--ink); font-weight: 700; }
+
+        @media (max-width: 720px) {
+            .wrap { padding: 24px 16px 48px; }
+            .hero { padding: 24px; }
+            .hero h1 { font-size: 28px; }
         }
     </style>
-    <script>
-        (() => {
-            const root = document.documentElement;
-            const stored = localStorage.getItem('theme');
-            const prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
-            if (stored === 'dark' || (!stored && prefersDark)) {
-                root.classList.add('dark');
-            }
-            window.toggleTheme = () => {
-                const isDark = root.classList.toggle('dark');
-                localStorage.setItem('theme', isDark ? 'dark' : 'light');
-            };
-            window.addEventListener('DOMContentLoaded', () => {
-                const observer = new IntersectionObserver((entries) => {
-                    entries.forEach((entry) => {
-                        if (entry.isIntersecting) {
-                            entry.target.classList.add('revealed');
-                            observer.unobserve(entry.target);
-                        }
-                    });
-                }, { threshold: 0.1 });
-                document.querySelectorAll('.reveal').forEach((el) => observer.observe(el));
-            });
-        })();
-    </script>
 </head>
 <body>
-    <div class="page">
-        <div class="backdrop">
-            <span class="blob-1"></span>
-            <span class="blob-2"></span>
+    @include('components.nav-professional')
+    <div class="wrap">
+        <section class="hero">
+            <p class="hero-tag" style="width: fit-content;">What's coming</p>
+            <h1>Events</h1>
+            <p>Town halls, hackathons, policy briefings, and training to build transparent budgets and climate data culture across Ireland.</p>
+            <div class="hero-tags">
+                <span class="hero-tag">Town halls</span>
+                <span class="hero-tag">Hackathons</span>
+                <span class="hero-tag">Training</span>
+            </div>
+        </section>
+
+        <div class="section-header">
+            <h2>Highlighted events</h2>
+            <span class="muted">Dates, locations, registration</span>
         </div>
 
-        <div class="wrap">
-            <header class="top">
-                <div class="brand">
-                    <div class="brand-badge"></div>
-                    <div>
-                        <small>Public Observatory</small>
-                        <div class="brand-title">Transparency.ie</div>
-                    </div>
-                </div>
-                <nav class="links">
-                    <a class="chip" href="/">Home</a>
-                    <a class="chip" href="/technologies">Technologies</a>
-                    <a class="chip" href="/case-studies">Case Studies</a>
-                    <a class="chip" href="/campaigns">Campaigns</a>
-                    <a class="chip" href="/metrics">Metrics</a>
-                    <button type="button" class="chip" onclick="toggleTheme()">☀️/🌙</button>
-                </nav>
-            </header>
-
-            <section class="panel reveal">
-                <p class="tag" style="margin-bottom: 12px;">What's Coming</p>
-                <h2>Events</h2>
-                <p class="muted" style="font-size: 16px; max-width: 680px; line-height: 1.7;">Town halls, webinars, hackathons, and policy briefings. Connect with communities, learn best practices, and shape Ireland's transparency agenda.</p>
-            </section>
-
-            <section class="grid events reveal">
-                <div class="event-card reveal">
-                    <div class="event-date">January 24–26</div>
-                    <h3>Dublin Transparency Hackathon</h3>
-                    <p class="muted">Build tools and apps using public budget data. 48 hours, €25K in prizes, mentorship from policy experts and data scientists.</p>
-                    <div class="event-time">📅 January 24–26, 2024</div>
-                    <div class="event-location">📍 Dublin Convention Centre</div>
-                    <a href="#event-1">Learn more →</a>
-                </div>
-
-                <div class="event-card reveal">
-                    <div class="event-date">February 3</div>
-                    <h3>National Budget Policy Forum</h3>
-                    <p class="muted">Officials, civil society, and citizens co-design the 2025 budget process. Live-streamed, Q&A, interactive polling.</p>
-                    <div class="event-time">🕐 14:00–17:00 GMT</div>
-                    <div class="event-location">📍 Online + in-person (Cork)</div>
-                    <a href="#event-2">Register →</a>
-                </div>
-
-                <div class="event-card reveal">
-                    <div class="event-date">February 15</div>
-                    <h3>Energy Storage Pilot Showcase</h3>
-                    <p class="muted">See live battery storage systems in action. Engineering deep-dive, Q&A with project teams, site tours in Limerick and Cork.</p>
-                    <div class="event-time">🕐 09:00–16:30 GMT</div>
-                    <div class="event-location">📍 Limerick Energy Hub</div>
-                    <a href="#event-3">Learn more →</a>
-                </div>
-
-                <div class="event-card reveal">
-                    <div class="event-date">February 22</div>
-                    <h3>Youth Climate Leadership Summit</h3>
-                    <p class="muted">Voices under 30 demanding climate action. Keynotes, breakout workshops, government commitments, networking.</p>
-                    <div class="event-time">🕐 10:00–18:00 GMT</div>
-                    <div class="event-location">📍 Galway Civic Centre</div>
-                    <a href="#event-4">Apply now →</a>
-                </div>
-
-                <div class="event-card reveal">
-                    <div class="event-date">March 7</div>
-                    <h3>Civic Data Literacy Workshop</h3>
-                    <p class="muted">Learn to read budgets, track emissions, build citizen dashboards. No prior experience needed. Four 3-hour sessions.</p>
-                    <div class="event-time">🕐 18:00–21:00 GMT (evenings)</div>
-                    <div class="event-location">📍 Online</div>
-                    <a href="#event-5">Register →</a>
-                </div>
-
-                <div class="event-card reveal">
-                    <div class="event-date">March 14</div>
-                    <h3>Local Government Innovation Panel</h3>
-                    <p class="muted">Councils share transparency wins, discuss budget innovation, adopt open data standards. Annual assembly.</p>
-                    <div class="event-time">🕐 09:00–14:00 GMT</div>
-                    <div class="event-location">📍 Waterford County Hall</div>
-                    <a href="#event-6">Details →</a>
-                </div>
-            </section>
-        </div>
+        <section class="grid">
+            <div class="event-card">
+                <div class="event-date">January 24–26</div>
+                <h3>Dublin Transparency Hackathon</h3>
+                <p>Build apps from budget data, €25K in prizes, mentorship from policy experts and data scientists.</p>
+                <div class="event-meta">📍 Dublin Convention Centre · 📅 In-person</div>
+                <a class="event-link" href="#event-1">Learn more →</a>
+            </div>
+            <div class="event-card">
+                <div class="event-date">February 3</div>
+                <h3>National Budget Policy Forum</h3>
+                <p>Officials, civil society, and citizens co-design the 2025 budget process with live polling and Q&A.</p>
+                <div class="event-meta">📍 Hybrid · 🕐 14:00–17:00 GMT</div>
+                <a class="event-link" href="#event-2">Register →</a>
+            </div>
+            <div class="event-card">
+                <div class="event-date">February 15</div>
+                <h3>Energy Storage Pilot Showcase</h3>
+                <p>Live battery systems, engineering deep-dives, and site tours in Limerick and Cork.</p>
+                <div class="event-meta">📍 Limerick Energy Hub · 🕐 09:00–16:30</div>
+                <a class="event-link" href="#event-3">Learn more →</a>
+            </div>
+            <div class="event-card">
+                <div class="event-date">February 22</div>
+                <h3>Youth Climate Leadership Summit</h3>
+                <p>Voices under 30 demanding climate action with workshops, commitments, and networking.</p>
+                <div class="event-meta">📍 Galway Civic Centre · 🕐 10:00–18:00</div>
+                <a class="event-link" href="#event-4">Apply now →</a>
+            </div>
+            <div class="event-card">
+                <div class="event-date">March 7</div>
+                <h3>Civic Data Literacy Workshop</h3>
+                <p>Read budgets, track emissions, and build citizen dashboards. Four 3-hour evening sessions.</p>
+                <div class="event-meta">📍 Online · 🕐 18:00–21:00</div>
+                <a class="event-link" href="#event-5">Register →</a>
+            </div>
+            <div class="event-card">
+                <div class="event-date">March 14</div>
+                <h3>Local Government Innovation Panel</h3>
+                <p>Councils share transparency wins, discuss open data standards, and plan budget innovation.</p>
+                <div class="event-meta">📍 Waterford County Hall · 🕐 09:00–14:00</div>
+                <a class="event-link" href="#event-6">Details →</a>
+            </div>
+        </section>
     </div>
+
+    <footer class="footer">
+        Transparency.ie — join us at our next meetup. <a href="/transparency">Transparency</a> · <a href="/case-studies">Case Studies</a>
+    </footer>
 </body>
 </html>

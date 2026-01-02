@@ -258,20 +258,11 @@
 </head>
 <body>
     <!-- Navigation -->
-    <nav class="nav">
-        <a href="/" class="nav-brand">✦ Transparency.ie</a>
-        <div class="nav-links">
-            <a href="/">Home</a>
-            <a href="/metrics">Transparency</a>
-            <a href="/technologies">Innovation</a>
-            <a href="/campaigns">Civic</a>
-            <a href="/events">Events</a>
-            <a href="/dashboard">Dashboard</a>
-        </div>
-        <div class="nav-actions">
-            <a href="/admin" class="btn btn-primary">Admin Panel</a>
-        </div>
-    </nav>
+    @if(request()->is('waterford*'))
+        @include('components.nav-waterford-professional')
+    @else
+        @include('components.nav-professional')
+    @endif
     
     <!-- Content -->
     {{ $slot ?? '' }}

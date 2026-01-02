@@ -13,10 +13,12 @@ Route::get('/events', [PublicController::class, 'events']);
 Route::get('/case-studies', [PublicController::class, 'caseStudies']);
 Route::get('/campaigns', [PublicController::class, 'campaigns']);
 Route::get('/metrics', [PublicController::class, 'metrics']);
-Route::get('/waterford-spending', [PublicController::class, 'waterfordSpending']);
+Route::get('/environment', [PublicController::class, 'environment'])->name('environment');
+Route::get('/transparency', [PublicController::class, 'metrics'])->name('transparency');
+Route::get('/waterford', [PublicController::class, 'waterfordSpending']);
 
 Route::get('/dashboard', function () {
-    return view('dashboard');
+    return redirect('/transparency');
 });
 
 // Enjoydeise OAuth Routes

@@ -1,566 +1,204 @@
-@extends('layouts.app')
+<!DOCTYPE html>
+<html lang="{{ str_replace('_', '-', app()->getLocale()) }}">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Waterford | Transparency</title>
+    <link rel="preconnect" href="https://fonts.bunny.net">
+    <link href="https://fonts.bunny.net/css?family=instrument-sans:400,500,600,700" rel="stylesheet" />
+    <style>
+        :root {
+            --bg: #f3f8f5;
+            --panel: #ffffff;
+            --ink: #0b1f16;
+            --subtle: #4b5563;
+            --border: #dfe7e2;
+            --card: #ffffff;
+            --shadow: 0 24px 60px rgba(12, 53, 32, 0.12);
+            --accent: #2d6a4f;
+            --accent-soft: #e1f2e7;
+            --hero-start: #d9f2e5;
+            --hero-end: #b8e3cc;
+        }
+        .dark {
+            --bg: #06120d;
+            --panel: rgba(255,255,255,0.06);
+            --ink: #e3f6eb;
+            --subtle: #9ca3af;
+            --border: rgba(255,255,255,0.12);
+            --card: rgba(255,255,255,0.05);
+            --shadow: 0 24px 80px rgba(0,0,0,0.32);
+            --accent: #7ae3a6;
+            --accent-soft: rgba(122,227,166,0.16);
+            --hero-start: #0a2e1c;
+            --hero-end: #0c3a26;
+        }
 
-@section('title', 'Waterford Council Spending')
+        * { box-sizing: border-box; }
 
-@section('styles')
-<style>
-    /* ===== Waterford Green Theme ===== */
-    :root {
-        --wf-green-dark: #1a472a;
-        --wf-green-main: #2d6a4f;
-        --wf-green-light: #40916c;
-        --wf-green-pale: #52b788;
-        --wf-green-mint: #74c69d;
-        --wf-green-bg: #f1faee;
-        --wf-text: #1a472a;
-        --wf-border: #d9e8df;
-        --wf-accent: #e63946;
-    }
-    
-    :root.dark {
-        --wf-green-dark: #0d2818;
-        --wf-green-main: #1b4332;
-        --wf-green-light: #2d6a4f;
-        --wf-green-pale: #40916c;
-        --wf-green-mint: #52b788;
-        --wf-green-bg: #1a1a1a;
-        --wf-text: #e8f5e9;
-        --wf-border: #263238;
-    }
-    
-    body {
-        background: linear-gradient(135deg, var(--wf-green-bg) 0%, #fff 50%, var(--wf-green-bg) 100%);
-    }
-    
-    :root.dark body {
-        background: linear-gradient(135deg, #0a0a0a 0%, #1a1a1a 50%, #0a0a0a 100%);
-    }
-    
-    /* ===== Header Section ===== */
-    .wf-header {
-        background: linear-gradient(135deg, var(--wf-green-dark) 0%, var(--wf-green-main) 100%);
-        color: #fff;
-        padding: 60px 32px;
-        margin: 0;
-        border-bottom: 4px solid var(--wf-green-light);
-        text-align: center;
-    }
-    
-    .wf-header h1 {
-        font-size: 48px;
-        font-weight: 900;
-        margin: 0 0 16px 0;
-        letter-spacing: -1px;
-        text-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
-    }
-    
-    .wf-header p {
-        font-size: 18px;
-        opacity: 0.95;
-        margin: 0;
-        max-width: 600px;
-        margin-left: auto;
-        margin-right: auto;
-    }
-    
-    /* ===== Content Container ===== */
-    .wf-container {
-        max-width: 1300px;
-        margin: 0 auto;
-        padding: 60px 32px;
-    }
-    
-    /* ===== Stats Cards ===== */
-    .wf-stats {
-        display: grid;
-        grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
-        gap: 24px;
-        margin-bottom: 60px;
-    }
-    
-    .wf-stat-card {
-        background: var(--wf-green-bg);
-        border: 2px solid var(--wf-green-light);
-        border-radius: 12px;
-        padding: 28px;
-        text-align: center;
-        transition: all 280ms ease;
-        box-shadow: 0 2px 8px rgba(26, 71, 42, 0.1);
-    }
-    
-    :root.dark .wf-stat-card {
-        background: #252525;
-        border-color: var(--wf-green-main);
-        box-shadow: 0 2px 8px rgba(0, 0, 0, 0.3);
-    }
-    
-    .wf-stat-card:hover {
-        transform: translateY(-8px);
-        border-color: var(--wf-green-pale);
-        box-shadow: 0 12px 28px rgba(26, 71, 42, 0.15);
-    }
-    
-    .wf-stat-icon {
-        font-size: 32px;
-        margin-bottom: 12px;
-    }
-    
-    .wf-stat-amount {
-        font-size: 28px;
-        font-weight: 900;
-        color: var(--wf-green-main);
-        margin: 8px 0;
-    }
-    
-    :root.dark .wf-stat-amount {
-        color: var(--wf-green-pale);
-    }
-    
-    .wf-stat-label {
-        font-size: 14px;
-        color: var(--wf-text);
-        font-weight: 600;
-        text-transform: uppercase;
-        letter-spacing: 0.5px;
-    }
-    
-    /* ===== Section Heading ===== */
-    .wf-section-heading {
-        font-size: 32px;
-        font-weight: 900;
-        color: var(--wf-green-main);
-        margin: 48px 0 32px 0;
-        padding-bottom: 16px;
-        border-bottom: 4px solid var(--wf-green-light);
-        display: inline-block;
-    }
-    
-    :root.dark .wf-section-heading {
-        color: var(--wf-green-mint);
-        border-bottom-color: var(--wf-green-main);
-    }
-    
-    /* ===== Spending Table ===== */
-    .wf-table-container {
-        background: var(--wf-green-bg);
-        border: 2px solid var(--wf-border);
-        border-radius: 12px;
-        overflow: hidden;
-        margin-bottom: 40px;
-        box-shadow: 0 2px 8px rgba(26, 71, 42, 0.1);
-    }
-    
-    :root.dark .wf-table-container {
-        background: #252525;
-        border-color: var(--wf-green-main);
-        box-shadow: 0 2px 8px rgba(0, 0, 0, 0.3);
-    }
-    
-    .wf-table {
-        width: 100%;
-        border-collapse: collapse;
-    }
-    
-    .wf-table thead {
-        background: linear-gradient(135deg, var(--wf-green-main), var(--wf-green-light));
-        color: #fff;
-    }
-    
-    :root.dark .wf-table thead {
-        background: linear-gradient(135deg, var(--wf-green-dark), var(--wf-green-main));
-    }
-    
-    .wf-table th {
-        padding: 18px;
-        text-align: left;
-        font-weight: 700;
-        font-size: 13px;
-        text-transform: uppercase;
-        letter-spacing: 0.5px;
-        border-bottom: 2px solid var(--wf-green-pale);
-    }
-    
-    .wf-table td {
-        padding: 18px;
-        border-bottom: 1px solid var(--wf-border);
-        color: var(--wf-text);
-    }
-    
-    :root.dark .wf-table td {
-        border-bottom-color: var(--wf-green-main);
-    }
-    
-    .wf-table tbody tr:hover {
-        background: rgba(74, 193, 136, 0.05);
-    }
-    
-    :root.dark .wf-table tbody tr:hover {
-        background: rgba(74, 193, 136, 0.1);
-    }
-    
-    .wf-table tbody tr:last-child td {
-        border-bottom: none;
-    }
-    
-    .wf-amount {
-        font-weight: 700;
-        color: var(--wf-green-main);
-        font-size: 14px;
-    }
-    
-    :root.dark .wf-amount {
-        color: var(--wf-green-pale);
-    }
-    
-    .wf-percentage {
-        display: inline-block;
-        padding: 4px 10px;
-        background: var(--wf-green-light);
-        color: #fff;
-        border-radius: 4px;
-        font-size: 12px;
-        font-weight: 600;
-    }
-    
-    /* ===== Chart Container ===== */
-    .wf-chart-container {
-        background: var(--wf-green-bg);
-        border: 2px solid var(--wf-border);
-        border-radius: 12px;
-        padding: 32px;
-        margin-bottom: 40px;
-        box-shadow: 0 2px 8px rgba(26, 71, 42, 0.1);
-    }
-    
-    :root.dark .wf-chart-container {
-        background: #252525;
-        border-color: var(--wf-green-main);
-        box-shadow: 0 2px 8px rgba(0, 0, 0, 0.3);
-    }
-    
-    /* ===== Bar Chart ===== */
-    .wf-bar-chart {
-        display: grid;
-        gap: 24px;
-    }
-    
-    .wf-chart-item {
-        display: grid;
-        grid-template-columns: 140px 1fr 120px;
-        align-items: center;
-        gap: 16px;
-    }
-    
-    .wf-chart-label {
-        font-size: 13px;
-        font-weight: 600;
-        color: var(--wf-text);
-    }
-    
-    .wf-chart-bar {
-        height: 32px;
-        background: linear-gradient(90deg, var(--wf-green-light), var(--wf-green-pale));
-        border-radius: 6px;
-        overflow: hidden;
-        box-shadow: 0 2px 6px rgba(26, 71, 42, 0.2);
-        transition: all 200ms ease;
-    }
-    
-    :root.dark .wf-chart-bar {
-        box-shadow: 0 2px 6px rgba(74, 193, 136, 0.2);
-    }
-    
-    .wf-chart-item:hover .wf-chart-bar {
-        box-shadow: 0 4px 12px rgba(26, 71, 42, 0.3);
-        transform: scaleY(1.1);
-    }
-    
-    .wf-chart-value {
-        font-weight: 700;
-        color: var(--wf-green-main);
-        text-align: right;
-    }
-    
-    :root.dark .wf-chart-value {
-        color: var(--wf-green-pale);
-    }
-    
-    /* ===== Call to Action ===== */
-    .wf-cta-section {
-        background: linear-gradient(135deg, var(--wf-green-main), var(--wf-green-light));
-        color: #fff;
-        padding: 48px 32px;
-        border-radius: 12px;
-        text-align: center;
-        margin: 60px 0;
-        box-shadow: 0 8px 24px rgba(26, 71, 42, 0.2);
-    }
-    
-    .wf-cta-section h2 {
-        font-size: 28px;
-        font-weight: 900;
-        margin: 0 0 16px 0;
-    }
-    
-    .wf-cta-section p {
-        font-size: 16px;
-        opacity: 0.95;
-        margin: 0 0 24px 0;
-    }
-    
-    .wf-cta-btn {
-        display: inline-block;
-        padding: 14px 32px;
-        background: #fff;
-        color: var(--wf-green-main);
-        border: none;
-        border-radius: 6px;
-        font-weight: 700;
-        font-size: 14px;
-        text-transform: uppercase;
-        letter-spacing: 0.5px;
-        cursor: pointer;
-        transition: all 200ms ease;
-        text-decoration: none;
-    }
-    
-    .wf-cta-btn:hover {
-        transform: translateY(-2px);
-        box-shadow: 0 6px 16px rgba(0, 0, 0, 0.2);
-    }
-    
-    /* ===== Footer Notes ===== */
-    .wf-notes {
-        background: var(--wf-green-bg);
-        border-left: 4px solid var(--wf-green-light);
-        padding: 24px;
-        border-radius: 6px;
-        margin-top: 40px;
-        font-size: 14px;
-        color: var(--wf-text);
-    }
-    
-    :root.dark .wf-notes {
-        background: #252525;
-        border-left-color: var(--wf-green-main);
-    }
-    
-    .wf-notes strong {
-        color: var(--wf-green-main);
-    }
-    
-    /* ===== Responsive ===== */
-    @media (max-width: 768px) {
-        .wf-header {
-            padding: 40px 20px;
+        body {
+            margin: 0;
+            min-height: 100vh;
+            font-family: 'Instrument Sans', system-ui, -apple-system, sans-serif;
+            background:
+                radial-gradient(circle at 12% 18%, rgba(45,106,79,0.18), transparent 30%),
+                radial-gradient(circle at 82% 6%, rgba(16,185,129,0.16), transparent 28%),
+                linear-gradient(160deg, var(--hero-start), var(--hero-end) 50%, var(--hero-start));
+            color: var(--ink);
         }
-        
-        .wf-header h1 {
-            font-size: 32px;
-        }
-        
-        .wf-container {
-            padding: 40px 20px;
-        }
-        
-        .wf-section-heading {
-            font-size: 24px;
-        }
-        
-        .wf-stats {
-            grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
-            gap: 16px;
-        }
-        
-        .wf-stat-card {
-            padding: 20px;
-        }
-        
-        .wf-chart-item {
-            grid-template-columns: 100px 1fr 80px;
+
+        a { color: inherit; text-decoration: none; }
+
+        .wrap { max-width: 1220px; margin: 0 auto; padding: 32px 28px 64px; display: grid; gap: 28px; }
+
+        .hero {
+            padding: 32px;
+            border-radius: 18px;
+            background: linear-gradient(135deg, rgba(45,106,79,0.16), rgba(16,185,129,0.12));
+            border: 1px solid var(--border);
+            box-shadow: var(--shadow);
+            display: grid;
             gap: 12px;
         }
-        
-        .wf-cta-section {
-            padding: 32px 20px;
-        }
-        
-        .wf-cta-section h2 {
-            font-size: 22px;
-        }
-    }
-</style>
-@endsection
+        .hero h1 { margin: 0; font-size: 36px; letter-spacing: -0.7px; }
+        .hero p { margin: 0; color: var(--subtle); max-width: 820px; line-height: 1.7; }
+        .hero-tags { display: flex; flex-wrap: wrap; gap: 10px; }
+        .hero-tag { padding: 8px 12px; border-radius: 10px; background: var(--accent-soft); color: var(--ink); font-weight: 700; font-size: 12px; }
 
-@section('content')
-<!-- Header -->
-<div class="wf-header">
-    <h1>🏛️ Waterford Council Spending</h1>
-    <p>Transparent financial overview of Waterford Council's budget allocation and spending initiatives</p>
-</div>
+        .grid { display: grid; gap: 14px; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); }
+        .card {
+            padding: 20px;
+            border-radius: 14px;
+            border: 1px solid var(--border);
+            background: var(--card);
+            box-shadow: var(--shadow);
+        }
+        .card h3 { margin: 0 0 4px 0; font-size: 16px; color: var(--accent); }
+        .kpi { font-size: 26px; font-weight: 800; margin: 0 0 4px 0; }
+        .muted { color: var(--subtle); font-size: 14px; line-height: 1.6; }
 
-<!-- Main Content -->
-<div class="wf-container">
-    <!-- Key Statistics -->
-    <div class="wf-stats">
-        <div class="wf-stat-card">
-            <div class="wf-stat-icon">💰</div>
-            <div class="wf-stat-amount">€287.5M</div>
-            <div class="wf-stat-label">Total Budget</div>
-        </div>
-        <div class="wf-stat-card">
-            <div class="wf-stat-icon">✅</div>
-            <div class="wf-stat-amount">68%</div>
-            <div class="wf-stat-label">Allocated</div>
-        </div>
-        <div class="wf-stat-card">
-            <div class="wf-stat-icon">📊</div>
-            <div class="wf-stat-amount">32%</div>
-            <div class="wf-stat-label">Reserved</div>
-        </div>
-        <div class="wf-stat-card">
-            <div class="wf-stat-icon">🏗️</div>
-            <div class="wf-stat-amount">127</div>
-            <div class="wf-stat-label">Projects Active</div>
-        </div>
-    </div>
-    
-    <!-- Spending by Department -->
-    <h2 class="wf-section-heading">📈 Spending by Department</h2>
-    <div class="wf-table-container">
-        <table class="wf-table">
-            <thead>
-                <tr>
-                    <th>Department</th>
-                    <th>Budget Allocation</th>
-                    <th>Spent</th>
-                    <th>% of Total</th>
-                </tr>
-            </thead>
-            <tbody>
-                <tr>
-                    <td><strong>Infrastructure & Transport</strong></td>
-                    <td class="wf-amount">€94.2M</td>
-                    <td class="wf-amount">€68.5M</td>
-                    <td><span class="wf-percentage">32.8%</span></td>
-                </tr>
-                <tr>
-                    <td><strong>Education & Youth Services</strong></td>
-                    <td class="wf-amount">€72.5M</td>
-                    <td class="wf-amount">€51.3M</td>
-                    <td><span class="wf-percentage">22.4%</span></td>
-                </tr>
-                <tr>
-                    <td><strong>Social Services & Housing</strong></td>
-                    <td class="wf-amount">€56.8M</td>
-                    <td class="wf-amount">€42.1M</td>
-                    <td><span class="wf-percentage">18.4%</span></td>
-                </tr>
-                <tr>
-                    <td><strong>Environmental & Parks</strong></td>
-                    <td class="wf-amount">€38.4M</td>
-                    <td class="wf-amount">€28.9M</td>
-                    <td><span class="wf-percentage">12.6%</span></td>
-                </tr>
-                <tr>
-                    <td><strong>Health & Community</strong></td>
-                    <td class="wf-amount">€25.6M</td>
-                    <td class="wf-amount">€19.2M</td>
-                    <td><span class="wf-percentage">8.4%</span></td>
-                </tr>
-            </tbody>
-        </table>
-    </div>
-    
-    <!-- Spending Breakdown Chart -->
-    <h2 class="wf-section-heading">💵 Budget Allocation Breakdown</h2>
-    <div class="wf-chart-container">
-        <div class="wf-bar-chart">
-            <div class="wf-chart-item">
-                <div class="wf-chart-label">Infrastructure</div>
-                <div class="wf-chart-bar" style="width: 100%; background: linear-gradient(90deg, #40916c, #52b788);"></div>
-                <div class="wf-chart-value">32.8%</div>
+        .section { padding: 24px; border-radius: 16px; border: 1px solid var(--border); background: var(--panel); box-shadow: var(--shadow); }
+        .section-header { display: flex; align-items: center; justify-content: space-between; gap: 12px; margin-bottom: 12px; }
+        .section-header h2 { margin: 0; font-size: 22px; letter-spacing: -0.3px; }
+        .pill { padding: 8px 12px; border-radius: 999px; background: var(--accent-soft); color: var(--accent); font-weight: 700; font-size: 12px; }
+
+        table { width: 100%; border-collapse: collapse; }
+        th, td { padding: 12px; border-bottom: 1px solid var(--border); text-align: left; }
+        th { font-size: 12px; text-transform: uppercase; letter-spacing: 0.08em; color: var(--subtle); }
+        td { color: var(--ink); }
+        .status { padding: 6px 10px; border-radius: 10px; background: var(--accent-soft); color: var(--accent); font-weight: 700; font-size: 12px; }
+
+        .columns { display: grid; gap: 14px; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); }
+        .list { display: grid; gap: 10px; }
+        .list-item { padding: 12px; border-radius: 12px; background: rgba(45,106,79,0.05); border: 1px solid var(--border); color: var(--ink); }
+
+        .footer { text-align: center; color: var(--subtle); font-size: 13px; padding: 28px; }
+        .footer a { color: var(--accent); font-weight: 700; }
+
+        @media (max-width: 720px) {
+            .wrap { padding: 24px 16px 48px; }
+            .hero { padding: 24px; }
+            .hero h1 { font-size: 28px; }
+        }
+    </style>
+</head>
+<body>
+    @include('components.nav-professional')
+    <div class="wrap">
+        <section class="hero">
+            <p class="hero-tag" style="width: fit-content;">Waterford Council</p>
+            <h1>Waterford | Council Transparency</h1>
+            <p>Budgets, live projects, population signals, and recent articles - presented in a fresh green design with both light and dark modes.</p>
+            <div class="hero-tags">
+                <span class="hero-tag">Spending</span>
+                <span class="hero-tag">Projects</span>
+                <span class="hero-tag">Population</span>
+                <span class="hero-tag">Articles</span>
             </div>
-            <div class="wf-chart-item">
-                <div class="wf-chart-label">Education</div>
-                <div class="wf-chart-bar" style="width: 68%; background: linear-gradient(90deg, #40916c, #52b788);"></div>
-                <div class="wf-chart-value">22.4%</div>
+        </section>
+
+        <section class="grid">
+            <div class="card">
+                <h3>Total Allocation 2026</h3>
+                <div class="kpi">EUR 4.7M</div>
+                <div class="muted">EUR 1.3M remaining</div>
             </div>
-            <div class="wf-chart-item">
-                <div class="wf-chart-label">Social Services</div>
-                <div class="wf-chart-bar" style="width: 56%; background: linear-gradient(90deg, #40916c, #52b788);"></div>
-                <div class="wf-chart-value">18.4%</div>
+            <div class="card">
+                <h3>YTD Spend</h3>
+                <div class="kpi">EUR 3.4M</div>
+                <div class="muted">72% of plan</div>
             </div>
-            <div class="wf-chart-item">
-                <div class="wf-chart-label">Environment</div>
-                <div class="wf-chart-bar" style="width: 38%; background: linear-gradient(90deg, #40916c, #52b788);"></div>
-                <div class="wf-chart-value">12.6%</div>
+            <div class="card">
+                <h3>Major Projects</h3>
+                <div class="kpi">11 active</div>
+                <div class="muted">3 at risk, 8 on track</div>
             </div>
-            <div class="wf-chart-item">
-                <div class="wf-chart-label">Health</div>
-                <div class="wf-chart-bar" style="width: 25%; background: linear-gradient(90deg, #40916c, #52b788);"></div>
-                <div class="wf-chart-value">8.4%</div>
+            <div class="card">
+                <h3>Population</h3>
+                <div class="kpi">127k</div>
+                <div class="muted">Median age 38.2 | 68% employment</div>
             </div>
-        </div>
+        </section>
+
+        <section class="section">
+            <div class="section-header">
+                <h2>Spending Breakdown</h2>
+                <span class="pill">Live overview</span>
+            </div>
+            <table>
+                <thead>
+                    <tr><th>Program</th><th>Budget</th><th>Spent</th><th>Status</th></tr>
+                </thead>
+                <tbody>
+                    <tr><td>Housing and Homelessness</td><td>EUR 1.6M</td><td>EUR 1.05M (66%)</td><td><span class="status">On track</span></td></tr>
+                    <tr><td>Transport and Roads</td><td>EUR 0.9M</td><td>EUR 0.48M (53%)</td><td><span class="status" style="background: rgba(230,57,70,0.15); color: #b91c1c;">Watch</span></td></tr>
+                    <tr><td>Climate and Resilience</td><td>EUR 0.7M</td><td>EUR 0.51M (73%)</td><td><span class="status">On track</span></td></tr>
+                    <tr><td>Digital Services</td><td>EUR 0.5M</td><td>EUR 0.22M (44%)</td><td><span class="status">On track</span></td></tr>
+                    <tr><td>Community and Culture</td><td>EUR 0.3M</td><td>EUR 0.18M (60%)</td><td><span class="status">On track</span></td></tr>
+                </tbody>
+            </table>
+        </section>
+
+        <section class="columns">
+            <div class="section">
+                <div class="section-header">
+                    <h2>Projects</h2>
+                    <span class="pill">11 active</span>
+                </div>
+                <div class="list">
+                    <div class="list-item"><strong>Greenway North Loop</strong><br><span class="muted">78% complete | Target Q2 2026 | EUR 650k allocated</span></div>
+                    <div class="list-item"><strong>Flood Defenses: Tramore and Dungarvan</strong><br><span class="muted">64% complete | Coastal walls plus sensors | EUR 480k</span></div>
+                    <div class="list-item"><strong>Procurement Transparency Pilot</strong><br><span class="muted">Planning | Public dashboard for all contracts above EUR 25k</span></div>
+                    <div class="list-item"><strong>EV and Active Transport Lanes</strong><br><span class="muted">42% complete | Smart signals rollout | EUR 310k</span></div>
+                </div>
+            </div>
+            <div class="section">
+                <div class="section-header">
+                    <h2>Population Signals</h2>
+                    <span class="pill">Updated 2026</span>
+                </div>
+                <div class="list">
+                    <div class="list-item"><strong>Youth (0-24)</strong><br><span class="muted">29% | apprenticeships and sport hubs</span></div>
+                    <div class="list-item"><strong>Working Age (25-64)</strong><br><span class="muted">54% | transport and digital services</span></div>
+                    <div class="list-item"><strong>Seniors (65+)</strong><br><span class="muted">17% | healthcare access and flood resilience</span></div>
+                    <div class="list-item"><strong>Households</strong><br><span class="muted">48.3k households | 68% employment</span></div>
+                </div>
+            </div>
+        </section>
+
+        <section class="section">
+            <div class="section-header">
+                <h2>Articles and Updates</h2>
+                <span class="pill">Recent</span>
+            </div>
+            <div class="columns">
+                <div class="list-item"><strong>"Waterford approves coastal resilience fund"</strong><br><span class="muted">EUR 480k ring-fenced; milestones published weekly.</span></div>
+                <div class="list-item"><strong>"Procurement dashboard to go public"</strong><br><span class="muted">All contracts above EUR 25k will be searchable.</span></div>
+                <div class="list-item"><strong>"Greenway extension hits 78% completion"</strong><br><span class="muted">Final surfacing and lighting underway.</span></div>
+            </div>
+        </section>
     </div>
-    
-    <!-- 2026 Key Initiatives -->
-    <h2 class="wf-section-heading">🎯 2026 Key Initiatives</h2>
-    <div class="wf-table-container">
-        <table class="wf-table">
-            <thead>
-                <tr>
-                    <th>Initiative</th>
-                    <th>Department</th>
-                    <th>Investment</th>
-                    <th>Status</th>
-                </tr>
-            </thead>
-            <tbody>
-                <tr>
-                    <td><strong>Waterford Greenway Extension</strong></td>
-                    <td>Infrastructure</td>
-                    <td class="wf-amount">€18.5M</td>
-                    <td><span class="wf-percentage" style="background: #2d6a4f;">In Progress</span></td>
-                </tr>
-                <tr>
-                    <td><strong>School Infrastructure Modernization</strong></td>
-                    <td>Education</td>
-                    <td class="wf-amount">€14.2M</td>
-                    <td><span class="wf-percentage" style="background: #2d6a4f;">In Progress</span></td>
-                </tr>
-                <tr>
-                    <td><strong>Sustainable Housing Program</strong></td>
-                    <td>Social Services</td>
-                    <td class="wf-amount">€12.8M</td>
-                    <td><span class="wf-percentage" style="background: #74c69d;">Planned</span></td>
-                </tr>
-                <tr>
-                    <td><strong>Smart City & Digital Innovation</strong></td>
-                    <td>Infrastructure</td>
-                    <td class="wf-amount">€8.6M</td>
-                    <td><span class="wf-percentage" style="background: #74c69d;">Planned</span></td>
-                </tr>
-                <tr>
-                    <td><strong>Climate Action & Green Spaces</strong></td>
-                    <td>Environment</td>
-                    <td class="wf-amount">€7.3M</td>
-                    <td><span class="wf-percentage" style="background: #52b788;">Approved</span></td>
-                </tr>
-            </tbody>
-        </table>
-    </div>
-    
-    <!-- Call to Action -->
-    <div class="wf-cta-section">
-        <h2>Want more transparency?</h2>
-        <p>Explore detailed budget documents, project timelines, and citizen engagement initiatives</p>
-        <a href="/transparency-portal" class="wf-cta-btn">📊 View Full Portal</a>
-    </div>
-    
-    <!-- Footnotes -->
-    <div class="wf-notes">
-        <p><strong>📌 Note:</strong> All figures are provisional estimates for the 2026 fiscal year. Data is updated quarterly. For detailed breakdowns and project-specific information, visit our <a href="/transparency-portal" style="color: var(--wf-green-light); text-decoration: none; font-weight: 700;">Transparency Portal</a>.</p>
-    </div>
-</div>
-@endsection
+
+    <div class="footer">Transparency.ie - Waterford data hub. <a href="/transparency">Transparency</a> | <a href="/case-studies">Case Studies</a></div>
+</body>
+</html>

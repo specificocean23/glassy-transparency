@@ -155,7 +155,7 @@
         transition: transform 200ms ease;
     }
     
-    .nav-waterford-pillars:hover .nav-waterford-pillars-trigger::after {
+    .nav-waterford-pillars.open .nav-waterford-pillars-trigger::after {
         transform: rotateZ(-180deg);
     }
     
@@ -178,7 +178,7 @@
         z-index: 1001;
     }
     
-    .nav-waterford-pillars:hover .nav-waterford-pillars-menu {
+    .nav-waterford-pillars.open .nav-waterford-pillars-menu {
         opacity: 1;
         pointer-events: all;
         transform: translateX(-50%) translateY(0);
@@ -374,25 +374,25 @@
             
             <!-- Pillars Dropdown -->
             <div class="nav-waterford-pillars">
-                <button type="button" class="nav-waterford-pillars-trigger">
+                <button type="button" class="nav-waterford-pillars-trigger" data-wf-pillars-toggle>
                     📊 Pillars
                 </button>
                 <div class="nav-waterford-pillars-menu">
-                    <a href="/metrics" class="nav-waterford-pillar-item">
+                    <a href="/transparency" class="nav-waterford-pillar-item">
                         <span class="nav-waterford-pillar-icon">💰</span>
                         <div class="nav-waterford-pillar-text">
                             <p class="nav-waterford-pillar-title">Transparency</p>
                             <p class="nav-waterford-pillar-desc">Budgets & spending tracking</p>
                         </div>
                     </a>
-                    <a href="/environment" class="nav-waterford-pillar-item">
+                    <a href="/metrics" class="nav-waterford-pillar-item">
                         <span class="nav-waterford-pillar-icon">🌍</span>
                         <div class="nav-waterford-pillar-text">
                             <p class="nav-waterford-pillar-title">Environment</p>
                             <p class="nav-waterford-pillar-desc">Climate & sustainability data</p>
                         </div>
                     </a>
-                    <a href="/waterford-spending" class="nav-waterford-pillar-item">
+                    <a href="/waterford" class="nav-waterford-pillar-item">
                         <span class="nav-waterford-pillar-icon">🏛️</span>
                         <div class="nav-waterford-pillar-text">
                             <p class="nav-waterford-pillar-title">Waterford</p>
@@ -410,7 +410,7 @@
             </div>
             
             <a href="/case-studies" class="nav-waterford-link @if(request()->is('case-studies*')) active @endif">
-                📚 Studies
+                📚 Case Studies
             </a>
             
             <a href="/events" class="nav-waterford-link @if(request()->is('events*')) active @endif">
@@ -426,8 +426,8 @@
             
             @if (Route::has('login'))
                 @auth
-                    <a href="{{ url('/dashboard') }}" class="nav-waterford-auth-btn">
-                        👤 Dashboard
+                    <a href="{{ url('/transparency') }}" class="nav-waterford-auth-btn">
+                        👤 Transparency
                     </a>
                 @else
                     <button type="button" class="nav-waterford-auth-btn" onclick="openEnjoydeiseLogin()">
@@ -464,6 +464,34 @@
             document.documentElement.classList.add('dark');
         }
         updateThemeIcon();
+
+        const pillars = document.querySelector('.nav-waterford-pillars');
+        const toggle = document.querySelector('[data-wf-pillars-toggle]');
+        const menu = pillars ? pillars.querySelector('.nav-waterford-pillars-menu') : null;
+
+        if (pillars && toggle && menu) {
+            const closeMenu = () => pillars.classList.remove('open');
+
+            toggle.addEventListener('click', (e) => {
+                e.preventDefault();
+                e.stopPropagation();
+                pillars.classList.toggle('open');
+            });
+
+            menu.addEventListener('click', (e) => e.stopPropagation());
+
+            document.addEventListener('click', (e) => {
+                if (!pillars.contains(e.target)) {
+                    closeMenu();
+                }
+            });
+
+            document.addEventListener('keydown', (e) => {
+                if (e.key === 'Escape') {
+                    closeMenu();
+                }
+            });
+        }
     });
     
     // Enjoydeise Login (placeholder - will integrate real OAuth)

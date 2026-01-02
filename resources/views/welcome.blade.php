@@ -301,10 +301,10 @@
                     <h4 style="font-size: 16px; font-weight: 700; margin: 0 0 8px 0;">Case Studies</h4>
                     <p style="font-size: 13px; color: var(--subtle); margin: 0;">Real-world examples of transparency in action.</p>
                 </a>
-                <a href="/dashboard" style="background: var(--panel); border: 1px solid var(--border); border-radius: 10px; padding: 24px; text-decoration: none; color: inherit; transition: all 250ms ease; opacity: 0; animation: revealRoute 600ms ease forwards; animation-delay: 400ms;" onmouseover="this.style.borderColor='var(--ink)'; this.style.backgroundColor='var(--card)'; this.style.boxShadow='var(--shadow)'; this.style.transform='translateY(-4px)';" onmouseout="this.style.borderColor='var(--border)'; this.style.backgroundColor='var(--panel)'; this.style.boxShadow='none'; this.style.transform='translateY(0)';">
+                <a href="/transparency" style="background: var(--panel); border: 1px solid var(--border); border-radius: 10px; padding: 24px; text-decoration: none; color: inherit; transition: all 250ms ease; opacity: 0; animation: revealRoute 600ms ease forwards; animation-delay: 400ms;" onmouseover="this.style.borderColor='var(--ink)'; this.style.backgroundColor='var(--card)'; this.style.boxShadow='var(--shadow)'; this.style.transform='translateY(-4px)';" onmouseout="this.style.borderColor='var(--border)'; this.style.backgroundColor='var(--panel)'; this.style.boxShadow='none'; this.style.transform='translateY(0)';">
                     <span style="font-size: 32px; margin-bottom: 12px; display: block;">📊</span>
-                    <h4 style="font-size: 16px; font-weight: 700; margin: 0 0 8px 0;">Dashboard</h4>
-                    <p style="font-size: 13px; color: var(--subtle); margin: 0;">Personalized analytics and custom data views.</p>
+                    <h4 style="font-size: 16px; font-weight: 700; margin: 0 0 8px 0;">Transparency</h4>
+                    <p style="font-size: 13px; color: var(--subtle); margin: 0;">Consolidated transparency dashboard and spending.</p>
                 </a>
             </div>
             <style>
@@ -327,7 +327,7 @@
                 <h2 style="font-size: 36px; font-weight: 800; margin: 0 0 16px 0; letter-spacing: -0.5px;">Join the Transparency Movement</h2>
                 <p style="font-size: 16px; color: var(--subtle); margin: 0 0 32px 0; line-height: 1.6;">Be part of Ireland's commitment to open government and civic engagement. Start exploring data, contribute insights, or build with our APIs.</p>
                 <div style="display: flex; gap: 16px; justify-content: center; flex-wrap: wrap;">
-                    <a href="/dashboard" style="padding: 12px 28px; border-radius: 8px; font-weight: 700; font-size: 14px; text-decoration: none; text-transform: uppercase; letter-spacing: 0.5px; display: inline-block; background: var(--ink); color: var(--panel); border: 2px solid var(--ink); transition: all 200ms ease; cursor: pointer;" onmouseover="this.style.transform='translateY(-2px)'; this.style.boxShadow='0 8px 20px rgba(0,0,0,0.15)';" onmouseout="this.style.transform='translateY(0)'; this.style.boxShadow='none';">Access Dashboard</a>
+                    <a href="/transparency" style="padding: 12px 28px; border-radius: 8px; font-weight: 700; font-size: 14px; text-decoration: none; text-transform: uppercase; letter-spacing: 0.5px; display: inline-block; background: var(--ink); color: var(--panel); border: 2px solid var(--ink); transition: all 200ms ease; cursor: pointer;" onmouseover="this.style.transform='translateY(-2px)'; this.style.boxShadow='0 8px 20px rgba(0,0,0,0.15)';" onmouseout="this.style.transform='translateY(0)'; this.style.boxShadow='none';">Open Transparency</a>
                     <a href="/waterford-spending" style="padding: 12px 28px; border-radius: 8px; font-weight: 700; font-size: 14px; text-decoration: none; text-transform: uppercase; letter-spacing: 0.5px; display: inline-block; background: transparent; color: var(--ink); border: 2px solid var(--ink); transition: all 200ms ease; cursor: pointer;" onmouseover="this.style.backgroundColor='var(--card)'; this.style.transform='translateY(-2px)';" onmouseout="this.style.backgroundColor='transparent'; this.style.transform='translateY(0)';">Learn More</a>
                 </div>
             </div>

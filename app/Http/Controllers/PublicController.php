@@ -40,6 +40,11 @@ class PublicController extends Controller
         return view('public.metrics', compact('metrics'));
     }
 
+    public function environment()
+    {
+        return view('public.environment');
+    }
+
     public function waterfordSpending()
     {
         // This page uses static data shown in the view

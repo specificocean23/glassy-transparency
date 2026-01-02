@@ -134,7 +134,7 @@
         transition: transform 200ms ease;
     }
     
-    .nav-professional-pillars:hover .nav-professional-pillars-trigger::after {
+    .nav-professional-pillars.open .nav-professional-pillars-trigger::after {
         transform: rotateZ(-180deg);
     }
     
@@ -157,7 +157,7 @@
         z-index: 1001;
     }
     
-    .nav-professional-pillars:hover .nav-professional-pillars-menu {
+    .nav-professional-pillars.open .nav-professional-pillars-menu {
         opacity: 1;
         pointer-events: all;
         transform: translateX(-50%) translateY(0);
@@ -333,25 +333,25 @@
             
             <!-- Pillars Dropdown -->
             <div class="nav-professional-pillars">
-                <button type="button" class="nav-professional-pillars-trigger">
+                <button type="button" class="nav-professional-pillars-trigger" data-pillars-toggle>
                     📊 Pillars
                 </button>
                 <div class="nav-professional-pillars-menu">
-                    <a href="/metrics" class="nav-professional-pillar-item">
+                    <a href="/transparency" class="nav-professional-pillar-item">
                         <span class="nav-professional-pillar-icon">💰</span>
                         <div class="nav-professional-pillar-text">
                             <p class="nav-professional-pillar-title">Transparency</p>
                             <p class="nav-professional-pillar-desc">Budgets & spending tracking</p>
                         </div>
                     </a>
-                    <a href="/metrics" class="nav-professional-pillar-item">
+                    <a href="/environment" class="nav-professional-pillar-item">
                         <span class="nav-professional-pillar-icon">🌍</span>
                         <div class="nav-professional-pillar-text">
                             <p class="nav-professional-pillar-title">Environment</p>
                             <p class="nav-professional-pillar-desc">Climate & sustainability data</p>
                         </div>
                     </a>
-                    <a href="/waterford-spending" class="nav-professional-pillar-item">
+                    <a href="/waterford" class="nav-professional-pillar-item">
                         <span class="nav-professional-pillar-icon">🏛️</span>
                         <div class="nav-professional-pillar-text">
                             <p class="nav-professional-pillar-title">Waterford</p>
@@ -369,7 +369,7 @@
             </div>
             
             <a href="/case-studies" class="nav-professional-link @if(request()->is('case-studies*')) active @endif">
-                📚 Studies
+                📚 Case Studies
             </a>
             
             <a href="/events" class="nav-professional-link @if(request()->is('events*')) active @endif">
@@ -385,8 +385,8 @@
             
             @if (Route::has('login'))
                 @auth
-                    <a href="{{ url('/dashboard') }}" class="nav-professional-auth-btn">
-                        👤 Dashboard
+                    <a href="{{ url('/transparency') }}" class="nav-professional-auth-btn">
+                        👤 Transparency
                     </a>
                 @else
                     <a href="{{ route('login') }}" class="nav-professional-auth-btn">
@@ -399,6 +399,33 @@
 </nav>
 
 <script>
+    (() => {
+        const root = document.documentElement;
+        const icon = document.getElementById('theme-toggle-icon');
+        const stored = localStorage.getItem('theme');
+        const prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
+
+        const applyTheme = (mode) => {
+            if (mode === 'dark') {
+                root.classList.add('dark');
+                if (icon) icon.textContent = '🌙';
+            } else {
+                root.classList.remove('dark');
+                if (icon) icon.textContent = '☀️';
+            }
+        };
+
+        applyTheme(stored || (prefersDark ? 'dark' : 'light'));
+
+        window.toggleTheme = () => {
+            const next = root.classList.contains('dark') ? 'light' : 'dark';
+            localStorage.setItem('theme', next);
+            applyTheme(next);
+        };
+    })();
+</script>
+
+<script>
     function updateThemeIcon() {
         const icon = document.getElementById('theme-toggle-icon');
         if (icon && document.documentElement.classList.contains('dark')) {
@@ -409,5 +436,35 @@
     }
     
     // Update icon on load
-    document.addEventListener('DOMContentLoaded', updateThemeIcon);
+    document.addEventListener('DOMContentLoaded', () => {
+        updateThemeIcon();
+
+        const pillars = document.querySelector('.nav-professional-pillars');
+        const toggle = document.querySelector('[data-pillars-toggle]');
+        const menu = pillars ? pillars.querySelector('.nav-professional-pillars-menu') : null;
+
+        if (pillars && toggle && menu) {
+            const closeMenu = () => pillars.classList.remove('open');
+
+            toggle.addEventListener('click', (e) => {
+                e.preventDefault();
+                e.stopPropagation();
+                pillars.classList.toggle('open');
+            });
+
+            menu.addEventListener('click', (e) => e.stopPropagation());
+
+            document.addEventListener('click', (e) => {
+                if (!pillars.contains(e.target)) {
+                    closeMenu();
+                }
+            });
+
+            document.addEventListener('keydown', (e) => {
+                if (e.key === 'Escape') {
+                    closeMenu();
+                }
+            });
+        }
+    });
 </script>
