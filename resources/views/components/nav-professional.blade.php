@@ -1,24 +1,26 @@
-<!-- Professional Monochrome Navigation for Homepage -->
+<!-- Transparency.ie Navigation - Monochrome Focus -->
 <style>
     :root {
-        --bg: #f8f8f8;
+        --bg: #f5f5f5;
         --panel: #ffffff;
-        --subtle: #666666;
+        --subtle: #757575;
         --ink: #1a1a1a;
         --border: #e0e0e0;
         --blur: blur(20px);
         --card: #ffffff;
-        --shadow: 0 20px 60px rgba(0,0,0,0.08);
+        --shadow: 0 2px 8px rgba(0,0,0,0.08);
+        --accent: #1e3a8a;
     }
     
     :root.dark {
-        --bg: #0a0a0a;
-        --panel: #1a1a1a;
-        --subtle: #999999;
-        --ink: #f5f5f5;
-        --border: #333333;
-        --card: #242424;
-        --shadow: 0 20px 60px rgba(0,0,0,0.4);
+        --bg: #0f172a;
+        --panel: #1e293b;
+        --subtle: #94a3b8;
+        --ink: #f1f5f9;
+        --border: #334155;
+        --card: #293548;
+        --shadow: 0 2px 8px rgba(0,0,0,0.3);
+        --accent: #93c5fd;
     }
     
     /* ===== Navigation Container ===== */
@@ -221,6 +223,33 @@
         flex-shrink: 0;
     }
     
+    .nav-professional-engage-btn {
+        padding: 9px 18px;
+        border: 1.5px solid var(--accent);
+        border-radius: 6px;
+        background: var(--accent);
+        color: white;
+        font-weight: 700;
+        font-size: 12px;
+        text-transform: uppercase;
+        letter-spacing: 0.5px;
+        cursor: pointer;
+        text-decoration: none;
+        transition: all 160ms ease;
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        gap: 6px;
+        white-space: nowrap;
+    }
+    
+    .nav-professional-engage-btn:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 4px 12px rgba(30, 58, 138, 0.25);
+        background: var(--accent);
+        filter: brightness(1.1);
+    }
+    
     .nav-professional-theme-btn {
         padding: 8px 12px;
         border: 1px solid var(--border);
@@ -239,30 +268,6 @@
     .nav-professional-theme-btn:hover {
         border-color: var(--ink);
         background: var(--panel);
-    }
-    
-    .nav-professional-auth-btn {
-        padding: 9px 18px;
-        border: 1.5px solid var(--ink);
-        border-radius: 6px;
-        background: var(--ink);
-        color: var(--panel);
-        font-weight: 700;
-        font-size: 12px;
-        text-transform: uppercase;
-        letter-spacing: 0.5px;
-        cursor: pointer;
-        text-decoration: none;
-        transition: all 160ms ease;
-        display: inline-flex;
-        align-items: center;
-        justify-content: center;
-        gap: 6px;
-    }
-    
-    .nav-professional-auth-btn:hover {
-        transform: translateY(-2px);
-        box-shadow: 0 4px 12px rgba(0,0,0,0.15);
     }
     
     /* ===== Responsive ===== */
@@ -298,6 +303,7 @@
         
         .nav-professional-links {
             gap: 2px;
+            display: none;
         }
         
         .nav-professional-link,
@@ -310,9 +316,10 @@
             min-width: 240px;
         }
         
-        .nav-professional-auth-btn {
-            padding: 8px 14px;
+        .nav-professional-engage-btn {
+            padding: 8px 12px;
             font-size: 11px;
+            white-space: nowrap;
         }
     }
 </style>
@@ -321,79 +328,69 @@
     <div class="nav-professional-inner">
         <!-- Brand -->
         <a href="/" class="nav-professional-brand">
-            <div class="nav-professional-badge">T</div>
+            <div class="nav-professional-badge">💰</div>
             <span>Transparency.ie</span>
         </a>
         
-        <!-- Navigation Links -->
+        <!-- Navigation Links - Focused on New Features -->
         <div class="nav-professional-links">
             <a href="/" class="nav-professional-link @if(request()->is('/')) active @endif">
-                🏠 Home
+                📊 Dashboard
             </a>
             
-            <!-- Pillars Dropdown -->
+            <a href="/timeline" class="nav-professional-link @if(request()->is('timeline*')) active @endif">
+                📅 Timeline
+            </a>
+            
+            <a href="/spending/explorer" class="nav-professional-link @if(request()->is('spending*')) active @endif">
+                🔍 Spending
+            </a>
+            
+            <a href="/admin/import" class="nav-professional-link @if(request()->is('admin*')) active @endif">
+                📥 Import Data
+            </a>
+            
+            <!-- Legacy Dropdown -->
             <div class="nav-professional-pillars">
                 <button type="button" class="nav-professional-pillars-trigger" data-pillars-toggle>
-                    📊 Pillars
+                    📍 More
                 </button>
                 <div class="nav-professional-pillars-menu">
                     <a href="/transparency" class="nav-professional-pillar-item">
                         <span class="nav-professional-pillar-icon">💰</span>
                         <div class="nav-professional-pillar-text">
-                            <p class="nav-professional-pillar-title">Transparency</p>
-                            <p class="nav-professional-pillar-desc">Budgets & spending tracking</p>
+                            <p class="nav-professional-pillar-title">Full Dashboard</p>
+                            <p class="nav-professional-pillar-desc">Complete budget tracking</p>
                         </div>
                     </a>
                     <a href="/environment" class="nav-professional-pillar-item">
                         <span class="nav-professional-pillar-icon">🌍</span>
                         <div class="nav-professional-pillar-text">
                             <p class="nav-professional-pillar-title">Environment</p>
-                            <p class="nav-professional-pillar-desc">Climate & sustainability data</p>
+                            <p class="nav-professional-pillar-desc">Climate & sustainability</p>
                         </div>
                     </a>
                     <a href="/waterford" class="nav-professional-pillar-item">
                         <span class="nav-professional-pillar-icon">🏛️</span>
                         <div class="nav-professional-pillar-text">
                             <p class="nav-professional-pillar-title">Waterford</p>
-                            <p class="nav-professional-pillar-desc">Council spending & initiatives</p>
-                        </div>
-                    </a>
-                    <a href="/technologies" class="nav-professional-pillar-item">
-                        <span class="nav-professional-pillar-icon">💡</span>
-                        <div class="nav-professional-pillar-text">
-                            <p class="nav-professional-pillar-title">Innovation</p>
-                            <p class="nav-professional-pillar-desc">Technologies & trials</p>
+                            <p class="nav-professional-pillar-desc">Council spending</p>
                         </div>
                     </a>
                 </div>
             </div>
-            
-            <a href="/case-studies" class="nav-professional-link @if(request()->is('case-studies*')) active @endif">
-                📚 Case Studies
-            </a>
-            
-            <a href="/events" class="nav-professional-link @if(request()->is('events*')) active @endif">
-                🎯 Events
-            </a>
         </div>
         
         <!-- Right Actions -->
         <div class="nav-professional-actions">
+            <!-- Engage CTA Button -->
+            <a href="https://enjoyireland.com" target="_blank" class="nav-professional-engage-btn" title="Join the conversation on enjoyireland.com">
+                💬 Engage
+            </a>
+            
             <button type="button" class="nav-professional-theme-btn" onclick="toggleTheme()" title="Toggle light/dark mode">
                 <span id="theme-toggle-icon">☀️</span>
             </button>
-            
-            @if (Route::has('login'))
-                @auth
-                    <a href="{{ url('/transparency') }}" class="nav-professional-auth-btn">
-                        👤 Transparency
-                    </a>
-                @else
-                    <a href="{{ route('login') }}" class="nav-professional-auth-btn">
-                        🔐 Login
-                    </a>
-                @endauth
-            @endif
         </div>
     </div>
 </nav>
