@@ -6,11 +6,45 @@
     <title>Spending Explorer - Detailed Breakdown</title>
     @vite(['resources/css/app.css', 'resources/js/app.js'])
     <style>
-        body {
-            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', system-ui, sans-serif;
-            background: #f8fafc;
+        :root {
+            --bg: #f8fafc;
+            --panel: #ffffff;
+            --subtle: #64748b;
+            --ink: #0f172a;
+            --border: #e2e8f0;
+            --accent: #1e3a8a;
+            --accent-light: #3b82f6;
+            --success: #16a34a;
+            --warning: #ea580c;
+            --danger: #dc2626;
+        }
+
+        :root.dark {
+            --bg: #0f172a;
+            --panel: #1e293b;
+            --subtle: #cbd5e1;
+            --ink: #f1f5f9;
+            --border: #334155;
+            --accent: #60a5fa;
+            --accent-light: #93c5fd;
+            --success: #4ade80;
+            --warning: #fb923c;
+            --danger: #ef4444;
+        }
+
+        * {
+            box-sizing: border-box;
             margin: 0;
             padding: 0;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', system-ui, sans-serif;
+            background: var(--bg);
+            color: var(--ink);
+            margin: 0;
+            padding: 0;
+            transition: background-color 200ms ease, color 200ms ease;
         }
 
         .container {
@@ -20,7 +54,7 @@
         }
 
         .header-section {
-            background: linear-gradient(135deg, #dc2626 0%, #f97316 100%);
+            background: linear-gradient(135deg, #1e3a8a 0%, #3b82f6 50%, #1e3a8a 100%);
             color: white;
             padding: 48px;
             border-radius: 16px;
@@ -29,11 +63,16 @@
         }
 
         .search-filters {
-            background: white;
+            background: var(--panel);
+            border: 1px solid var(--border);
             padding: 24px;
             border-radius: 12px;
             margin-bottom: 32px;
             box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+        }
+
+        :root.dark .search-filters {
+            box-shadow: 0 1px 3px rgba(0,0,0,0.3);
         }
 
         .search-box {
@@ -47,15 +86,22 @@
             flex: 1;
             min-width: 300px;
             padding: 14px 20px;
-            border: 2px solid #e2e8f0;
+            border: 2px solid var(--border);
             border-radius: 8px;
             font-size: 16px;
-            transition: all 200ms;
+            background: var(--panel);
+            color: var(--ink);
+            transition: all 200ms ease;
         }
 
         .search-input:focus {
             outline: none;
-            border-color: #dc2626;
+            border-color: var(--accent);
+            box-shadow: 0 0 0 3px rgba(30, 58, 138, 0.1);
+        }
+
+        :root.dark .search-input:focus {
+            box-shadow: 0 0 0 3px rgba(96, 165, 250, 0.1);
         }
 
         .filter-tags {
@@ -66,18 +112,25 @@
 
         .filter-tag {
             padding: 8px 16px;
-            border: 2px solid #e2e8f0;
+            border: 2px solid var(--border);
             border-radius: 20px;
-            background: white;
+            background: var(--panel);
+            color: var(--ink);
             cursor: pointer;
             font-size: 14px;
             font-weight: 600;
-            transition: all 200ms;
+            transition: all 200ms ease;
         }
 
-        .filter-tag:hover, .filter-tag.active {
-            border-color: #dc2626;
-            background: #dc2626;
+        .filter-tag:hover {
+            border-color: var(--accent);
+            background: var(--accent);
+            color: white;
+        }
+
+        .filter-tag.active {
+            border-color: var(--accent);
+            background: var(--accent);
             color: white;
         }
 
@@ -87,23 +140,33 @@
         }
 
         .spending-card {
-            background: white;
+            background: var(--panel);
+            border: 1px solid var(--border);
             padding: 24px;
             border-radius: 12px;
             box-shadow: 0 1px 3px rgba(0,0,0,0.1);
-            border-left: 6px solid #dc2626;
-            transition: all 300ms;
+            border-left: 6px solid var(--accent);
+            transition: all 300ms ease;
             position: relative;
         }
 
+        :root.dark .spending-card {
+            box-shadow: 0 1px 3px rgba(0,0,0,0.3);
+        }
+
         .spending-card:hover {
-            box-shadow: 0 10px 20px rgba(0,0,0,0.15);
+            box-shadow: 0 10px 20px rgba(0,0,0,0.12);
             transform: translateX(4px);
+            border-color: var(--accent);
         }
 
         .spending-card.questionable {
-            background: #fef2f2;
-            border-left-color: #dc2626;
+            background: var(--panel);
+            border-left-color: var(--danger);
+        }
+
+        :root.dark .spending-card.questionable {
+            background: var(--panel);
         }
 
         .card-header {
@@ -117,14 +180,14 @@
         .card-title {
             font-size: 20px;
             font-weight: 800;
-            color: #0f172a;
+            color: var(--ink);
             flex: 1;
         }
 
         .card-amount {
             font-size: 32px;
             font-weight: 900;
-            color: #dc2626;
+            color: var(--accent);
             white-space: nowrap;
         }
 
@@ -145,33 +208,58 @@
         }
 
         .badge-questionable {
-            background: #dc2626;
-            color: white;
+            background: rgba(220, 38, 38, 0.15);
+            color: var(--danger);
+        }
+
+        :root.dark .badge-questionable {
+            background: rgba(239, 68, 68, 0.2);
+            color: #fca5a5;
         }
 
         .badge-category {
-            background: #e0e7ff;
-            color: #3730a3;
+            background: rgba(30, 58, 138, 0.1);
+            color: var(--accent);
+        }
+
+        :root.dark .badge-category {
+            background: rgba(96, 165, 250, 0.2);
+            color: #bfdbfe;
         }
 
         .badge-status {
-            background: #dcfce7;
-            color: #166534;
+            background: rgba(22, 163, 74, 0.1);
+            color: var(--success);
+        }
+
+        :root.dark .badge-status {
+            background: rgba(74, 222, 128, 0.2);
+            color: #86efac;
         }
 
         .badge-date {
-            background: #dbeafe;
-            color: #1e40af;
+            background: rgba(30, 58, 138, 0.1);
+            color: var(--accent);
+        }
+
+        :root.dark .badge-date {
+            background: rgba(96, 165, 250, 0.2);
+            color: #bfdbfe;
         }
 
         .badge-location {
-            background: #fef3c7;
-            color: #92400e;
+            background: rgba(234, 88, 12, 0.1);
+            color: var(--warning);
+        }
+
+        :root.dark .badge-location {
+            background: rgba(251, 146, 60, 0.2);
+            color: #fdba74;
         }
 
         .interest-bar {
             height: 6px;
-            background: #e2e8f0;
+            background: var(--border);
             border-radius: 3px;
             overflow: hidden;
             margin-top: 12px;
@@ -179,8 +267,8 @@
 
         .interest-fill {
             height: 100%;
-            background: linear-gradient(90deg, #16a34a, #f59e0b, #dc2626);
-            transition: width 300ms;
+            background: linear-gradient(90deg, var(--success), var(--warning), var(--danger));
+            transition: width 300ms ease;
         }
 
         .stats-grid {
@@ -191,26 +279,80 @@
         }
 
         .stat-box {
-            background: white;
+            background: var(--panel);
+            border: 1px solid var(--border);
             padding: 20px;
             border-radius: 12px;
             text-align: center;
-            box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+            box-shadow: 0 1px 3px rgba(0,0,0,0.08);
+            transition: all 200ms ease;
+        }
+
+        :root.dark .stat-box {
+            box-shadow: 0 1px 3px rgba(0,0,0,0.3);
+        }
+
+        .stat-box:hover {
+            border-color: var(--accent);
+            box-shadow: 0 4px 12px rgba(30, 58, 138, 0.12);
         }
 
         .stat-value {
             font-size: 32px;
             font-weight: 900;
-            color: #dc2626;
+            color: var(--accent);
             margin-bottom: 4px;
         }
 
         .stat-label {
             font-size: 12px;
-            color: #64748b;
+            color: var(--subtle);
             text-transform: uppercase;
             letter-spacing: 1px;
         }
+
+        details {
+            cursor: pointer;
+        }
+
+        details summary {
+            cursor: pointer;
+            font-weight: 600;
+            color: var(--accent);
+        }
+
+        details p {
+            margin-top: 8px;
+            padding: 12px;
+            background: rgba(30, 58, 138, 0.05);
+            border-radius: 8px;
+            font-size: 14px;
+            color: var(--subtle);
+        }
+
+        :root.dark details p {
+            background: rgba(96, 165, 250, 0.1);
+        }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            .container {
+                padding: 80px 16px 40px;
+            }
+
+            .card-header {
+                flex-direction: column;
+            }
+
+            .search-box {
+                flex-direction: column;
+            }
+
+            .search-input {
+                min-width: auto;
+            }
+        }
+    </style>
     </style>
 </head>
 <body>
@@ -292,7 +434,7 @@
                     </div>
 
                     @if($item->description)
-                        <p style="color: #475569; margin-bottom: 12px; line-height: 1.6;">
+                        <p style="color: var(--subtle); margin-bottom: 12px; line-height: 1.6;">
                             {{ Str::limit($item->description, 200) }}
                         </p>
                     @endif
@@ -317,13 +459,13 @@
                     </div>
 
                     @if($item->vendor)
-                        <div style="font-size: 14px; color: #64748b; margin-top: 8px;">
+                        <div style="font-size: 14px; color: var(--subtle); margin-top: 8px;">
                             <strong>Vendor:</strong> {{ $item->vendor }}
                         </div>
                     @endif
 
                     <div style="display: flex; justify-content: space-between; align-items: center; margin-top: 12px;">
-                        <span style="font-size: 13px; font-weight: 600; color: #64748b;">
+                        <span style="font-size: 13px; font-weight: 600; color: var(--subtle);">
                             Public Interest Score
                         </span>
                         <span style="font-size: 16px; font-weight: 800; color: {{ $item->public_interest_score >= 70 ? '#dc2626' : '#64748b' }};">
@@ -336,8 +478,8 @@
 
                     @if($item->justification)
                         <details style="margin-top: 12px;">
-                            <summary style="cursor: pointer; font-weight: 600; color: #475569;">View Justification</summary>
-                            <p style="margin-top: 8px; padding: 12px; background: #f8fafc; border-radius: 8px; font-size: 14px; color: #475569;">
+                            <summary style="cursor: pointer; font-weight: 600; color: var(--accent);">View Justification</summary>
+                            <p style="margin-top: 8px; padding: 12px; background: rgba(30, 58, 138, 0.05); border-radius: 8px; font-size: 14px; color: var(--subtle);">
                                 {{ $item->justification }}
                             </p>
                         </details>
@@ -347,7 +489,7 @@
                 <div style="background: white; padding: 64px; border-radius: 12px; text-align: center;">
                     <div style="font-size: 80px; margin-bottom: 16px;">📊</div>
                     <h2 style="margin-bottom: 12px; font-size: 32px;">No Spending Items Yet</h2>
-                    <p style="color: #64748b; font-size: 18px; margin-bottom: 24px;">
+                    <p style="color: var(--subtle); font-size: 18px; margin-bottom: 24px;">
                         Import spending data to start tracking government expenditures.
                     </p>
                     <a href="/admin/import" style="display: inline-block; padding: 16px 32px; background: #dc2626; color: white; border-radius: 8px; text-decoration: none; font-weight: 700; font-size: 16px;">

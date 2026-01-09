@@ -345,46 +345,24 @@
             <a href="/spending/explorer" class="nav-professional-link @if(request()->is('spending*')) active @endif">
                 🔍 Spending
             </a>
+
+            <a href="/environment" class="nav-professional-link @if(request()->is('environment*')) active @endif">
+                🌍 Environment
+            </a>
+
+            <a href="/waterford-council" class="nav-professional-link @if(request()->is('waterford-council*')) active @endif">
+                🏛️ Waterford Council
+            </a>
             
             <a href="/admin/import" class="nav-professional-link @if(request()->is('admin*')) active @endif">
                 📥 Import Data
             </a>
-            
-            <!-- Legacy Dropdown -->
-            <div class="nav-professional-pillars">
-                <button type="button" class="nav-professional-pillars-trigger" data-pillars-toggle>
-                    📍 More
-                </button>
-                <div class="nav-professional-pillars-menu">
-                    <a href="/transparency" class="nav-professional-pillar-item">
-                        <span class="nav-professional-pillar-icon">💰</span>
-                        <div class="nav-professional-pillar-text">
-                            <p class="nav-professional-pillar-title">Full Dashboard</p>
-                            <p class="nav-professional-pillar-desc">Complete budget tracking</p>
-                        </div>
-                    </a>
-                    <a href="/environment" class="nav-professional-pillar-item">
-                        <span class="nav-professional-pillar-icon">🌍</span>
-                        <div class="nav-professional-pillar-text">
-                            <p class="nav-professional-pillar-title">Environment</p>
-                            <p class="nav-professional-pillar-desc">Climate & sustainability</p>
-                        </div>
-                    </a>
-                    <a href="/waterford" class="nav-professional-pillar-item">
-                        <span class="nav-professional-pillar-icon">🏛️</span>
-                        <div class="nav-professional-pillar-text">
-                            <p class="nav-professional-pillar-title">Waterford</p>
-                            <p class="nav-professional-pillar-desc">Council spending</p>
-                        </div>
-                    </a>
-                </div>
-            </div>
         </div>
         
         <!-- Right Actions -->
         <div class="nav-professional-actions">
             <!-- Engage CTA Button -->
-            <a href="https://enjoyireland.com" target="_blank" class="nav-professional-engage-btn" title="Join the conversation on enjoyireland.com">
+            <a href="https://enjoyumunster.vercel.app" target="_blank" class="nav-professional-engage-btn" title="Join the conversation on enjoymunster.ie">
                 💬 Engage
             </a>
             
@@ -435,33 +413,5 @@
     // Update icon on load
     document.addEventListener('DOMContentLoaded', () => {
         updateThemeIcon();
-
-        const pillars = document.querySelector('.nav-professional-pillars');
-        const toggle = document.querySelector('[data-pillars-toggle]');
-        const menu = pillars ? pillars.querySelector('.nav-professional-pillars-menu') : null;
-
-        if (pillars && toggle && menu) {
-            const closeMenu = () => pillars.classList.remove('open');
-
-            toggle.addEventListener('click', (e) => {
-                e.preventDefault();
-                e.stopPropagation();
-                pillars.classList.toggle('open');
-            });
-
-            menu.addEventListener('click', (e) => e.stopPropagation());
-
-            document.addEventListener('click', (e) => {
-                if (!pillars.contains(e.target)) {
-                    closeMenu();
-                }
-            });
-
-            document.addEventListener('keydown', (e) => {
-                if (e.key === 'Escape') {
-                    closeMenu();
-                }
-            });
-        }
     });
 </script>

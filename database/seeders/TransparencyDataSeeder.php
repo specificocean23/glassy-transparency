@@ -29,63 +29,37 @@ class TransparencyDataSeeder extends Seeder
 
     private function seedTransparencyData()
     {
-        // Real Irish Government Spending 2023-2026 (estimated billions)
-        $budgetData = [
-            2026 => [
-                'Health' => ['allocated' => 23500000000, 'spent' => 22100000000],
-                'Education' => ['allocated' => 12800000000, 'spent' => 12400000000],
-                'Social Welfare & Family Support' => ['allocated' => 29200000000, 'spent' => 28900000000],
-                'Infrastructure & Transport' => ['allocated' => 8400000000, 'spent' => 7800000000],
-                'Justice & Policing (Gardai)' => ['allocated' => 4200000000, 'spent' => 4150000000],
-                'Environment & Climate Action' => ['allocated' => 3100000000, 'spent' => 2900000000],
-                'Fossil Fuel Phase-Out & Subsidies' => ['allocated' => 2100000000, 'spent' => 1950000000],
-                'Defence & Security' => ['allocated' => 1500000000, 'spent' => 1450000000],
-                'Arts & Culture' => ['allocated' => 850000000, 'spent' => 780000000],
-                'Housing & Community' => ['allocated' => 4900000000, 'spent' => 4600000000],
-            ],
-            2025 => [
-                'Health' => ['allocated' => 22800000000, 'spent' => 21500000000],
-                'Education' => ['allocated' => 12400000000, 'spent' => 12000000000],
-                'Social Welfare & Family Support' => ['allocated' => 28900000000, 'spent' => 28600000000],
-                'Infrastructure & Transport' => ['allocated' => 7900000000, 'spent' => 7200000000],
-                'Justice & Policing (Gardai)' => ['allocated' => 4050000000, 'spent' => 4000000000],
-                'Environment & Climate Action' => ['allocated' => 2900000000, 'spent' => 2700000000],
-                'Fossil Fuel Phase-Out & Subsidies' => ['allocated' => 2300000000, 'spent' => 2100000000],
-                'Defence & Security' => ['allocated' => 1450000000, 'spent' => 1400000000],
-                'Arts & Culture' => ['allocated' => 800000000, 'spent' => 720000000],
-                'Housing & Community' => ['allocated' => 4500000000, 'spent' => 4200000000],
-            ],
-            2024 => [
-                'Health' => ['allocated' => 22000000000, 'spent' => 20800000000],
-                'Education' => ['allocated' => 12000000000, 'spent' => 11600000000],
-                'Social Welfare & Family Support' => ['allocated' => 28200000000, 'spent' => 27900000000],
-                'Infrastructure & Transport' => ['allocated' => 7500000000, 'spent' => 6900000000],
-                'Justice & Policing (Gardai)' => ['allocated' => 3900000000, 'spent' => 3850000000],
-                'Environment & Climate Action' => ['allocated' => 2700000000, 'spent' => 2500000000],
-                'Fossil Fuel Phase-Out & Subsidies' => ['allocated' => 2500000000, 'spent' => 2300000000],
-                'Defence & Security' => ['allocated' => 1400000000, 'spent' => 1350000000],
-                'Arts & Culture' => ['allocated' => 750000000, 'spent' => 680000000],
-                'Housing & Community' => ['allocated' => 4200000000, 'spent' => 3900000000],
-            ],
-            2023 => [
-                'Health' => ['allocated' => 21200000000, 'spent' => 20000000000],
-                'Education' => ['allocated' => 11600000000, 'spent' => 11200000000],
-                'Social Welfare & Family Support' => ['allocated' => 27500000000, 'spent' => 27200000000],
-                'Infrastructure & Transport' => ['allocated' => 7200000000, 'spent' => 6500000000],
-                'Justice & Policing (Gardai)' => ['allocated' => 3750000000, 'spent' => 3700000000],
-                'Environment & Climate Action' => ['allocated' => 2500000000, 'spent' => 2300000000],
-                'Fossil Fuel Phase-Out & Subsidies' => ['allocated' => 2700000000, 'spent' => 2500000000],
-                'Defence & Security' => ['allocated' => 1350000000, 'spent' => 1300000000],
-                'Arts & Culture' => ['allocated' => 700000000, 'spent' => 630000000],
-                'Housing & Community' => ['allocated' => 3800000000, 'spent' => 3500000000],
-            ],
+        // Baseline Irish Government Spending for 2026 (euros)
+        $baseline = [
+            'Social Welfare & Family Support' => ['allocated' => 29200000000, 'spent' => 28900000000],
+            'Health' => ['allocated' => 23500000000, 'spent' => 22100000000],
+            'Education' => ['allocated' => 12800000000, 'spent' => 12400000000],
+            'Infrastructure & Transport' => ['allocated' => 8400000000, 'spent' => 7800000000],
+            'Housing - New Construction' => ['allocated' => 2800000000, 'spent' => 2600000000],
+            'Housing - Existing Stock' => ['allocated' => 2100000000, 'spent' => 2000000000],
+            'Justice & Policing (Gardai)' => ['allocated' => 4200000000, 'spent' => 4150000000],
+            'Environment & Climate Action' => ['allocated' => 3100000000, 'spent' => 2900000000],
+            'Fossil Fuel Phase-Out & Subsidies' => ['allocated' => 2100000000, 'spent' => 1950000000],
+            'EU Programmes & Receipts' => ['allocated' => 1800000000, 'spent' => 1700000000],
+            'EU Contributions' => ['allocated' => 1500000000, 'spent' => 1500000000],
+            'Defence & Security' => ['allocated' => 1500000000, 'spent' => 1450000000],
+            'Arts & Culture' => ['allocated' => 850000000, 'spent' => 780000000],
         ];
-        
-        foreach ($budgetData as $year => $categories) {
-            foreach ($categories as $category => $amounts) {
-                $allocated = $amounts['allocated'];
-                $spent = $amounts['spent'];
-                $predicted = $spent * 1.02;
+
+        $startYear = 2010;
+        $endYear = 2026;
+
+        for ($year = $endYear; $year >= $startYear; $year--) {
+            $yearsBack = $endYear - $year;
+            // Mild decay over time (~1.5% per year, bottoming at 60% of baseline)
+            $decay = max(0.60, 1 - (0.015 * $yearsBack));
+
+            foreach ($baseline as $category => $amounts) {
+                $allocated = (int) round($amounts['allocated'] * $decay);
+                // Spent typically close to allocated with small variance
+                $spentVariance = 0.93 + (mt_rand(0, 10) / 100); // 0.93 - 1.03
+                $spent = (int) round($allocated * $spentVariance);
+                $predicted = (int) round($spent * 1.02);
 
                 Budget::create([
                     'year' => $year,
@@ -99,6 +73,7 @@ class TransparencyDataSeeder extends Seeder
                 ]);
             }
         }
+    }
 
         // Create Timeline Events
         $events = [

@@ -6,11 +6,45 @@
     <title>Timeline - All Major Events</title>
     @vite(['resources/css/app.css', 'resources/js/app.js'])
     <style>
-        body {
-            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', system-ui, sans-serif;
-            background: #f8fafc;
+        :root {
+            --bg: #f8fafc;
+            --panel: #ffffff;
+            --subtle: #64748b;
+            --ink: #0f172a;
+            --border: #e2e8f0;
+            --accent: #1e3a8a;
+            --accent-light: #3b82f6;
+            --success: #16a34a;
+            --warning: #ea580c;
+            --danger: #dc2626;
+        }
+
+        :root.dark {
+            --bg: #0f172a;
+            --panel: #1e293b;
+            --subtle: #cbd5e1;
+            --ink: #f1f5f9;
+            --border: #334155;
+            --accent: #60a5fa;
+            --accent-light: #93c5fd;
+            --success: #4ade80;
+            --warning: #fb923c;
+            --danger: #ef4444;
+        }
+
+        * {
+            box-sizing: border-box;
             margin: 0;
             padding: 0;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', system-ui, sans-serif;
+            background: var(--bg);
+            color: var(--ink);
+            margin: 0;
+            padding: 0;
+            transition: background-color 200ms ease, color 200ms ease;
         }
 
         .container {
@@ -20,9 +54,10 @@
         }
 
         .filters {
-            background: white;
+            background: var(--panel);
             padding: 24px;
             border-radius: 12px;
+            border: 1px solid var(--border);
             margin-bottom: 32px;
             box-shadow: 0 1px 3px rgba(0,0,0,0.1);
             display: flex;
@@ -30,19 +65,30 @@
             flex-wrap: wrap;
         }
 
+        :root.dark .filters {
+            box-shadow: 0 1px 3px rgba(0,0,0,0.3);
+        }
+
         .filter-btn {
             padding: 10px 20px;
-            border: 2px solid #e2e8f0;
+            border: 2px solid var(--border);
             border-radius: 8px;
-            background: white;
+            background: var(--panel);
+            color: var(--ink);
             cursor: pointer;
-            transition: all 200ms;
+            transition: all 200ms ease;
             font-weight: 600;
         }
 
-        .filter-btn:hover, .filter-btn.active {
-            border-color: #dc2626;
-            background: #dc2626;
+        .filter-btn:hover {
+            border-color: var(--accent);
+            background: var(--accent);
+            color: white;
+        }
+
+        .filter-btn.active {
+            border-color: var(--accent);
+            background: var(--accent);
             color: white;
         }
 
@@ -58,22 +104,28 @@
             top: 0;
             bottom: 0;
             width: 4px;
-            background: linear-gradient(to bottom, #dc2626, #f97316);
+            background: linear-gradient(to bottom, var(--accent), var(--accent-light));
         }
 
         .timeline-item {
             position: relative;
             margin-bottom: 48px;
-            background: white;
+            background: var(--panel);
+            border: 1px solid var(--border);
             padding: 24px;
             border-radius: 12px;
-            box-shadow: 0 4px 6px -1px rgba(0,0,0,0.1);
-            transition: all 300ms;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+            transition: all 300ms ease;
+        }
+
+        :root.dark .timeline-item {
+            box-shadow: 0 1px 3px rgba(0,0,0,0.3);
         }
 
         .timeline-item:hover {
-            box-shadow: 0 20px 25px -5px rgba(0,0,0,0.1);
+            box-shadow: 0 10px 25px rgba(0,0,0,0.1);
             transform: translateX(8px);
+            border-color: var(--accent);
         }
 
         .timeline-item::before {
@@ -84,9 +136,9 @@
             width: 24px;
             height: 24px;
             border-radius: 50%;
-            background: white;
-            border: 4px solid #dc2626;
-            box-shadow: 0 0 0 4px white, 0 0 0 8px #dc2626;
+            background: var(--panel);
+            border: 4px solid var(--accent);
+            box-shadow: 0 0 0 4px var(--panel), 0 0 0 8px var(--accent);
             z-index: 10;
         }
 
@@ -101,7 +153,7 @@
         .event-title {
             font-size: 22px;
             font-weight: 800;
-            color: #0f172a;
+            color: var(--ink);
         }
 
         .event-amount {
@@ -111,11 +163,11 @@
         }
 
         .event-amount.expense {
-            color: #dc2626;
+            color: var(--danger);
         }
 
         .event-amount.income {
-            color: #16a34a;
+            color: var(--success);
         }
 
         .event-meta {
@@ -134,29 +186,98 @@
         }
 
         .badge-date {
-            background: #dbeafe;
-            color: #1e40af;
+            background: rgba(30, 58, 138, 0.1);
+            color: var(--accent);
+        }
+
+        :root.dark .badge-date {
+            background: rgba(96, 165, 250, 0.2);
+            color: #bfdbfe;
         }
 
         .badge-type {
-            background: #fef3c7;
-            color: #92400e;
+            background: rgba(234, 88, 12, 0.1);
+            color: var(--warning);
+        }
+
+        :root.dark .badge-type {
+            background: rgba(251, 146, 60, 0.2);
+            color: #fdba74;
         }
 
         .badge-controversial {
-            background: #fee2e2;
-            color: #991b1b;
+            background: rgba(220, 38, 38, 0.1);
+            color: var(--danger);
+        }
+
+        :root.dark .badge-controversial {
+            background: rgba(239, 68, 68, 0.2);
+            color: #fca5a5;
         }
 
         .badge-featured {
-            background: #fef9c3;
-            color: #854d0e;
+            background: rgba(251, 191, 36, 0.1);
+            color: #b45309;
+        }
+
+        :root.dark .badge-featured {
+            background: rgba(251, 191, 36, 0.2);
+            color: #fcd34d;
         }
 
         .badge-impact {
-            background: #fae8ff;
-            color: #86198f;
+            background: rgba(147, 51, 234, 0.1);
+            color: #7c3aed;
         }
+
+        :root.dark .badge-impact {
+            background: rgba(196, 181, 253, 0.2);
+            color: #ddd6fe;
+        }
+
+        a {
+            color: var(--accent);
+            transition: opacity 200ms ease;
+        }
+
+        a:hover {
+            opacity: 0.8;
+        }
+
+        .btn {
+            padding: 12px 24px;
+            background: var(--accent);
+            color: white;
+            border-radius: 8px;
+            text-decoration: none;
+            font-weight: 700;
+            transition: all 200ms ease;
+        }
+
+        .btn:hover {
+            background: var(--accent-light);
+            transform: translateY(-2px);
+        }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            .container {
+                padding: 80px 16px 40px;
+            }
+
+            .timeline {
+                padding-left: 20px;
+            }
+
+            .timeline-item::before {
+                left: -36px;
+            }
+
+            .event-header {
+                flex-direction: column;
+            }
+        }
+    </style>
     </style>
 </head>
 <body>
@@ -164,7 +285,7 @@
 
     <div class="container">
         <h1 style="font-size: 48px; font-weight: 900; margin-bottom: 16px;">📅 Timeline of Major Events</h1>
-        <p style="font-size: 18px; color: #64748b; margin-bottom: 32px;">
+        <p style="font-size: 18px; color: var(--subtle); margin-bottom: 32px;">
             Comprehensive timeline of significant government spending and revenue events
         </p>
 
@@ -220,13 +341,13 @@
                     </div>
 
                     @if($event->description)
-                        <p style="color: #475569; line-height: 1.7; margin-bottom: 12px;">
+                        <p style="color: var(--subtle); line-height: 1.7; margin-bottom: 12px;">
                             {{ $event->description }}
                         </p>
                     @endif
 
                     @if($event->department)
-                        <div style="font-size: 14px; color: #64748b;">
+                        <div style="font-size: 14px; color: var(--subtle);">
                             <strong>Department:</strong> {{ $event->department }}
                         </div>
                     @endif
@@ -242,7 +363,7 @@
                 <div style="background: white; padding: 48px; border-radius: 12px; text-align: center;">
                     <div style="font-size: 64px; margin-bottom: 16px;">📭</div>
                     <h2 style="margin-bottom: 12px;">No Events Yet</h2>
-                    <p style="color: #64748b;">Import timeline data to start tracking major government events.</p>
+                    <p style="color: var(--subtle);">Import timeline data to start tracking major government events.</p>
                     <a href="/admin/import" style="display: inline-block; margin-top: 24px; padding: 12px 24px; background: #dc2626; color: white; border-radius: 8px; text-decoration: none; font-weight: 700;">
                         Import Data
                     </a>

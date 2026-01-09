@@ -2,170 +2,68 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\Technology;
-use App\Models\Event;
-use App\Models\CaseStudy;
-use App\Models\AdvocacyCampaign;
-use App\Models\EnvironmentalMetric;
-use App\Models\County;
-use App\Models\FinancialCategory;
-use App\Models\SpendingRecord;
 use App\Models\Budget;
 use App\Models\TimelineEvent;
 use App\Models\SpendingItem;
 use App\Models\RevenueStream;
-use Illuminate\Http\Request;
+use App\Models\CouncilAllowance;
 
 class PublicController extends Controller
 {
-    public function technologies()
-    {
-        $technologies = Technology::all();
-        return view('public.technologies', compact('technologies'));
-    }
-
-    public function events()
-    {
-        $events = Event::where('status', 'published')->orWhere('status', 'active')->get();
-        return view('public.events', compact('events'));
-    }
-
-    public function caseStudies()
-    {
-        $caseStudies = CaseStudy::all();
-        return view('public.case-studies', compact('caseStudies'));
-    }
-
-    public function campaigns()
-    {
-        $campaigns = AdvocacyCampaign::all();
-        return view('public.campaigns', compact('campaigns'));
-    }
-
-    public function metrics()
-    {
-        $year = request()->get('year', 2026);
-        $countySlug = request()->get('county', 'all-federal');
-        $filter = request()->get('filter', null); // environmental, housing
-
-        $counties = County::orderBy('sort_order')->get();
-        $currentCounty = County::where('slug', $countySlug)->first() ?? $counties->first();
-        
-        $categories = FinancialCategory::orderBy('sort_order')->get();
-
-        // Get spending records for current year and county
-        $spendingQuery = SpendingRecord::where('year', $year)
-            ->where('county_id', $currentCounty->id)
-            ->with('financialCategory');
-
-        // Apply filters
-        if ($filter === 'environmental-good') {
-            $categoryIds = FinancialCategory::where('is_environmental_positive', true)->pluck('id');
-            $spendingQuery->whereIn('financial_category_id', $categoryIds);
-        } elseif ($filter === 'environmental-bad') {
-            $categoryIds = FinancialCategory::where('is_environmental_negative', true)->pluck('id');
-            $spendingQuery->whereIn('financial_category_id', $categoryIds);
-        } elseif ($filter === 'new-housing') {
-            $categoryIds = FinancialCategory::where('is_new_housing', true)->pluck('id');
-            $spendingQuery->whereIn('financial_category_id', $categoryIds);
-        } elseif ($filter === 'current-housing') {
-            $categoryIds = FinancialCategory::where('is_current_housing', true)->pluck('id');
-            $spendingQuery->whereIn('financial_category_id', $categoryIds);
-        }
-
-        $spendingRecords = $spendingQuery->get();
-
-        // Get case studies for current county
-        $caseStudiesQuery = CaseStudy::query();
-        if (!$currentCounty->is_federal) {
-            $caseStudiesQuery->where('county_id', $currentCounty->id);
-        }
-        $caseStudies = $caseStudiesQuery->paginate(12);
-
-        // Get available years
-        $availableYears = SpendingRecord::distinct()
-            ->orderBy('year', 'desc')
-            ->pluck('year');
-
-        return view('public.transparency', compact(
-            'counties',
-            'currentCounty',
-            'categories',
-            'spendingRecords',
-            'caseStudies',
-            'year',
-            'availableYears',
-            'filter'
-        ));
-    }
-
-    public function environment()
-    {
-        return view('public.environment');
-    }
-
-    public function waterfordSpending()
-    {
-        // This page uses static data shown in the view
-        // In the future, you can fetch from a database or API
-        return view('waterford-spending');
-    }
-
     public function home()
     {
-        // Get current year and last 3 years for rolling 4-year view
+        $minYear = 2010;
         $currentYear = 2026;
-        $years = range($currentYear, $currentYear - 3);
-        
-        // Get budget summary for 4-year rolling period
-        $budgetSummary = Budget::whereIn('year', $years)
-            ->selectRaw('year, SUM(allocated_amount) as allocated, SUM(spent_amount) as spent, SUM(predicted_amount) as predicted')
+        $availableYears = Budget::distinct()->orderBy('year', 'desc')->pluck('year')->toArray();
+        $selectedYear = (int) request()->get('year', $currentYear);
+        $selectedYear = in_array($selectedYear, $availableYears) ? $selectedYear : $currentYear;
+        $filter = request()->get('filter', 'all');
+
+        // Build bar chart years: selected year + two previous (bounded by minYear)
+        $barYears = array_values(array_filter($availableYears, fn ($y) => $y <= $selectedYear));
+        $barYears = array_slice($barYears, 0, 3);
+
+        // Full budget summary for all years (for chart recomputation client-side)
+        $budgetSummaryAll = Budget::selectRaw('year, SUM(allocated_amount) as allocated, SUM(spent_amount) as spent, SUM(predicted_amount) as predicted')
             ->groupBy('year')
             ->orderBy('year', 'desc')
             ->get();
 
-        // Get all budget data for JavaScript (to support dynamic filtering)
+        // Per-year category breakdown (allocated + spent + predicted) for client-side filters
         $allBudgetsByYear = [];
-        foreach ($years as $year) {
+        foreach ($availableYears as $year) {
             $categoryData = Budget::where('year', $year)
-                ->selectRaw('category, SUM(spent_amount) as total')
+                ->selectRaw('category, SUM(allocated_amount) as allocated, SUM(spent_amount) as spent, SUM(predicted_amount) as predicted')
                 ->groupBy('category')
-                ->orderBy('total', 'desc')
+                ->orderBy('spent', 'desc')
                 ->get();
             $allBudgetsByYear[$year] = $categoryData;
         }
 
-        // Get total spending across all years
-        $totalSpent = Budget::whereIn('year', $years)->sum('spent_amount');
-        $totalAllocated = Budget::whereIn('year', $years)->sum('allocated_amount');
+        // Category breakdown for selected year (no filter applied yet; filters handled client-side)
+        $categoryBreakdown = $allBudgetsByYear[$selectedYear] ?? collect();
 
-        // Get featured timeline events (controversial and high-impact)
+        // Totals (all data, unfiltered)
+        $totalSpent = Budget::sum('spent_amount');
+        $totalAllocated = Budget::sum('allocated_amount');
+
+        // Featured content
         $featuredEvents = TimelineEvent::where('is_featured', true)
             ->orWhere('is_controversial', true)
             ->orderBy('event_date', 'desc')
             ->limit(6)
             ->get();
 
-        // Get questionable spending items
         $questionableSpending = SpendingItem::where('is_questionable', true)
             ->orWhere('public_interest_score', '>=', 80)
             ->orderBy('amount', 'desc')
             ->limit(10)
             ->get();
 
-        // Get major revenue streams
         $majorRevenue = RevenueStream::orderBy('amount', 'desc')
             ->limit(5)
             ->get();
 
-        // Category breakdown for current year
-        $categoryBreakdown = Budget::where('year', $currentYear)
-            ->selectRaw('category, SUM(spent_amount) as total')
-            ->groupBy('category')
-            ->orderBy('total', 'desc')
-            ->get();
-
-        // Statistics
         $stats = [
             'total_spent' => $totalSpent,
             'total_allocated' => $totalAllocated,
@@ -175,15 +73,17 @@ class PublicController extends Controller
         ];
 
         return view('welcome-transparency', compact(
-            'budgetSummary',
+            'budgetSummaryAll',
             'featuredEvents',
             'questionableSpending',
             'majorRevenue',
             'categoryBreakdown',
             'stats',
-            'years',
+            'availableYears',
             'allBudgetsByYear',
-            'currentYear'
+            'selectedYear',
+            'barYears',
+            'filter'
         ));
     }
 
@@ -201,6 +101,118 @@ class PublicController extends Controller
         $categories = SpendingItem::distinct()->pluck('category');
         
         return view('spending.explorer', compact('items', 'categories'));
+    }
+
+    public function environmentDashboard()
+    {
+        $availableYears = Budget::distinct()->orderBy('year', 'desc')->pluck('year')->toArray();
+        if (empty($availableYears)) {
+            $availableYears = [2026, 2025, 2024, 2023];
+        }
+        $currentYear = max($availableYears);
+        $selectedYear = (int) request()->get('year', $currentYear);
+        $selectedYear = in_array($selectedYear, $availableYears) ? $selectedYear : $currentYear;
+
+        $envByYear = Budget::where('category', 'Environment')
+            ->selectRaw('year, SUM(spent_amount) as spent')
+            ->groupBy('year')
+            ->orderBy('year', 'desc')
+            ->get();
+
+        $fossilByYear = Budget::where('category', 'Fossil Fuel')
+            ->selectRaw('year, SUM(spent_amount) as spent')
+            ->groupBy('year')
+            ->orderBy('year', 'desc')
+            ->get();
+
+        $selectedEnv = Budget::where('year', $selectedYear)
+            ->whereIn('category', ['Environment', 'Fossil Fuel'])
+            ->selectRaw('category, SUM(spent_amount) as spent')
+            ->groupBy('category')
+            ->orderBy('spent', 'desc')
+            ->get();
+
+        // Fallback demo data if DB categories are missing
+        if ($envByYear->isEmpty() && $fossilByYear->isEmpty()) {
+            $envByYear = collect([
+                (object)['year' => 2026, 'spent' => 200_000_000],
+                (object)['year' => 2025, 'spent' => 180_000_000],
+                (object)['year' => 2024, 'spent' => 150_000_000],
+            ]);
+            $fossilByYear = collect([
+                (object)['year' => 2026, 'spent' => 500_000_000],
+                (object)['year' => 2025, 'spent' => 550_000_000],
+                (object)['year' => 2024, 'spent' => 600_000_000],
+            ]);
+        }
+
+        if ($selectedEnv->isEmpty()) {
+            $selectedEnv = collect([
+                (object)['category' => 'Environment', 'spent' => 200_000_000],
+                (object)['category' => 'Fossil Fuel', 'spent' => 500_000_000],
+            ]);
+        }
+
+        return view('environment.index', compact(
+            'availableYears',
+            'selectedYear',
+            'envByYear',
+            'fossilByYear',
+            'selectedEnv'
+        ));
+    }
+
+    public function waterfordCouncil()
+    {
+        // Filter spending items by location containing Waterford
+        $availableYears = SpendingItem::where('location', 'like', '%Waterford%')
+            ->selectRaw('EXTRACT(YEAR FROM date) as y')
+            ->distinct()
+            ->orderBy('y', 'desc')
+            ->pluck('y')
+            ->map(fn($y) => (int)$y)
+            ->toArray();
+
+        if (empty($availableYears)) {
+            $availableYears = [2026];
+        }
+
+        $currentYear = max($availableYears);
+        $selectedYear = (int) request()->get('year', $currentYear);
+        $selectedYear = in_array($selectedYear, $availableYears) ? $selectedYear : $currentYear;
+
+        $items = SpendingItem::where('location', 'like', '%Waterford%')
+            ->whereYear('date', $selectedYear)
+            ->orderBy('date', 'desc')
+            ->paginate(50);
+
+        $categories = SpendingItem::where('location', 'like', '%Waterford%')
+            ->distinct()
+            ->pluck('category');
+
+        $categoryBreakdown = SpendingItem::where('location', 'like', '%Waterford%')
+            ->whereYear('date', $selectedYear)
+            ->selectRaw('category, SUM(amount) as total')
+            ->groupBy('category')
+            ->orderBy('total', 'desc')
+            ->get();
+
+        $totalSpent = SpendingItem::where('location', 'like', '%Waterford%')
+            ->whereYear('date', $selectedYear)
+            ->sum('amount');
+
+        $allowanceRecord = CouncilAllowance::forCounty('Waterford')->forYear($selectedYear)->first();
+        $allowance = $allowanceRecord ? $allowanceRecord->amount : null;
+
+        return view('waterford-council', compact(
+            'availableYears',
+            'selectedYear',
+            'items',
+            'categories',
+            'categoryBreakdown',
+            'totalSpent',
+            'allowance'
+        ));
     }
 }
 

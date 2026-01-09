@@ -8,28 +8,31 @@
     <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
     <style>
         :root {
-            --bg: #f5f5f5;
+            --bg: #f8fafc;
             --panel: #ffffff;
-            --subtle: #757575;
-            --ink: #1a1a1a;
-            --border: #e0e0e0;
+            --subtle: #64748b;
+            --ink: #0f172a;
+            --border: #e2e8f0;
             --accent: #1e3a8a;
             --accent-light: #3b82f6;
+            --accent-lighter: #60a5fa;
             --success: #16a34a;
-            --warning: #f59e0b;
-            --danger: #1e40af;
-            --dark: #0f172a;
-            --light: #f8fafc;
+            --warning: #ea580c;
+            --danger: #dc2626;
         }
 
         :root.dark {
             --bg: #0f172a;
             --panel: #1e293b;
-            --subtle: #94a3b8;
+            --subtle: #cbd5e1;
             --ink: #f1f5f9;
             --border: #334155;
-            --accent: #93c5fd;
-            --accent-light: #60a5fa;
+            --accent: #60a5fa;
+            --accent-light: #93c5fd;
+            --accent-lighter: #bfdbfe;
+            --success: #4ade80;
+            --warning: #fb923c;
+            --danger: #ef4444;
         }
 
         * {
@@ -43,10 +46,11 @@
             background: var(--bg);
             color: var(--ink);
             line-height: 1.6;
+            transition: background-color 200ms ease, color 200ms ease;
         }
 
         .hero {
-            background: linear-gradient(135deg, var(--accent) 0%, var(--accent-light) 100%);
+            background: linear-gradient(135deg, #1e3a8a 0%, #3b82f6 50%, #1e3a8a 100%);
             color: white;
             padding: 80px 32px;
             text-align: center;
@@ -62,8 +66,8 @@
             right: 0;
             bottom: 0;
             background: 
-                radial-gradient(circle at 20% 50%, rgba(255,255,255,0.1) 0%, transparent 50%),
-                radial-gradient(circle at 80% 80%, rgba(255,255,255,0.1) 0%, transparent 50%);
+                radial-gradient(circle at 20% 50%, rgba(255,255,255,0.12) 0%, transparent 50%),
+                radial-gradient(circle at 80% 80%, rgba(59, 130, 246, 0.1) 0%, transparent 50%);
             pointer-events: none;
         }
 
@@ -133,25 +137,27 @@
             font-size: 36px;
             font-weight: 800;
             margin-bottom: 12px;
-            color: var(--dark);
+            color: var(--ink);
         }
 
         .section-subtitle {
             font-size: 18px;
-            color: #64748b;
+            color: var(--subtle);
         }
 
         .card {
-            background: white;
-            border-radius: 16px;
+            background: var(--panel);
+            border: 1px solid var(--border);
+            border-radius: 12px;
             padding: 32px;
-            box-shadow: 0 4px 6px -1px rgba(0,0,0,0.1), 0 2px 4px -1px rgba(0,0,0,0.06);
-            transition: all 300ms;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+            backdrop-filter: blur(10px);
+            transition: all 300ms ease;
         }
 
         .card:hover {
-            box-shadow: 0 20px 25px -5px rgba(0,0,0,0.1), 0 10px 10px -5px rgba(0,0,0,0.04);
-            transform: translateY(-4px);
+            box-shadow: 0 10px 25px rgba(0,0,0,0.1);
+            border-color: var(--accent);
         }
 
         .grid {
@@ -177,36 +183,38 @@
         }
 
         .spending-item {
-            border-left: 4px solid var(--primary);
+            border-left: 4px solid var(--accent);
             padding: 20px;
-            background: #fef2f2;
+            background: var(--panel);
+            border: 1px solid var(--border);
             border-radius: 8px;
             margin-bottom: 16px;
-            transition: all 200ms;
+            transition: all 200ms ease;
         }
 
         .spending-item:hover {
-            background: #fee2e2;
+            background: var(--panel);
             transform: translateX(4px);
+            box-shadow: 0 4px 12px rgba(30, 58, 138, 0.15);
         }
 
         .spending-item-title {
             font-weight: 700;
             font-size: 18px;
             margin-bottom: 8px;
-            color: var(--dark);
+            color: var(--ink);
         }
 
         .spending-item-amount {
             font-size: 24px;
             font-weight: 900;
-            color: var(--primary);
+            color: var(--accent);
             margin-bottom: 8px;
         }
 
         .spending-item-meta {
             font-size: 14px;
-            color: #64748b;
+            color: var(--subtle);
         }
 
         .timeline-event {
@@ -224,7 +232,7 @@
             height: 16px;
             border-radius: 50%;
             background: var(--accent);
-            border: 4px solid white;
+            border: 4px solid var(--panel);
             box-shadow: 0 0 0 2px var(--accent);
         }
 
@@ -253,23 +261,43 @@
         }
 
         .badge-danger {
+            background: rgba(220, 38, 38, 0.1);
+            color: var(--danger);
+        }
+
+        :root.dark .badge-danger {
+            background: rgba(239, 68, 68, 0.2);
+            color: #fca5a5;
+        }
+
+        .badge-warning {
+            background: rgba(234, 88, 12, 0.1);
+            color: var(--warning);
+        }
+
+        :root.dark .badge-warning {
+            background: rgba(251, 146, 60, 0.2);
+            color: #fdba74;
+        }
+
+        .badge-success {
+            background: rgba(22, 163, 74, 0.1);
+            color: var(--success);
+        }
+
+        :root.dark .badge-success {
+            background: rgba(74, 222, 128, 0.2);
+            color: #86efac;
+        }
+
+        .badge-info {
             background: rgba(30, 58, 138, 0.1);
             color: var(--accent);
         }
 
-        .badge-warning {
-            background: #fef3c7;
-            color: #92400e;
-        }
-
-        .badge-success {
-            background: #dcfce7;
-            color: #166534;
-        }
-
-        .badge-info {
-            background: #dbeafe;
-            color: #1e40af;
+        :root.dark .badge-info {
+            background: rgba(147, 197, 253, 0.2);
+            color: #bfdbfe;
         }
 
         .btn {
@@ -278,7 +306,7 @@
             border-radius: 8px;
             font-weight: 700;
             text-decoration: none;
-            transition: all 200ms;
+            transition: all 200ms ease;
             border: none;
             cursor: pointer;
             font-size: 16px;
@@ -287,29 +315,24 @@
         .btn-primary {
             background: var(--accent);
             color: white;
-            backdrop-filter: blur(20px);
-            border: 1px solid rgba(255, 255, 255, 0.2);
-            box-shadow: 0 8px 32px rgba(30, 58, 138, 0.2);
+            box-shadow: 0 4px 15px rgba(30, 58, 138, 0.2);
         }
 
         .btn-primary:hover {
             background: var(--accent-light);
             transform: translateY(-2px);
-            box-shadow: 0 12px 24px rgba(30, 58, 138, 0.3), inset 0 1px 0 rgba(255, 255, 255, 0.3);
+            box-shadow: 0 8px 20px rgba(30, 58, 138, 0.3);
         }
 
         .btn-outline {
-            background: rgba(255, 255, 255, 0.1);
-            color: white;
-            border: 1px solid rgba(255, 255, 255, 0.3);
-            backdrop-filter: blur(20px);
-            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
+            background: transparent;
+            color: var(--accent);
+            border: 2px solid var(--accent);
         }
 
         .btn-outline:hover {
-            background: rgba(255, 255, 255, 0.2);
-            border-color: rgba(255, 255, 255, 0.5);
-            box-shadow: 0 12px 40px rgba(0, 0, 0, 0.15), inset 0 1px 0 rgba(255, 255, 255, 0.5);
+            background: var(--accent);
+            color: white;
         }
 
         .stat-card {
@@ -319,15 +342,27 @@
             border: 1px solid var(--border);
             border-radius: 12px;
             backdrop-filter: blur(10px);
-            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.05);
+            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.08);
+            transition: all 200ms ease;
         }
 
-        /* Glassy effect for cards */
-        .card {
-            background: var(--panel) !important;
-            border: 1px solid var(--border) !important;
-            backdrop-filter: blur(10px) !important;
-            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.08) !important;
+        .stat-card:hover {
+            border-color: var(--accent);
+            box-shadow: 0 4px 12px rgba(30, 58, 138, 0.12);
+        }
+
+        .stat-card-value {
+            font-size: 48px;
+            font-weight: 900;
+            color: var(--accent);
+            margin-bottom: 8px;
+        }
+
+        .stat-card-label {
+            font-size: 14px;
+            color: var(--subtle);
+            text-transform: uppercase;
+            letter-spacing: 1px;
         }
 
         /* Time period selector buttons */
@@ -348,15 +383,14 @@
             cursor: pointer;
             font-weight: 600;
             transition: all 200ms ease;
-            backdrop-filter: blur(10px);
-            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.05);
+            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.08);
         }
 
         .time-period-btn:hover {
             background: var(--accent);
             color: white;
             border-color: var(--accent);
-            box-shadow: 0 6px 20px rgba(30, 58, 138, 0.2);
+            box-shadow: 0 4px 12px rgba(30, 58, 138, 0.2);
             transform: translateY(-2px);
         }
 
@@ -364,40 +398,50 @@
             background: var(--accent);
             color: white;
             border-color: var(--accent);
-            box-shadow: 0 8px 25px rgba(30, 58, 138, 0.3), inset 0 1px 0 rgba(255, 255, 255, 0.2);
-        }
-
-        .spending-item {
-            padding: 24px;
-            background: var(--panel);
-            border: 1px solid var(--border);
-            border-radius: 12px;
-            backdrop-filter: blur(10px);
-            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.05);
-        }
-            font-size: 48px;
-            font-weight: 900;
-            color: var(--primary);
-            margin-bottom: 8px;
-        }
-
-        .stat-card-label {
-            font-size: 14px;
-            color: #64748b;
-            text-transform: uppercase;
-            letter-spacing: 1px;
+            box-shadow: 0 6px 20px rgba(30, 58, 138, 0.25);
         }
 
         .alert-box {
-            background: #fff7ed;
+            background: var(--panel);
             border: 2px solid var(--warning);
             border-radius: 12px;
             padding: 24px;
             margin-bottom: 24px;
         }
 
+        :root.dark .alert-box {
+            background: rgba(234, 88, 12, 0.05);
+            border-color: var(--warning);
+        }
+
         .alert-box h3 {
-            color: #92400e;
+            color: var(--warning);
+            margin-bottom: 8px;
+        }
+
+        .alert-box p {
+            color: var(--subtle);
+        }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            .container {
+                padding: 40px 16px;
+            }
+
+            .section {
+                margin-bottom: 60px;
+            }
+
+            .grid-2 {
+                grid-template-columns: 1fr;
+            }
+
+            .card {
+                padding: 20px;
+            }
+        }
+    </style>
             margin-bottom: 12px;
         }
 
@@ -512,7 +556,7 @@
                                 · {{ $item->date->format('M Y') }}
                             </div>
                             @if($item->description)
-                                <p style="margin-top: 12px; font-size: 14px; color: #475569;">
+                                <p style="margin-top: 12px; font-size: 14px; color: var(--subtle);">
                                     {{ Str::limit($item->description, 120) }}
                                 </p>
                             @endif
@@ -560,15 +604,15 @@
                                     {{ $event->formatted_amount }}
                                 </div>
                             @endif
-                            <div style="font-size: 13px; color: #64748b; margin-bottom: 8px;">
+                            <div style="font-size: 13px; color: var(--subtle); margin-bottom: 8px;">
                                 {{ $event->event_date->format('F j, Y') }} · {{ ucfirst($event->event_type) }}
                             </div>
-                            <p style="font-size: 14px; color: #475569;">
+                            <p style="font-size: 14px; color: var(--subtle);">
                                 {{ Str::limit($event->description, 150) }}
                             </p>
                         </div>
                     @empty
-                        <p style="color: #64748b;">No timeline events yet. Import data to populate this section.</p>
+                        <p style="color: var(--subtle);">No timeline events yet. Import data to populate this section.</p>
                     @endforelse
                 </div>
 
@@ -585,7 +629,7 @@
                             </div>
                         </div>
                     @empty
-                        <p style="color: #64748b;">No revenue data yet. Import data to track government income.</p>
+                        <p style="color: var(--subtle);">No revenue data yet. Import data to track government income.</p>
                     @endforelse
                 </div>
             </div>
@@ -626,7 +670,7 @@
                 </p>
                 <div style="display: flex; gap: 16px; justify-content: center; flex-wrap: wrap;">
                     <a href="/admin/import" class="btn" style="background: rgba(255,255,255,0.95); color: var(--accent); backdrop-filter: blur(10px);">Import Data</a>
-                    <a href="/transparency" class="btn btn-outline" >Explore Dashboard</a>
+                    <a href="/timeline" class="btn btn-outline">Explore Timeline</a>
                 </div>
             </div>
         </section>
@@ -635,7 +679,7 @@
     <script>
         let budgetChart = null;
         let categoryChart = null;
-        const allYears = @json($years);
+        const allYears = @json($availableYears);
         const allBudgetsByYear = @json($allBudgetsByYear);
         const colorPalette = [
             '#1e3a8a', '#3b82f6', '#0ea5e9', '#06b6d4', 
@@ -651,7 +695,7 @@
 
             const selectedYears = allYears.slice(0, numYears);
             const budgetData = selectedYears.map(year => {
-                const yearBudgets = @json($budgetSummary);
+                const yearBudgets = @json($budgetSummaryAll);
                 return yearBudgets.find(b => b.year == year);
             }).filter(b => b);
 
@@ -668,7 +712,7 @@
             
             if (categoryChart && categoryData) {
                 const labels = categoryData.map(c => c.category);
-                const data = categoryData.map(c => c.total);
+                const data = categoryData.map(c => c.spent);
                 const colors = colorPalette.slice(0, labels.length);
                 
                 categoryChart.data.labels = labels;
@@ -685,25 +729,25 @@
             budgetChart = new Chart(budgetCtx, {
                 type: 'bar',
                 data: {
-                    labels: @json($budgetSummary->pluck('year')),
+                    labels: @json($budgetSummaryAll->pluck('year')),
                     datasets: [
                         {
                             label: 'Allocated',
-                            data: @json($budgetSummary->pluck('allocated')),
+                            data: @json($budgetSummaryAll->pluck('allocated')),
                             backgroundColor: 'rgba(117, 117, 117, 0.4)',
                             borderColor: 'rgba(117, 117, 117, 0.8)',
                             borderWidth: 2
                         },
                         {
                             label: 'Spent',
-                            data: @json($budgetSummary->pluck('spent')),
+                            data: @json($budgetSummaryAll->pluck('spent')),
                             backgroundColor: 'rgba(30, 58, 138, 0.7)',
                             borderColor: 'rgba(30, 58, 138, 1)',
                             borderWidth: 2
                         },
                         {
                             label: 'Predicted',
-                            data: @json($budgetSummary->pluck('predicted')),
+                            data: @json($budgetSummaryAll->pluck('predicted')),
                             backgroundColor: 'rgba(59, 130, 246, 0.5)',
                             borderColor: 'rgba(59, 130, 246, 1)',
                             borderWidth: 2,
@@ -745,7 +789,7 @@
                 data: {
                     labels: @json($categoryBreakdown->pluck('category')),
                     datasets: [{
-                        data: @json($categoryBreakdown->pluck('total')),
+                        data: @json($categoryBreakdown->pluck('spent')),
                         backgroundColor: colorPalette,
                         borderWidth: 2,
                         borderColor: 'var(--panel)'
