@@ -114,7 +114,7 @@ class PublicController extends Controller
     public function home()
     {
         // Get current year and last 3 years for rolling 4-year view
-        $currentYear = date('Y');
+        $currentYear = 2026;
         $years = range($currentYear, $currentYear - 3);
         
         // Get budget summary for 4-year rolling period
@@ -123,6 +123,17 @@ class PublicController extends Controller
             ->groupBy('year')
             ->orderBy('year', 'desc')
             ->get();
+
+        // Get all budget data for JavaScript (to support dynamic filtering)
+        $allBudgetsByYear = [];
+        foreach ($years as $year) {
+            $categoryData = Budget::where('year', $year)
+                ->selectRaw('category, SUM(spent_amount) as total')
+                ->groupBy('category')
+                ->orderBy('total', 'desc')
+                ->get();
+            $allBudgetsByYear[$year] = $categoryData;
+        }
 
         // Get total spending across all years
         $totalSpent = Budget::whereIn('year', $years)->sum('spent_amount');
@@ -170,7 +181,9 @@ class PublicController extends Controller
             'majorRevenue',
             'categoryBreakdown',
             'stats',
-            'years'
+            'years',
+            'allBudgetsByYear',
+            'currentYear'
         ));
     }
 

@@ -8,14 +8,28 @@
     <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
     <style>
         :root {
-            --primary: #dc2626;
-            --secondary: #f97316;
+            --bg: #f5f5f5;
+            --panel: #ffffff;
+            --subtle: #757575;
+            --ink: #1a1a1a;
+            --border: #e0e0e0;
+            --accent: #1e3a8a;
+            --accent-light: #3b82f6;
             --success: #16a34a;
             --warning: #f59e0b;
-            --danger: #dc2626;
+            --danger: #1e40af;
             --dark: #0f172a;
             --light: #f8fafc;
-            --border: #e2e8f0;
+        }
+
+        :root.dark {
+            --bg: #0f172a;
+            --panel: #1e293b;
+            --subtle: #94a3b8;
+            --ink: #f1f5f9;
+            --border: #334155;
+            --accent: #93c5fd;
+            --accent-light: #60a5fa;
         }
 
         * {
@@ -26,13 +40,13 @@
 
         body {
             font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', system-ui, sans-serif;
-            background: var(--light);
-            color: var(--dark);
+            background: var(--bg);
+            color: var(--ink);
             line-height: 1.6;
         }
 
         .hero {
-            background: linear-gradient(135deg, var(--primary) 0%, var(--secondary) 100%);
+            background: linear-gradient(135deg, var(--accent) 0%, var(--accent-light) 100%);
             color: white;
             padding: 80px 32px;
             text-align: center;
@@ -209,9 +223,9 @@
             width: 16px;
             height: 16px;
             border-radius: 50%;
-            background: var(--primary);
+            background: var(--accent);
             border: 4px solid white;
-            box-shadow: 0 0 0 2px var(--primary);
+            box-shadow: 0 0 0 2px var(--accent);
         }
 
         .timeline-event::after {
@@ -239,8 +253,8 @@
         }
 
         .badge-danger {
-            background: #fee2e2;
-            color: var(--danger);
+            background: rgba(30, 58, 138, 0.1);
+            color: var(--accent);
         }
 
         .badge-warning {
@@ -271,33 +285,96 @@
         }
 
         .btn-primary {
-            background: var(--primary);
+            background: var(--accent);
             color: white;
+            backdrop-filter: blur(20px);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            box-shadow: 0 8px 32px rgba(30, 58, 138, 0.2);
         }
 
         .btn-primary:hover {
-            background: #b91c1c;
+            background: var(--accent-light);
             transform: translateY(-2px);
-            box-shadow: 0 10px 20px rgba(220, 38, 38, 0.3);
+            box-shadow: 0 12px 24px rgba(30, 58, 138, 0.3), inset 0 1px 0 rgba(255, 255, 255, 0.3);
         }
 
         .btn-outline {
-            background: transparent;
-            color: var(--primary);
-            border: 2px solid var(--primary);
+            background: rgba(255, 255, 255, 0.1);
+            color: white;
+            border: 1px solid rgba(255, 255, 255, 0.3);
+            backdrop-filter: blur(20px);
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
         }
 
         .btn-outline:hover {
-            background: var(--primary);
-            color: white;
+            background: rgba(255, 255, 255, 0.2);
+            border-color: rgba(255, 255, 255, 0.5);
+            box-shadow: 0 12px 40px rgba(0, 0, 0, 0.15), inset 0 1px 0 rgba(255, 255, 255, 0.5);
         }
 
         .stat-card {
             text-align: center;
             padding: 24px;
+            background: var(--panel);
+            border: 1px solid var(--border);
+            border-radius: 12px;
+            backdrop-filter: blur(10px);
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.05);
         }
 
-        .stat-card-value {
+        /* Glassy effect for cards */
+        .card {
+            background: var(--panel) !important;
+            border: 1px solid var(--border) !important;
+            backdrop-filter: blur(10px) !important;
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.08) !important;
+        }
+
+        /* Time period selector buttons */
+        .time-period-selector {
+            display: flex;
+            gap: 12px;
+            flex-wrap: wrap;
+            justify-content: center;
+            margin-bottom: 24px;
+        }
+
+        .time-period-btn {
+            padding: 10px 20px;
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            background: var(--panel);
+            color: var(--ink);
+            cursor: pointer;
+            font-weight: 600;
+            transition: all 200ms ease;
+            backdrop-filter: blur(10px);
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.05);
+        }
+
+        .time-period-btn:hover {
+            background: var(--accent);
+            color: white;
+            border-color: var(--accent);
+            box-shadow: 0 6px 20px rgba(30, 58, 138, 0.2);
+            transform: translateY(-2px);
+        }
+
+        .time-period-btn.active {
+            background: var(--accent);
+            color: white;
+            border-color: var(--accent);
+            box-shadow: 0 8px 25px rgba(30, 58, 138, 0.3), inset 0 1px 0 rgba(255, 255, 255, 0.2);
+        }
+
+        .spending-item {
+            padding: 24px;
+            background: var(--panel);
+            border: 1px solid var(--border);
+            border-radius: 12px;
+            backdrop-filter: blur(10px);
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.05);
+        }
             font-size: 48px;
             font-weight: 900;
             color: var(--primary);
@@ -385,7 +462,15 @@
         <section class="section">
             <div class="section-header">
                 <h2 class="section-title">📊 4-Year Budget Overview</h2>
-                <p class="section-subtitle">Rolling view of actual spending vs. allocated budgets ({{ implode(', ', $years) }})</p>
+                <p class="section-subtitle">Rolling view of actual spending vs. allocated budgets</p>
+            </div>
+
+            <!-- Time Period Selector -->
+            <div class="time-period-selector">
+                <button class="time-period-btn active" data-years="4" onclick="updateCharts(4)">📅 Last 4 Years</button>
+                <button class="time-period-btn" data-years="3" onclick="updateCharts(3)">📊 Last 3 Years</button>
+                <button class="time-period-btn" data-years="2" onclick="updateCharts(2)">📈 Last 2 Years</button>
+                <button class="time-period-btn" data-years="1" onclick="updateCharts(1)">📌 Current Year</button>
             </div>
 
             <div class="grid grid-2">
@@ -397,7 +482,7 @@
                 </div>
 
                 <div class="card">
-                    <h3 style="margin-bottom: 20px;">Category Breakdown ({{ date('Y') }})</h3>
+                    <h3 style="margin-bottom: 20px;">Category Breakdown <span id="categoryYear">(2026)</span></h3>
                     <div class="chart-container">
                         <canvas id="categoryChart"></canvas>
                     </div>
@@ -534,24 +619,70 @@
 
         <!-- CTA Section -->
         <section class="section" style="text-align: center;">
-            <div class="card" style="background: linear-gradient(135deg, var(--primary) 0%, var(--secondary) 100%); color: white;">
+            <div class="card" style="background: linear-gradient(135deg, var(--accent) 0%, var(--accent-light) 100%); color: white;">
                 <h2 style="font-size: 32px; margin-bottom: 16px;">Get Involved</h2>
                 <p style="font-size: 18px; margin-bottom: 32px; opacity: 0.95;">
                     Help us track government spending and hold officials accountable
                 </p>
                 <div style="display: flex; gap: 16px; justify-content: center; flex-wrap: wrap;">
-                    <a href="/admin/import" class="btn" style="background: white; color: var(--primary);">Import Data</a>
-                    <a href="/transparency" class="btn btn-outline" style="border-color: white; color: white;">Explore Dashboard</a>
+                    <a href="/admin/import" class="btn" style="background: rgba(255,255,255,0.95); color: var(--accent); backdrop-filter: blur(10px);">Import Data</a>
+                    <a href="/transparency" class="btn btn-outline" >Explore Dashboard</a>
                 </div>
             </div>
         </section>
     </div>
 
     <script>
-        // Budget Trends Chart
+        let budgetChart = null;
+        let categoryChart = null;
+        const allYears = @json($years);
+        const allBudgetsByYear = @json($allBudgetsByYear);
+        const colorPalette = [
+            '#1e3a8a', '#3b82f6', '#0ea5e9', '#06b6d4', 
+            '#14b8a6', '#10b981', '#84cc16', '#eab308',
+            '#f59e0b', '#f97316'
+        ];
+
+        function updateCharts(numYears) {
+            document.querySelectorAll('.time-period-btn').forEach(btn => {
+                btn.classList.remove('active');
+            });
+            event.target.classList.add('active');
+
+            const selectedYears = allYears.slice(0, numYears);
+            const budgetData = selectedYears.map(year => {
+                const yearBudgets = @json($budgetSummary);
+                return yearBudgets.find(b => b.year == year);
+            }).filter(b => b);
+
+            if (budgetChart) {
+                budgetChart.data.labels = budgetData.map(b => b.year);
+                budgetChart.data.datasets[0].data = budgetData.map(b => b.allocated);
+                budgetChart.data.datasets[1].data = budgetData.map(b => b.spent);
+                budgetChart.data.datasets[2].data = budgetData.map(b => b.predicted);
+                budgetChart.update();
+            }
+
+            const mostRecentYear = selectedYears[0];
+            const categoryData = allBudgetsByYear[mostRecentYear];
+            
+            if (categoryChart && categoryData) {
+                const labels = categoryData.map(c => c.category);
+                const data = categoryData.map(c => c.total);
+                const colors = colorPalette.slice(0, labels.length);
+                
+                categoryChart.data.labels = labels;
+                categoryChart.data.datasets[0].data = data;
+                categoryChart.data.datasets[0].backgroundColor = colors;
+                categoryChart.update();
+                
+                document.getElementById('categoryYear').textContent = '(' + mostRecentYear + ')';
+            }
+        }
+
         const budgetCtx = document.getElementById('budgetChart');
         if (budgetCtx) {
-            new Chart(budgetCtx, {
+            budgetChart = new Chart(budgetCtx, {
                 type: 'bar',
                 data: {
                     labels: @json($budgetSummary->pluck('year')),
@@ -559,22 +690,22 @@
                         {
                             label: 'Allocated',
                             data: @json($budgetSummary->pluck('allocated')),
-                            backgroundColor: 'rgba(156, 163, 175, 0.5)',
-                            borderColor: 'rgba(156, 163, 175, 1)',
+                            backgroundColor: 'rgba(117, 117, 117, 0.4)',
+                            borderColor: 'rgba(117, 117, 117, 0.8)',
                             borderWidth: 2
                         },
                         {
                             label: 'Spent',
                             data: @json($budgetSummary->pluck('spent')),
-                            backgroundColor: 'rgba(220, 38, 38, 0.7)',
-                            borderColor: 'rgba(220, 38, 38, 1)',
+                            backgroundColor: 'rgba(30, 58, 138, 0.7)',
+                            borderColor: 'rgba(30, 58, 138, 1)',
                             borderWidth: 2
                         },
                         {
                             label: 'Predicted',
                             data: @json($budgetSummary->pluck('predicted')),
-                            backgroundColor: 'rgba(249, 115, 22, 0.5)',
-                            borderColor: 'rgba(249, 115, 22, 1)',
+                            backgroundColor: 'rgba(59, 130, 246, 0.5)',
+                            borderColor: 'rgba(59, 130, 246, 1)',
                             borderWidth: 2,
                             borderDash: [5, 5]
                         }
@@ -584,65 +715,52 @@
                     responsive: true,
                     maintainAspectRatio: false,
                     plugins: {
-                        legend: {
-                            position: 'top',
-                        },
+                        legend: { position: 'top', labels: { color: 'var(--ink)', font: { weight: 600 } } },
                         tooltip: {
-                            callbacks: {
-                                label: function(context) {
-                                    return context.dataset.label + ': €' + 
-                                           (context.parsed.y / 1000000).toFixed(1) + 'M';
-                                }
-                            }
+                            callbacks: { label: function(context) { return context.dataset.label + ': €' + (context.parsed.y / 1000000000).toFixed(2) + 'B'; } },
+                            backgroundColor: 'rgba(0, 0, 0, 0.7)',
+                            titleColor: '#fff',
+                            bodyColor: '#fff'
                         }
                     },
                     scales: {
                         y: {
                             beginAtZero: true,
-                            ticks: {
-                                callback: function(value) {
-                                    return '€' + (value / 1000000).toFixed(0) + 'M';
-                                }
-                            }
+                            ticks: { color: 'var(--subtle)', callback: function(value) { return '€' + (value / 1000000000).toFixed(0) + 'B'; } },
+                            grid: { color: 'var(--border)' }
+                        },
+                        x: {
+                            ticks: { color: 'var(--subtle)' },
+                            grid: { display: false }
                         }
                     }
                 }
             });
         }
 
-        // Category Pie Chart
         const categoryCtx = document.getElementById('categoryChart');
         if (categoryCtx) {
-            new Chart(categoryCtx, {
+            categoryChart = new Chart(categoryCtx, {
                 type: 'doughnut',
                 data: {
                     labels: @json($categoryBreakdown->pluck('category')),
                     datasets: [{
                         data: @json($categoryBreakdown->pluck('total')),
-                        backgroundColor: [
-                            '#dc2626', '#f97316', '#f59e0b', '#16a34a', 
-                            '#0ea5e9', '#6366f1', '#8b5cf6', '#ec4899'
-                        ],
+                        backgroundColor: colorPalette,
                         borderWidth: 2,
-                        borderColor: '#fff'
+                        borderColor: 'var(--panel)'
                     }]
                 },
                 options: {
                     responsive: true,
                     maintainAspectRatio: false,
                     plugins: {
-                        legend: {
-                            position: 'right',
-                        },
+                        legend: { position: 'right', labels: { color: 'var(--ink)', font: { weight: 600 }, padding: 12 } },
                         tooltip: {
-                            callbacks: {
-                                label: function(context) {
-                                    const total = context.dataset.data.reduce((a, b) => a + b, 0);
-                                    const percentage = ((context.parsed / total) * 100).toFixed(1);
-                                    return context.label + ': €' + 
-                                           (context.parsed / 1000000).toFixed(1) + 'M (' + percentage + '%)';
-                                }
-                            }
+                            callbacks: { label: function(context) { const total = context.dataset.data.reduce((a, b) => a + b, 0); const percentage = ((context.parsed / total) * 100).toFixed(1); return context.label + ': €' + (context.parsed / 1000000000).toFixed(2) + 'B (' + percentage + '%)'; } },
+                            backgroundColor: 'rgba(0, 0, 0, 0.7)',
+                            titleColor: '#fff',
+                            bodyColor: '#fff'
                         }
                     }
                 }
