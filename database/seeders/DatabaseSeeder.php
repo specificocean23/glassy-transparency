@@ -13,11 +13,9 @@ class DatabaseSeeder extends Seeder
 {
     public function run(): void
     {
-        // Call the Waterford Council and Irish Energy seeders
+        // Call transparency data seeder (includes new budget structure)
         $this->call([
-            WaterfordCouncilSeeder::class,
-            IrishFederalEnergySeeder::class,
-            IrishEnvironmentalDataSeeder::class,
+            TransparencyDataSeeder::class,
         ]);
     }
 }

@@ -25,6 +25,7 @@ class CaseStudy extends Model
         'featured_image',
         'key_stats',
         'initiative_id',
+        'county_id',
         'published_at',
         'is_featured',
     ];
@@ -52,6 +53,11 @@ class CaseStudy extends Model
     public function initiative(): BelongsTo
     {
         return $this->belongsTo(Initiative::class);
+    }
+
+    public function county(): BelongsTo
+    {
+        return $this->belongsTo(County::class);
     }
 
     public function scopePublished($query)

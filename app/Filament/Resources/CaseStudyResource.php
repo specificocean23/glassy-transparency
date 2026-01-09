@@ -15,6 +15,12 @@ class CaseStudyResource extends Resource
     {
         return $form->schema([
             Forms\Components\TextInput::make('title')->required(),
+            Forms\Components\Select::make('county_id')
+                ->relationship('county', 'name')
+                ->searchable()
+                ->preload()
+                ->label('County')
+                ->helperText('Leave empty for federal/national case studies'),
             Forms\Components\TextInput::make('category'),
             Forms\Components\Textarea::make('summary'),
             Forms\Components\Textarea::make('full_content'),
@@ -30,9 +36,19 @@ class CaseStudyResource extends Resource
     {
         return $table->columns([
             Tables\Columns\TextColumn::make('title')->searchable(),
+            Tables\Columns\TextColumn::make('county.name')
+                ->label('County')
+                ->sortable()
+                ->default('All Counties'),
             Tables\Columns\TextColumn::make('category'),
             Tables\Columns\TextColumn::make('jobs_created'),
             Tables\Columns\TextColumn::make('published_at')->date(),
+        ])->filters([
+            Tables\Filters\SelectFilter::make('county_id')
+                ->relationship('county', 'name')
+                ->searchable()
+                ->preload()
+                ->label('County'),
         ])->actions([
             Tables\Actions\EditAction::make(),
             Tables\Actions\DeleteAction::make(),

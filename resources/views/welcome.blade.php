@@ -4,7 +4,7 @@
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <meta name="csrf-token" content="{{ csrf_token() }}">
-    <title>{{ config('app.name', 'Transparency.ie') }} - Ireland's Public Ledger</title>
+    <title>{{ config('app.name', 'Transparency') }} - Ireland's Public Ledger</title>
     <link rel="preconnect" href="https://fonts.bunny.net">
     <link href="https://fonts.bunny.net/css?family=figtree:400,600&display=swap" rel="stylesheet" />
     @if (file_exists(public_path('build/manifest.json')) || file_exists(public_path('hot')))
@@ -200,7 +200,7 @@
         <section style="background: linear-gradient(135deg, var(--panel) 0%, var(--card) 100%); padding: 80px 32px; text-align: center; border-bottom: 1px solid var(--border); position: relative; overflow: hidden;">
             <div style="position: absolute; top: -50%; right: -20%; width: 600px; height: 600px; border-radius: 50%; background: radial-gradient(circle, var(--card) 0%, transparent 70%); opacity: 0.3; z-index: 0;"></div>
             <div style="position: relative; z-index: 1; max-width: 800px; margin: 0 auto;">
-                <h1 style="font-size: clamp(32px, 8vw, 52px); font-weight: 900; letter-spacing: -1.5px; margin: 0 0 20px 0; line-height: 1.1;">Ireland's Public Ledger</h1>
+                <h1 style="font-size: clamp(32px, 8vw, 52px); font-weight: 900; letter-spacing: -1.5px; margin: 0 0 20px 0; line-height: 1.1;">Ireland's Open Public Ledger</h1>
                 <p style="font-size: 18px; color: var(--subtle); margin: 0; line-height: 1.7;">Real-time transparency into government budgets, council spending, environmental initiatives, and civic engagement across Ireland.</p>
             </div>
         </section>

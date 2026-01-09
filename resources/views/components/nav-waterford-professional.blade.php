@@ -372,42 +372,9 @@
                 🏠 Home
             </a>
             
-            <!-- Pillars Dropdown -->
-            <div class="nav-waterford-pillars">
-                <button type="button" class="nav-waterford-pillars-trigger" data-wf-pillars-toggle>
-                    📊 Pillars
-                </button>
-                <div class="nav-waterford-pillars-menu">
-                    <a href="/transparency" class="nav-waterford-pillar-item">
-                        <span class="nav-waterford-pillar-icon">💰</span>
-                        <div class="nav-waterford-pillar-text">
-                            <p class="nav-waterford-pillar-title">Transparency</p>
-                            <p class="nav-waterford-pillar-desc">Budgets & spending tracking</p>
-                        </div>
-                    </a>
-                    <a href="/metrics" class="nav-waterford-pillar-item">
-                        <span class="nav-waterford-pillar-icon">🌍</span>
-                        <div class="nav-waterford-pillar-text">
-                            <p class="nav-waterford-pillar-title">Environment</p>
-                            <p class="nav-waterford-pillar-desc">Climate & sustainability data</p>
-                        </div>
-                    </a>
-                    <a href="/waterford" class="nav-waterford-pillar-item">
-                        <span class="nav-waterford-pillar-icon">🏛️</span>
-                        <div class="nav-waterford-pillar-text">
-                            <p class="nav-waterford-pillar-title">Waterford</p>
-                            <p class="nav-waterford-pillar-desc">Council spending & initiatives</p>
-                        </div>
-                    </a>
-                    <a href="/innovation" class="nav-waterford-pillar-item">
-                        <span class="nav-waterford-pillar-icon">💡</span>
-                        <div class="nav-waterford-pillar-text">
-                            <p class="nav-waterford-pillar-title">Innovation</p>
-                            <p class="nav-waterford-pillar-desc">Technologies & trials</p>
-                        </div>
-                    </a>
-                </div>
-            </div>
+            <a href="/transparency" class="nav-waterford-link @if(request()->is('transparency*')) active @endif">
+                💰 Transparency
+            </a>
             
             <a href="/case-studies" class="nav-waterford-link @if(request()->is('case-studies*')) active @endif">
                 📚 Case Studies
